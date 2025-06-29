@@ -19,12 +19,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 export function Navbar() {
   const navLinks = [
-    { name: "Home", href: "#" },
+    { name: "Home", href: "/" },
     { name: "Swag Store", href: "#" },
     { name: "Swag Packs", href: "#" },
     { name: "Pricing", href: "#" },
-    { name: "Products Catalog", href: "#" },
+    { name: "Catalog", href: "/catalog" },
     { name: "Contract Us", href: "#" },
+    { name: "All products", href: "/all-product" },
   ]
 
   return (
