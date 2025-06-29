@@ -13,9 +13,13 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1rem",
       screens: {
-        "2xl": "1400px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1170px", // Custom container width
+        "2xl": "1170px", // Prevents stretching beyond 1170px
       },
     },
     extend: {
@@ -53,19 +57,22 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom colors based on screenshots
         gratisswag: {
           orange: "#FF9900",
           blue: "#145078",
           "light-gray": "#F5F5F5",
           "dark-gray": "#333333",
-          "accent-blue": "#007BFF", // For "Engagement" text
+          "accent-blue": "#007BFF",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        poppins: ["var(--font-poppins)"],
+        manrope: ["var(--font-manrope)"],
       },
       keyframes: {
         "accordion-down": {
