@@ -60,17 +60,17 @@ export function Footer() {
             <h3 className="mb-4 text-lg font-semibold">Support</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="text-gray-300 hover:text-white">
+                <Link href="/privacy-policy" className="text-gray-300 hover:text-white">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-300 hover:text-white">
+                <Link href="terms-of-service" className="text-gray-300 hover:text-white">
                   Terms Of Service
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-300 hover:text-white">
+                <Link href="/faq" className="text-gray-300 hover:text-white">
                   FAQ
                 </Link>
               </li>

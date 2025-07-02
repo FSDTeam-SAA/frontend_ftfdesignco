@@ -1,4 +1,5 @@
 "use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Menu, Search, ShoppingCart, User } from "lucide-react"
@@ -19,12 +20,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 export function Navbar() {
   const navLinks = [
-    { name: "Home", href: "#" },
+    { name: "Home", href: "/" },
     { name: "Swag Store", href: "#" },
     { name: "Swag Packs", href: "#" },
-    { name: "Pricing", href: "#" },
-    { name: "Products Catalog", href: "#" },
-    { name: "Contract Us", href: "#" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Catalog", href: "/catalog" },
+    { name: "Contract Us", href: "/contact-us" },
+    { name: "All products", href: "/all-product" },
   ]
 
   return (
