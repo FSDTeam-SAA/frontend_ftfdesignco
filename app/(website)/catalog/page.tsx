@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
@@ -10,21 +11,33 @@ interface Category {
   thumbnail: string
 }
 
-async function getCategories(): Promise<Category[]> {
-  try {
-    const response = await fetch("http://localhost:5001/api/v1/category", {
-      cache: "no-store",
-    })
-    const data = await response.json()
-    return data.success ? data.data : []
-  } catch (error) {
-    console.error("Failed to fetch categories:", error)
-    return []
-  }
-}
+export default function CategorySection() {
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
 
-export default async function CategorySection() {
-  const categories = await getCategories()
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/v1/category", {
+          cache: "no-store",
+        })
+        const data = await response.json()
+        if (data.success) {
+          setCategories(data.data)
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    getCategories()
+  }, [])
+
+  if (loading) {
+    return <div className="p-10 text-center">Loading categories...</div>
+  }
 
   return (
     <section className="py-16 bg-gray-50">

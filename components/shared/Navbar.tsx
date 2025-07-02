@@ -1,4 +1,5 @@
 "use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Menu, Search, ShoppingCart, User } from "lucide-react"
@@ -22,9 +23,9 @@ export function Navbar() {
     { name: "Home", href: "/" },
     { name: "Swag Store", href: "#" },
     { name: "Swag Packs", href: "#" },
-    { name: "Pricing", href: "#" },
+    { name: "Pricing", href: "/pricing" },
     { name: "Catalog", href: "/catalog" },
-    { name: "Contract Us", href: "#" },
+    { name: "Contract Us", href: "/contact-us" },
     { name: "All products", href: "/all-product" },
   ]
 

@@ -32,7 +32,14 @@ interface ProductsResponse {
   totalPages: number
 }
 
-async function getProducts(searchParams: any): Promise<ProductsResponse> {
+interface GetProductsParams {
+  category?: string
+  page?: string
+  limit?: string
+  sort?: string
+}
+
+async function getProducts(searchParams: GetProductsParams): Promise<ProductsResponse> {
   const { category, page = "1", limit = "12", sort = "createdAt" } = searchParams
 
   let url = `http://localhost:5001/api/v1/product/get-all?page=${page}&limit=${limit}&sort=${sort}`
@@ -42,7 +49,7 @@ async function getProducts(searchParams: any): Promise<ProductsResponse> {
 
   try {
     const response = await fetch(url, { cache: "no-store" })
-    const data = await response.json()
+    const data: ProductsResponse = await response.json()
     return data
   } catch (error) {
     console.error("Failed to fetch products:", error)
@@ -56,7 +63,7 @@ async function getProducts(searchParams: any): Promise<ProductsResponse> {
   }
 }
 
-export async function ProductsGrid({ searchParams }: { searchParams: any }) {
+export async function ProductsGrid({ searchParams }: { searchParams: GetProductsParams }) {
   const productsData = await getProducts(searchParams)
   const { data: products, totalProducts, currentPage, totalPages } = productsData
 

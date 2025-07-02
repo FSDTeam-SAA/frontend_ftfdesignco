@@ -111,7 +111,7 @@ function page() {
         </div>
         <div className="space-y-2">
           <h1 className="text-[32px] font-semibold leading-[120%]">
-            7. Children's Privacy
+            7. Children&apos;s Privacy
           </h1>
           <p className="text-base text-[#424242] font-normal leading-[150%]">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
