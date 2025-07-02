@@ -30,7 +30,7 @@ export function Navbar() {
   ]
 
   return (
-    <header className="w-full">
+    <header className="w-full sticky top-0 z-50 bg-white">
       {/* Top Bar */}
       <div className="bg-gratisswag-dark-gray h-2 w-full" />
 
@@ -39,13 +39,13 @@ export function Navbar() {
         {/* Logo */}
         <Link href="#" className="flex items-center gap-2">
           <Image
-            src="/placeholder.svg?height=32&width=32"
+            src="/assets/logo.png"
             alt="GratiSwag Logo"
-            width={32}
-            height={32}
-            className="h-8 w-8"
+            width={1000}
+            height={1000}
+            className="h-[64px] w-[104px]"
           />
-          <span className="text-xl font-bold text-gratisswag-dark-gray">GratiSwag</span>
+        
         </Link>
 
         {/* Search Bar (Desktop) */}
@@ -147,7 +147,7 @@ export function Navbar() {
       </nav>
 
       {/* Bottom Navigation Links (Desktop) */}
-      <div className="hidden border-t border-gray-200 bg-white py-3 md:block">
+      <div className="hidden border-b border-gray-200 bg-white py-3 md:block">
         <div className="container mx-auto flex justify-center gap-8 px-4 md:px-6">
           {navLinks.map((link) => (
             <Link
