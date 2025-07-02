@@ -1,5 +1,7 @@
 import type { ReactNode } from "react"
+import "../../app/globals.css"
 import Image from "next/image"
+
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
