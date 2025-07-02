@@ -1,8 +1,8 @@
 
+import FAQSection from "@/components/FAQSection";
 import { SubScriptionPlan } from "@/components/SubScriptionPlan";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { Banner } from "@/components/web_components/Banner";
-import FAQSection from "./faq/page";
 
 export default function Home() {
   return (
@@ -13,4 +13,4 @@ export default function Home() {
       <FAQSection/> 
     </div>
   );
-}
+} 

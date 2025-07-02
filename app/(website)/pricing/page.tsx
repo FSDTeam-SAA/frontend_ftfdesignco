@@ -1,12 +1,19 @@
-import { SubScriptionPlan } from '@/components/SubScriptionPlan'
-import React from 'react'
+import FAQSection from "@/components/FAQSection";
+import { SubScriptionPlan } from "@/components/SubScriptionPlan";
+import React from "react";
 
 function Page() {
   return (
     <div>
-        <SubScriptionPlan/>
+      <div>
+        <SubScriptionPlan />
+      </div>
+
+      <div className="bg-[#FCF7EF]">
+        <FAQSection />
+      </div>
     </div>
-  )
+  );
 }
 
-export default Page
+export default Page;
