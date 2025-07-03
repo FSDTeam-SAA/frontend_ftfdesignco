@@ -1,7 +1,12 @@
+'use client'
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
 export function Banner() {
+  const session=useSession();
+  const data=session
+  console.log("data",data)
   return (
     <section className="bg-white py-8 sm:py-12 md:py-16 lg:py-20">
       <div className="container mx-auto grid items-center gap-6 px-4 sm:gap-8 md:grid-cols-2 md:px-6 lg:gap-12 xl:gap-1">
