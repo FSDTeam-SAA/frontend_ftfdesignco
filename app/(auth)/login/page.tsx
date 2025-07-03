@@ -20,7 +20,7 @@ export default function WelcomePage() {
 
         <div className="space-y-3">
           <Button
-            onClick={() => router.push("/login/company")}
+            onClick={() => router.push("/company")}
             className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3"
           >
             Company Login

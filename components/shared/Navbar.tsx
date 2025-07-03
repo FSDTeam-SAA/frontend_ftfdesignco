@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { signOut } from "next-auth/react"
 import { Menu, Search, ShoppingCart, User } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -45,7 +46,6 @@ export function Navbar() {
             height={1000}
             className="h-[64px] w-[104px]"
           />
-        
         </Link>
 
         {/* Search Bar (Desktop) */}
@@ -89,13 +89,15 @@ export function Navbar() {
                 <span className="sr-only">User Menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent className="bg-red-600" align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/company" })}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

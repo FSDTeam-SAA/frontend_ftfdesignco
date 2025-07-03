@@ -33,7 +33,7 @@ export function Footer() {
             <h3 className="mb-4 text-lg font-semibold">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="text-gray-300 hover:text-white">
+                <Link href="/about-us" className="text-gray-300 hover:text-white">
                   About Us
                 </Link>
               </li>
@@ -48,7 +48,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-300 hover:text-white">
+                <Link href="/contact-us" className="text-gray-300 hover:text-white">
                   Contact
                 </Link>
               </li>
@@ -65,7 +65,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="terms-of-service" className="text-gray-300 hover:text-white">
+                <Link href="/terms-of-service" className="text-gray-300 hover:text-white">
                   Terms Of Service
                 </Link>
               </li>

@@ -3,6 +3,7 @@ import "./globals.css";
 import { Poppins, Manrope } from "next/font/google";
 import QueryProvider from "@/components/provider/QueryProvider";
 import { Toaster } from "sonner";
+import SessionWrapper from "@/components/provider/SessionProvider";
 
 // Global font (Poppins)
 const poppins = Poppins({
@@ -35,7 +36,7 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${manrope.variable}`}>
       <body className="antialiased">
         <QueryProvider>
-          {children}
+         <SessionWrapper>{children}</SessionWrapper>
           <Toaster />
         </QueryProvider>
       </body>

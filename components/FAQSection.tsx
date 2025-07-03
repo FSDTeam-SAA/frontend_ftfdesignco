@@ -26,33 +26,20 @@ const faqs = [
     answer:
       "We accept major credit cards, ACH transfers, and offer net-30 terms for qualified businesses.",
   },
-  {
-    question: "What are your payment terms?",
-    answer:
-      "We accept major credit cards, ACH transfers, and offer net-30 terms for qualified businesses.",
-  },
-  {
-    question: "What are your payment terms?",
-    answer:
-      "We accept major credit cards, ACH transfers, and offer net-30 terms for qualified businesses.",
-  },
-  {
-    question: "What are your payment terms?",
-    answer:
-      "We accept major credit cards, ACH transfers, and offer net-30 terms for qualified businesses.",
-  },
 ];
 
-export default function Page() {
+export default function FAQSection() {
   return (
-    <section className="py-24">
+    <section className="py-16">
       <div className="container mx-auto">
         <div className="mb-12 space-y-2 text-center">
-          <h2 className="text-5xl font-bold text-center">
+          <h2 className="text-3xl font-bold text-center">
             Frequently Asked Questions
           </h2>
           <p className="max-w-2xl mx-auto">
-            Your guide to using Wellness Made Clear
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi{" "}
           </p>
         </div>
         <Accordion type="single" collapsible className="w-full">
