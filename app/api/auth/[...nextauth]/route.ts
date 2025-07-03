@@ -1,36 +1,89 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+declare module "next-auth" {
+  interface User {
+    employeeId?: string;
+    userId?: string;
+    shop: string;
+    needPasswordChange?: boolean;
+    phone?: string; 
+  
+  }
+}
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
+        role: { label: "Role", type: "text" }, 
         email: { label: "Email", type: "email" },
+        employeeId: { label: "Employee ID", type: "text" }, 
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch(`${process.env.NEXTAUTH_PUBLIC_API_URL}/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: credentials?.email,
-            password: credentials?.password,
-          }),
-        });
+        if (!credentials) return null;
 
-        const data = await res.json();
+        let loginUrl = "";
+        let loginPayload: Record<string, string> = {};
 
-        if (res.ok && data?.success && data?.data?.accessToken) {
-          return {
-            accessToken: data.data.accessToken,
-            ...data.data.user, // spread user fields directly
+        // Set API endpoint and payload based on role
+        if (credentials.role === "company") {
+          loginUrl = `${process.env.NEXTAUTH_PUBLIC_API_URL}/auth/login`;
+          loginPayload = {
+            email: credentials.email,
+            password: credentials.password,
           };
+        } else if (credentials.role === "employee") {
+          loginUrl = `${process.env.NEXTAUTH_PUBLIC_API_URL}/auth/employee-login`;
+          loginPayload = {
+            employeeId: credentials.employeeId,
+            password: credentials.password,
+          };
+        } else {
+          return null;
         }
 
-        return null;
+        try {
+          const res = await fetch(loginUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(loginPayload),
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success && data.data?.accessToken) {
+            const accessToken = data.data.accessToken;
+
+            if (credentials.role === "company") {
+              const user = data.data.user;
+              return {
+                role: user.role, // e.g., "company_admin"
+                accessToken,
+                ...user,
+              };
+            }
+
+            if (credentials.role === "employee") {
+              const employee = data.data.employee;
+              return {
+                role: "employee",
+                accessToken,
+                ...employee,
+                needPasswordChange: data.data.needPasswordChange,
+              };
+            }
+          }
+
+          return null;
+        } catch (error) {
+          console.error("Authorize error:", error);
+          return null;
+        }
       },
     }),
   ],
@@ -43,32 +96,51 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
-        token.user = {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          image: user.image,
-          isVerified: user.isVerified,
-          isShopCreated: user.isShopCreated,
-          employeeCount: user.employeeCount,
-          shop: user.shop,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        };
+        token.role = user.role;
+
+        if (user.role === "company_admin" || user.role === "company") {
+          token.user = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            image: user.image ?? null,
+            isVerified: user.isVerified,
+            isShopCreated: user.isShopCreated,
+            employeeCount: user.employeeCount,
+            shop: user.shop,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          };
+        }
+
+        if (user.role === "employee") {
+          token.user = {
+            id: user._id,
+            employeeId: user.employeeId,
+            email: user.email,
+            userId: user.userId,
+            shop: user.shop,
+            needPasswordChange: user.needPasswordChange,
+            role: "employee",
+          };
+        }
       }
+
       return token;
     },
 
     async session({ session, token }) {
       session.accessToken = token.accessToken;
       session.user = token.user;
+      (session.user as { role: string }).role = token.role as string;
       return session;
     },
   },
 
   pages: {
-    signIn: "/login", // optional
+    signIn: "/login", // Custom login page
   },
 });
 

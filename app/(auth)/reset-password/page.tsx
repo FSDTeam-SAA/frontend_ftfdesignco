@@ -1,14 +1,13 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
-// import { GiftBoxLogo } from "@/components/gift-box-logo"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -28,53 +27,72 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <Card className="w-full max-w-md bg-white shadow-lg">
-      <CardContent className="p-8">
-        <div className="mb-6">
-          <h2 className="text-xl font-medium text-gray-800 mb-1">Reset Password</h2>
-          <p className="text-sm text-gray-600">Set your new password</p>
+    <div className="container mx-auto flex items-center justify-center min-h-screen p-4 sm:p-6">
+      <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12 w-full max-w-5xl">
+        {/* Left Section: Branding */}
+        <div className="flex flex-col items-center md:items-start gap-4 w-full md:w-1/2 lg:w-2/5">
+          <Image
+            src="/assets/logo.png"
+            alt="GratiSwag Logo"
+            width={435}
+            height={269}
+            className="w-full max-w-[200px] sm:max-w-[400px] h-auto object-contain"
+            priority
+          />
         </div>
 
-        <div className="lg:hidden mb-6">
-          {/* <GiftBoxLogo /> */}
-        </div>
+        {/* Right Section: Form */}
+        <Card className="w-full max-w-md sm:max-w-lg shadow-lg rounded-lg p-4 sm:p-6 bg-white">
+          <CardHeader className="text-center md:text-left px-0 pt-0 pb-4">
+            <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 justify-center md:justify-start">
+              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">Reset Password</h2>
+              <span role="img" aria-label="wave">👋</span>
+            </CardTitle>
+            <p className="text-sm sm:text-base text-[#424242] mt-2">Set your new password</p>
+          </CardHeader>
 
-        <form onSubmit={handleResetPassword} className="space-y-4">
-          <div>
-            <Label htmlFor="newPassword" className="text-sm font-medium text-gray-700">
-              New Password
-            </Label>
-            <Input
-              id="newPassword"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.newPassword}
-              onChange={(e) => handleInputChange("newPassword", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <CardContent className="grid gap-4 sm:gap-6 px-0 pb-0">
+              <div className="grid gap-2">
+                <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor="newPassword">
+                  New Password
+                </Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={formData.newPassword}
+                  onChange={(e) => handleInputChange("newPassword", e.target.value)}
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px]"
+                  required
+                />
+              </div>
 
-          <div>
-            <Label htmlFor="confirmNewPassword" className="text-sm font-medium text-gray-700">
-              Confirm New Password
-            </Label>
-            <Input
-              id="confirmNewPassword"
-              type="password"
-              placeholder="Enter your confirm password"
-              value={formData.confirmNewPassword}
-              onChange={(e) => handleInputChange("confirmNewPassword", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
+              <div className="grid gap-2">
+                <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor="confirmNewPassword">
+                  Confirm New Password
+                </Label>
+                <Input
+                  id="confirmNewPassword"
+                  type="password"
+                  placeholder="Enter your confirm password"
+                  value={formData.confirmNewPassword}
+                  onChange={(e) => handleInputChange("confirmNewPassword", e.target.value)}
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px]"
+                  required
+                />
+              </div>
 
-          <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 mt-6">
-            Continue
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+              <Button
+                type="submit"
+                className="w-full bg-[#D9AD5E] text-[#131313] text-sm sm:text-[16px] md:text-[18px] font-bold hover:bg-[#D9AD5E]/90 h-10 sm:h-12 rounded-[10px]"
+              >
+                Continue
+              </Button>
+            </CardContent>
+          </form>
+        </Card>
+      </div>
+    </div>
   )
 }

@@ -26,7 +26,7 @@ export default function WelcomePage() {
             Company Login
           </Button>
           <Button
-            onClick={() => router.push("/login/employee")}
+            onClick={() => router.push("/employee")}
             variant="outline"
             className="w-full border-gray-300 text-gray-700 font-medium py-3"
           >
