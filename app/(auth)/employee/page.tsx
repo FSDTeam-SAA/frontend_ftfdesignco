@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import { toast } from "sonner"
 
 export default function EmployeeLoginPage() {
   const [employeeId, setEmployeeId] = useState("")
@@ -31,9 +32,11 @@ export default function EmployeeLoginPage() {
     })
 
     if (res?.ok) {
+      toast.success("Login successful!")
       router.push("/")
     } else {
       setError("Invalid employee ID or password.")
+      toast.error("Invalid employee ID or password.")
     }
 
     setLoading(false)

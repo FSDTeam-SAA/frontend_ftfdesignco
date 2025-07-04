@@ -3,21 +3,52 @@
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
+import { toast } from "sonner"
+
+const forgotPassword = async (email: string) => {
+  const response = await fetch(`http://localhost:5001/api/v1/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  })
+  
+  if (!response.ok) {
+    throw new Error("Failed to send OTP")
+  }
+  
+  return response.json()
+}
 
 export default function ForgotPasswordPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
+  
+
+  const mutation = useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: (data) => {
+      toast.success("OTP sent successfully")
+      router.push("/otp?context=forgot-password&token=" + data.data?.accessToken)
+    },
+    onError: (error) => {
+      console.error("Error sending OTP:", error)
+      toast.error(error.message || "Failed to send OTP")
+     
+    },
+  })
 
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Forgot password email:", email)
-    router.push("/otp")
+    mutation.mutate(email)
   }
 
   return (
@@ -40,7 +71,6 @@ export default function ForgotPasswordPage() {
           <CardHeader className="text-center md:text-left px-0 pt-0 pb-4">
             <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 justify-center md:justify-start">
               <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">Forgot Password</h2>
-            
             </CardTitle>
             <p className="text-sm sm:text-base text-[#424242] mt-2">
               Enter your registered email address, we&apos;ll send you a code to reset your password
@@ -67,8 +97,9 @@ export default function ForgotPasswordPage() {
               <Button
                 type="submit"
                 className="w-full bg-[#D9AD5E] text-[#131313] text-sm sm:text-[16px] md:text-[18px] font-bold hover:bg-[#D9AD5E]/90 h-10 sm:h-12 rounded-[10px]"
+                disabled={mutation.isPending}
               >
-                Send OTP
+                {mutation.isPending ? "Sending..." : "Send OTP"}
               </Button>
 
               <p className="text-sm sm:text-[14px] text-gray-600 text-center mt-4">

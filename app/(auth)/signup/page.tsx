@@ -1,15 +1,67 @@
+
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Card, CardContent } from "@/components/ui/card"
-// import { GiftBoxLogo } from "@/components/gift-box-logo"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
+import Link from "next/link"
+import { toast } from "sonner"
+
+interface RegisterData {
+  name: string
+  email: string
+  phone: string
+  password: string
+}
+
+interface ApiResponse {
+  success: boolean
+  code: number
+  message: string
+  data?: {
+    accessToken: string
+    user: {
+      _id: string
+      name: string
+      email: string
+      role: string
+    }
+  }
+}
+
+const registerUser = async (data: RegisterData): Promise<ApiResponse> => {
+  try {
+    const response = await fetch(`${process.env.NEXTAUTH_PUBLIC_API_URL}/api/user/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+
+    const contentType = response.headers.get("content-type") || ""
+    const isJson = contentType.includes("application/json")
+    const responseBody = isJson ? await response.json() : await response.text()
+
+    if (!response.ok) {
+      throw new Error(
+        isJson ? responseBody.message || "Registration failed" : responseBody
+      )
+    }
+
+    if (!isJson) throw new Error("Invalid JSON response from server")
+
+    return responseBody as ApiResponse
+  } catch (error) {
+    throw error instanceof Error
+      ? error
+      : new Error("Network error occurred")
+  }
+}
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -22,128 +74,121 @@ export default function SignUpPage() {
     agreeTerms: false,
   })
 
+  const mutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: (data: ApiResponse) => {
+      toast.success(data.message || "Registration successful!")
+      router.push("/otp?context=register&token=" + data.data?.accessToken)
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Something went wrong")
+    },
+  })
+
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Sign Up submitted:", formData)
-    // Simulate signup success and redirect
-    router.push("/login") // Redirect to welcome/login page
+
+    if (formData.password !== formData.confirmPassword) {
+      return toast.error("Passwords do not match")
+    }
+
+    if (!formData.agreeTerms) {
+      return toast.error("You must agree to the Terms & Conditions")
+    }
+
+    mutation.mutate({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      password: formData.password,
+    })
   }
 
   return (
-    <Card className="w-full max-w-md bg-white shadow-lg">
-      <CardContent className="p-8">
-        <div className="mb-6">
-          <h2 className="text-xl font-medium text-gray-800 mb-1">Create New Account</h2>
-          <p className="text-sm text-gray-600">Please enter details</p>
+    <div className="container mx-auto flex items-center justify-center min-h-screen p-4 sm:p-6">
+      <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12 w-full max-w-5xl">
+        {/* Left Section: Branding */}
+        <div className="flex flex-col items-center md:items-start gap-4 w-full md:w-1/2 lg:w-2/5">
+          <Image
+            src="/assets/logo.png"
+            alt="GratiSwag Logo"
+            width={435}
+            height={269}
+            className="w-full max-w-[300px] sm:max-w-[400px] h-auto object-contain"
+            priority
+          />
         </div>
 
-        <div className="lg:hidden mb-6">
-          {/* <GiftBoxLogo /> */}
-        </div>
+        {/* Right Section: Form */}
+        <Card className="w-full max-w-md sm:max-w-lg shadow-lg rounded-lg p-4 sm:p-6 bg-white">
+          <CardHeader className="text-center md:text-left px-0 pt-0 pb-4">
+            <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 justify-center md:justify-start">
+              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">Create New Account</h2>
+              <span role="img" aria-label="wave">👋</span>
+            </CardTitle>
+            <p className="text-sm sm:text-base text-[#424242] mt-2">
+              Please fill in the form to continue
+            </p>
+          </CardHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Name
-            </Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Enter your full name"
-              value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="grid gap-4 sm:gap-6 px-0 pb-0">
+              {[
+                { id: "name", type: "text", label: "Name", placeholder: "Enter your full name" },
+                { id: "email", type: "email", label: "Email Address", placeholder: "Enter your email address" },
+                { id: "phone", type: "tel", label: "Phone Number", placeholder: "Enter your Phone Number" },
+                { id: "password", type: "password", label: "Password", placeholder: "Enter your password" },
+                { id: "confirmPassword", type: "password", label: "Confirm Password", placeholder: "Enter Confirm password" },
+              ].map(({ id, type, label, placeholder }) => (
+                <div key={id} className="grid gap-2">
+                  <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor={id}>
+                    {label}
+                  </Label>
+                  <Input
+                    id={id}
+                    type={type}
+                    placeholder={placeholder}
+                    required
+                    value={formData[id as keyof typeof formData] as string}
+                    onChange={(e) => handleInputChange(id, e.target.value)}
+                    className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px]"
+                  />
+                </div>
+              ))}
 
-          <div>
-            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email Address
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email address"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="terms"
+                  checked={formData.agreeTerms}
+                  onCheckedChange={(v) => handleInputChange("agreeTerms", v as boolean)}
+                />
+                <Label htmlFor="terms" className="text-sm sm:text-[14px] text-gray-600">
+                  I agree to the Terms & Conditions
+                </Label>
+              </div>
 
-          <div>
-            <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-              Phone Number
-            </Label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="Enter your Phone Number"
-              value={formData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
+              <Button
+                type="submit"
+                className="w-full bg-[#D9AD5E] text-[#131313] text-sm sm:text-[16px] md:text-[18px] font-bold hover:bg-[#D9AD5E]/90 h-10 sm:h-12 rounded-[10px]"
+                disabled={mutation.isPending}
+              >
+                {mutation.isPending ? "Creating account..." : "Sign Up"}
+              </Button>
 
-          <div>
-            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={(e) => handleInputChange("password", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
-              Confirm Password
-            </Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="Enter Confirm password"
-              value={formData.confirmPassword}
-              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
-
-          <div className="flex items-center space-x-2 pt-2">
-            <Checkbox
-              id="terms"
-              checked={formData.agreeTerms}
-              onCheckedChange={(checked) => handleInputChange("agreeTerms", checked as boolean)}
-            />
-            <Label htmlFor="terms" className="text-sm text-gray-600">
-              I agree to the Terms & Conditions
-            </Label>
-          </div>
-
-          <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 mt-6">
-            Sign Up
-          </Button>
-        </form>
-
-        <p className="text-sm text-gray-600 text-center mt-6">
-          Already have an account?{" "}
-          <button onClick={() => router.push("/login")} className="text-blue-600 hover:underline">
-            Sign In
-          </button>
-        </p>
-      </CardContent>
-    </Card>
+              <p className="text-sm sm:text-[14px] text-gray-600 text-center mt-4">
+                Already have an account?{" "}
+                <Link href="/login" className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline">
+                  Sign in
+                </Link>
+              </p>
+            </CardContent>
+          </form>
+        </Card>
+      </div>
+    </div>
   )
 }
