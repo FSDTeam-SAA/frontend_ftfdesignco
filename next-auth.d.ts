@@ -14,6 +14,7 @@ declare module "next-auth" {
       isShopCreated: boolean
       employeeCount: number
       shop: string
+      isPaid: boolean
       createdAt: string
       updatedAt: string
     }
