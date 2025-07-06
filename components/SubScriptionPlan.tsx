@@ -1,5 +1,6 @@
-
 import SubScriptionPlanCard from "./shared/card/subScriptionPlanCard"
+
+
 
 interface PricingPlan {
   _id: string

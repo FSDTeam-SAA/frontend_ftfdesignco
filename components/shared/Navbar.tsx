@@ -60,13 +60,13 @@ export function Navbar() {
           <Input
             type="search"
             placeholder="Search products..."
-            className="w-full rounded-full border border-gray-300 py-2 pr-12 text-sm sm:text-base focus-visible:ring-2 focus-visible:ring-gratisswag-orange"
+            className="w-full rounded-full border border-gray-300 py-2 pr-12 text-sm sm:text-base focus-visible:ring-2 focus-visible:ring-[#D9AD5E]"
             aria-label="Search products"
           />
           <Button
             type="submit"
             size="icon"
-            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-gratisswag-orange hover:bg-gratisswag-orange/90"
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-[#D9AD5E] hover:bg-[#f5b641]"
             aria-label="Submit search"
           >
             <Search className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
@@ -80,7 +80,7 @@ export function Navbar() {
               {role === "employee" && (
                 <Button variant="ghost" size="icon" className="relative h-10 w-10" aria-label="Shopping Cart">
                   <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-gratisswag-dark-gray" />
-                  <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-gratisswag-orange px-1.5 text-xs font-semibold text-white">
+                  <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-[#D9AD5E] px-1.5 text-xs font-semibold text-white">
                     0
                   </Badge>
                 </Button>
@@ -126,7 +126,7 @@ export function Navbar() {
           ) : (
             /* Login Button (Hidden on small devices, shown on md and above) */
             <Link href="/login" className="hidden md:inline-flex">
-              <Button className="bg-gratisswag-orange hover:bg-gratisswag-orange/90 text-sm sm:text-base px-3 sm:px-4">
+              <Button className="bg-[#D9AD5E] hover:bg-[#f5b641] text-sm sm:text-base px-3 sm:px-4">
                 Login
               </Button>
             </Link>
@@ -134,11 +134,11 @@ export function Navbar() {
           {/* Create My Store Button - Now opens a modal */}
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
-              <Button className="hidden bg-gratisswag-orange hover:bg-gratisswag-orange/90 text-sm sm:text-base px-3 sm:px-4 lg:inline-flex">
+              <Button className="hidden bg-[#D9AD5E] hover:bg-[#f5b641] text-sm sm:text-base px-3 sm:px-4 lg:inline-flex rounded-[7px]">
                 Create My Store
               </Button>
             </DialogTrigger>
-            <CreateStoreModal />
+            <CreateStoreModal /> 
           </Dialog>
 
           {/* Mobile Sheet Trigger */}
