@@ -10,7 +10,7 @@ interface Category {
 
 async function getCategories(): Promise<Category[]> {
   try {
-    const response = await fetch("http://localhost:5001/api/v1/category", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`, {
       cache: "no-store",
     })
     const data = await response.json()
