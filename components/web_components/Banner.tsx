@@ -1,15 +1,21 @@
-'use client'
+"use client";
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useState } from "react";
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import { Button } from "../ui/button";
+import { CreateStoreModal } from "./create-store-modal";
 
 export function Banner() {
   const { data: session } = useSession();
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
   const token = session?.accessToken;
   const accessSubScription = session?.user?.isPaid === true;
+
 
   const handleClick = () => {
     if (!token) {
@@ -17,7 +23,7 @@ export function Banner() {
     } else if (!accessSubScription) {
       router.push("/pricing");
     } else {
-      router.push("/create-store");
+      setIsModalOpen(true); // Open the modal instead of navigating
     }
   };
 
@@ -30,18 +36,27 @@ export function Banner() {
             Company
           </span>
           <h2 className="mb-4 text-2xl font-bold leading-tight text-gratisswag-dark-gray sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl max-w-[90vw] sm:max-w-[513px]">
-            Gratitude Given. <span className="text-gratisswag-accent-blue">Engagement</span> Gained.
+            Gratitude Given.{" "}
+            <span className="text-gratisswag-accent-blue">Engagement</span>{" "}
+            Gained.
           </h2>
           <p className="mb-6 text-base text-gray-600 sm:text-lg md:text-xl max-w-[90vw] sm:max-w-[513px]">
-            Fuel employee excitement with a swag store platform that celebrates and rewards every win.
+            Fuel employee excitement with a swag store platform that celebrates
+            and rewards every win.
           </p>
           <div className="flex flex-col mx-auto lg:mx-0 gap-3 sm:flex-row sm:gap-4">
-            <button
-              onClick={handleClick}
-              className="py-2 px-6 rounded bg-[#D9AD5E] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg"
-            >
-              Create My Store
-            </button>
+            {/* Create My Store Button - Now opens a modal */}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  className="py-2 px-6 rounded bg-[#D9AD5E] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg"
+                  onClick={handleClick}
+                >
+                  Create My Store
+                </Button>
+              </DialogTrigger>
+              <CreateStoreModal />
+            </Dialog>
           </div>
         </div>
 
