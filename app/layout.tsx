@@ -36,7 +36,9 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${manrope.variable}`}>
       <body className="antialiased">
         <QueryProvider>
-         <SessionWrapper>{children}</SessionWrapper>
+          <SessionWrapper>
+              {children}
+          </SessionWrapper>
           <Toaster />
         </QueryProvider>
       </body>

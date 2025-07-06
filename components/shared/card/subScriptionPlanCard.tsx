@@ -1,24 +1,49 @@
+"use client";
+
+import CheckoutForm from "@/components/SubScripCheckoutForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
-import React from "react";
+import { useSession } from "next-auth/react";
+import React, { useState } from "react";
 
 interface PricingPlan {
-  _id: string
-  title: string
-  description: string
-  price: number
-  maxEmployees: number
-  features: string[]
-  billingCycle: string
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  maxEmployees: number;
+  features: string[];
+  billingCycle: string;
 }
 
 interface SubScriptionPlanCardProps extends PricingPlan {
-  index: number
+  index: number;
 }
 
 export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
-  const { _id, title, description, price, maxEmployees, features, billingCycle, index } = props;
+  const {
+    _id,
+    title,
+    description,
+    price,
+    maxEmployees,
+    features,
+    billingCycle,
+    index,
+  } = props;
+  const [showCheckout, setShowCheckout] = useState(false);
+  const session = useSession();
+  const userId = session.data?.user?._id;
+
+  const handleGetStarted = () => {
+    if (!userId) {
+      console.error("User ID is missing. Please log in.");
+      return;
+    }
+    setShowCheckout(true);
+  };
+
   return (
     <div>
       <Card
@@ -58,12 +83,18 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
           <Button
             className="w-full"
             variant={index === 1 ? "default" : "outline"}
+            onClick={handleGetStarted}
+            disabled={!userId || session.status === "loading"}
           >
             Get Started
           </Button>
         </CardContent>
       </Card>
+      {showCheckout && userId && (
+        <div className="p-8">
+          <CheckoutForm userId={userId} planId={_id} amount={price} />
+        </div>
+      )}
     </div>
   );
 }
-
