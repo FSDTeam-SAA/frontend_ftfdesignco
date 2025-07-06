@@ -1,6 +1,6 @@
+
+
 import SubScriptionPlanCard from "./shared/card/subScriptionPlanCard"
-
-
 
 interface PricingPlan {
   _id: string
@@ -14,7 +14,7 @@ interface PricingPlan {
 
 async function getPricingPlans(): Promise<PricingPlan[]> {
   try {
-    const response = await fetch("http://localhost:5001/api/v1/subscription-plan", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscription-plan`, {
       cache: "no-store",
     })
     const data = await response.json()
