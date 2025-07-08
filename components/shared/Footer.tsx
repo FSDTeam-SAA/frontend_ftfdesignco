@@ -1,9 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+
 import { Separator } from "@/components/ui/separator"
+import Subscribe from "./subscribe"
 
 export function Footer() {
   return (
@@ -87,16 +87,7 @@ export function Footer() {
               Subscribe To Our <span className="text-[#D9AD5E]">NEWSLETTER</span>
             </h3>
             <p className="mb-4 text-sm text-gray-300">Connect with us on social media and stay in the loop.</p>
-            <div className="flex border border-white">
-              <Input
-                type="email"
-                placeholder="Enter Your Email..."
-                className=" bg-gratisswag-blue px-4 py-2 text-white placeholder:text-white"
-              />
-              <Button className="rounded-md bg-[#D9AD5E] px-6 py-2 text-white hover:bg-[#f5b641]">
-                Subscribe
-              </Button>
-            </div>
+            <Subscribe />
           </div>
         </div>
 
