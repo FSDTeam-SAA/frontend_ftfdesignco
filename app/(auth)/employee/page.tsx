@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -11,10 +12,11 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 import { toast } from "sonner"
-
+import { Eye, EyeOff } from "lucide-react" 
 export default function EmployeeLoginPage() {
   const [employeeId, setEmployeeId] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false) 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
@@ -40,6 +42,11 @@ export default function EmployeeLoginPage() {
     }
 
     setLoading(false)
+  }
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
   }
 
   return (
@@ -88,15 +95,25 @@ export default function EmployeeLoginPage() {
                 <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor="password">
                   Password
                 </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px]"
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"} // Toggle input type based on showPassword
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <Eye className="h-5 w-5" /> :  <EyeOff className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm gap-2">

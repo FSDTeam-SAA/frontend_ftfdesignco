@@ -1,36 +1,34 @@
 import Image from "next/image"
 import Link from "next/link"
-
-
 import { Separator } from "@/components/ui/separator"
 import Subscribe from "./subscribe"
 
 export function Footer() {
   return (
-    <footer className="bg-gratisswag-blue py-12 text-white md:py-16">
-      <div className="container">
-        <div className="grid grid-cols-11 gap-4 py-8">
+    <footer className="bg-[#035F8A] py-8 sm:py-12 md:py-16 text-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-11 gap-4 sm:gap-6 py-6 sm:py-8">
           {/* Left Section - Logo and Description */}
-          <div className="col-span-1 md:col-span-4">
+          <div className="md:col-span-4 mb-6 md:mb-0">
             <div className="mb-4 flex items-center gap-2">
               <Image
                 src="/assets/logo.png"
                 alt="GratiSwag Logo"
                 width={40}
                 height={40}
-                className="w-[104px] h-[64px]"
+                className="w-16 h-10 sm:w-[104px] sm:h-[64px] z-10"
               />
             </div>
-            <p className="text-sm text-gray-300">
+            <p className="text-xs sm:text-sm text-gray-300">
               Connecting hearts through meaningful dedications, fostering deeper bonds, creating lasting memories, and
               celebrating the beauty of shared emotions.
             </p>
           </div>
 
           {/* Company Links */}
-          <div className="col-span-1 md:col-span-2">
-            <h3 className="mb-4 text-lg font-semibold">Company</h3>
-            <ul className="space-y-2 text-sm">
+          <div className="md:col-span-2 mb-6 md:mb-0">
+            <h3 className="mb-4 text-base sm:text-lg font-semibold">Company</h3>
+            <ul className="space-y-2 text-xs sm:text-sm">
               <li>
                 <Link href="/about-us" className="text-gray-300 hover:text-white">
                   About Us
@@ -55,9 +53,9 @@ export function Footer() {
           </div>
 
           {/* Support Links */}
-          <div className="col-span-1 md:col-span-2">
-            <h3 className="mb-4 text-lg font-semibold">Support</h3>
-            <ul className="space-y-2 text-sm">
+          <div className="md:col-span-2 mb-6 md:mb-0">
+            <h3 className="mb-4 text-base sm:text-lg font-semibold">Support</h3>
+            <ul className="space-y-2 text-xs sm:text-sm">
               <li>
                 <Link href="/privacy-policy" className="text-gray-300 hover:text-white">
                   Privacy Policy
@@ -82,19 +80,19 @@ export function Footer() {
           </div>
 
           {/* Newsletter Signup */}
-          <div className="col-span-1 md:col-span-3">
-            <h3 className="mb-4 text-lg font-semibold">
+          <div className="md:col-span-3">
+            <h3 className="mb-4 text-base sm:text-lg font-semibold">
               Subscribe To Our <span className="text-[#D9AD5E]">NEWSLETTER</span>
             </h3>
-            <p className="mb-4 text-sm text-gray-300">Connect with us on social media and stay in the loop.</p>
+            <p className="mb-4 text-xs sm:text-sm text-gray-300">Connect with us on social media and stay in the loop.</p>
             <Subscribe />
           </div>
         </div>
 
-        <Separator className="my-8 bg-gray-600" />
+        <Separator className="my-6 sm:my-8 bg-gray-600" />
 
         {/* Copyright */}
-        <div className="text-center text-sm text-gray-400">{"© 2025 Swag. All Rights Reserved"}</div>
+        <div className="text-center text-xs sm:text-sm text-gray-400">{"© 2025 Swag. All Rights Reserved"}</div>
       </div>
     </footer>
   )
