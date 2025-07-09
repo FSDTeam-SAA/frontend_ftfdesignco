@@ -32,6 +32,8 @@ export function Navbar() {
   const shop = session?.user?.shop
   const accessSubScription = session?.user?.isPaid === true
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+  console.log(session);
+  
 
   const handleClick = () => {
     if (!token) {

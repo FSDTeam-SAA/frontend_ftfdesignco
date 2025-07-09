@@ -14,7 +14,7 @@ declare module "next-auth" {
 }
 
 const handler = NextAuth({
-  secret: process.env.NEXTAUTH_SECRET, // ✅ Secret ekhane use korchi
+  secret: process.env.NEXTAUTH_SECRET,
 
   providers: [
     CredentialsProvider({
