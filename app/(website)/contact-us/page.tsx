@@ -1,4 +1,4 @@
-import { CardContent} from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,101 +7,94 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export default function Page() {
   return (
-    <section className="">
-      <div className="container  text-center py-24">
-        <h2 className="text-3xl font-bold mb-4">
+    <section className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center py-12 sm:py-16 lg:py-24">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#131313] mb-4">
           Get in Touch with a <span className="text-[#3258DA]">Swag Solutions Executive</span>
         </h2>
-        <p className="text-gray-600">
-          We&apos;d love to hear from you. Send us a message and we&apos;ll
-          respond as soon as possible.
+        <p className="text-[#424242] text-sm sm:text-base max-w-[884px] mx-auto">
+          Our team is always ready to assist you with any questions or concerns you might have. Fill out the form below and we&apos;ll get back to you as soon as possible
         </p>
       </div>
-      <div className="container py-12">
-        <div className="grid grid-cols-8 gap-12">
-          <div className="col-span-6">
-            <div>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" placeholder="Your first name" className=""/>
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" placeholder="Your last name" />
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" placeholder="(555) 000-0000" />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="How can we help?" />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="message">Your Message</Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Tell us more about your needs..."
-                    rows={4}
-                    className="placeholder:text-gray-400"
-                  />
-                </div>
-                <Button className="w-full bg-[#D9AD5E] text-black">Send Message</Button>
-              </CardContent>
-            </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-8 gap-6 lg:gap-12">
+          <div className="lg:col-span-6">
+            <CardContent className="space-y-4 p-4 sm:p-6">
+              <div className="space-y-1">
+                <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="firstName">First Name</Label>
+                <Input id="firstName" placeholder="Your first name" className="text-sm sm:text-base" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your.email@example.com"
+                  className="text-sm sm:text-base"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="phone">Phone Number</Label>
+                <Input id="phone" placeholder="(555) 000-0000" className="text-sm sm:text-base" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="subject">Subject</Label>
+                <Input id="subject" placeholder="How can we help?" className="text-sm sm:text-base" />
+              </div>
+              <div className="space-y-1 mb-6 sm:mb-10">
+                <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="message">Your Message</Label>
+                <Textarea
+                  id="message"
+                  placeholder="Tell us more about your needs..."
+                  rows={4}
+                  className="placeholder:text-gray-400 text-sm sm:text-base"
+                />
+              </div>
+              <Button className="w-full bg-[#D9AD5E] h-10 sm:h-12 rounded-lg hover:bg-[#D9AD5E]/90 text-black text-sm sm:text-base">
+                Send Message
+              </Button>
+            </CardContent>
           </div>
 
-          <div className="col-span-2">
-            <div>
-              <CardContent className="p-6">
-                <h3 className="text-[16px] font-semibold mb-4">
-                  Contact Information
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
-                      <Mail className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <span>swag@example.com</span>
+          <div className="lg:col-span-2">
+            <CardContent className="p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold mb-4">
+                Contact Information
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="p-2 sm:p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
+                    <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                   </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
-                      <Phone className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <span>(555) 000-0000</span>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
-                      <MapPin className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <span>
-                      123 Business Ave, Suite 100
-                      New York, NY 10001
-                    </span>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <span>Mon-Fri: 9AM-6PM EST</span>
-                  </div>
+                  <span className="text-sm sm:text-base">swag@example.com</span>
                 </div>
-              </CardContent>
-            </div>
+
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="p-2 sm:p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
+                    <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                  </div>
+                  <span className="text-sm sm:text-base">(555) 000-0000</span>
+                </div>
+
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="p-2 sm:p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
+                    <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                  </div>
+                  <span className="text-sm sm:text-base">
+                    123 Business Ave, Suite 100
+                    <br />
+                    New York, NY 10001
+                  </span>
+                </div>
+
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="p-2 sm:p-3 bg-[#E7EEFD] rounded-full flex items-center justify-center">
+                    <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                  </div>
+                  <span className="text-sm sm:text-base">Mon-Fri: 9AM-6PM EST</span>
+                </div>
+              </div>
+            </CardContent>
           </div>
         </div>
       </div>

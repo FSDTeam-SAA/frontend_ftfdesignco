@@ -142,7 +142,7 @@ export default function CompanyLoginPage() {
               </Button>
 
               <p className="text-sm sm:text-[14px] text-gray-600 text-center mt-4">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/signup" className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline">
                   Sign Up
                 </Link>

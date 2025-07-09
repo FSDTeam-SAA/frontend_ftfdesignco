@@ -4,10 +4,10 @@
 
 @layer base {
   body {
-    @apply font-poppins; /* Poppins is global */
+    @apply font-poppins ; /* Poppins is global */
   }
 
   h2 {
-    @apply font-manrope; /* This applies Manrope to h2 only */
+    @apply font-manrope ; /* This applies Manrope to h2 only */
   }
 }
