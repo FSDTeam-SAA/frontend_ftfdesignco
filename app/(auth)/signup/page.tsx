@@ -1,72 +1,73 @@
 
-"use client"
 
-import React, { useState } from "react"
-import { useRouter } from "next/navigation"
-import { useMutation } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Image from "next/image"
-import Link from "next/link"
-import { toast } from "sonner"
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 interface RegisterData {
-  name: string
-  email: string
-  phone: string
-  password: string
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
 }
 
 interface ApiResponse {
-  success: boolean
-  code: number
-  message: string
+  success: boolean;
+  code: number;
+  message: string;
   data?: {
-    accessToken: string
+    accessToken: string;
     user: {
-      _id: string
-      name: string
-      email: string
-      role: string
-    }
-  }
+      _id: string;
+      name: string;
+      email: string;
+      role: string;
+    };
+  };
 }
 
 const registerUser = async (data: RegisterData): Promise<ApiResponse> => {
   try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    );
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
-
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-
-    const contentType = response.headers.get("content-type") || ""
-    const isJson = contentType.includes("application/json")
-    const responseBody = isJson ? await response.json() : await response.text()
+    const contentType = response.headers.get("content-type") || "";
+    const isJson = contentType.includes("application/json");
+    const responseBody = isJson ? await response.json() : await response.text();
 
     if (!response.ok) {
       throw new Error(
         isJson ? responseBody.message || "Registration failed" : responseBody
-      )
+      );
     }
 
-    if (!isJson) throw new Error("Invalid JSON response from server")
+    if (!isJson) throw new Error("Invalid JSON response from server");
 
-    return responseBody as ApiResponse
+    return responseBody as ApiResponse;
   } catch (error) {
-    throw error instanceof Error
-      ? error
-      : new Error("Network error occurred")
+    throw error instanceof Error ? error : new Error("Network error occurred");
   }
-}
+};
 
 export default function SignUpPage() {
-  const router = useRouter()
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -74,32 +75,44 @@ export default function SignUpPage() {
     password: "",
     confirmPassword: "",
     agreeTerms: false,
-  })
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleInputChange = (field: string, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
 
   const mutation = useMutation({
     mutationFn: registerUser,
     onSuccess: (data: ApiResponse) => {
-      toast.success(data.message || "Registration successful!")
-      router.push("/otp?context=register&token=" + data.data?.accessToken)
+      toast.success(data.message || "Registration successful!");
+      setTimeout(() => {
+        router.push("/otp?context=register&token=" + data.data?.accessToken);
+      }, 500);
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Something went wrong")
+      toast.error(error.message || "Something went wrong");
     },
-  })
-
-  const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      return toast.error("Passwords do not match")
+      return toast.error("Passwords do not match");
     }
 
     if (!formData.agreeTerms) {
-      return toast.error("You must agree to the Terms & Conditions")
+      return toast.error("You must agree to the Terms & Conditions");
     }
 
     mutation.mutate({
@@ -107,8 +120,8 @@ export default function SignUpPage() {
       email: formData.email,
       phone: formData.phone,
       password: formData.password,
-    })
-  }
+    });
+  };
 
   return (
     <div className="container mx-auto flex items-center justify-center min-h-screen p-4 sm:p-6">
@@ -129,8 +142,12 @@ export default function SignUpPage() {
         <Card className="w-full max-w-md sm:max-w-lg shadow-lg rounded-lg p-4 sm:p-6 bg-white">
           <CardHeader className="text-center md:text-left px-0 pt-0 pb-4">
             <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 justify-center md:justify-start">
-              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">Create New Account</h2>
-              <span role="img" aria-label="wave">👋</span>
+              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">
+                Create New Account
+              </h2>
+              <span role="img" aria-label="wave">
+                👋
+              </span>
             </CardTitle>
             <p className="text-sm sm:text-base text-[#424242] mt-2">
               Please fill in the form to continue
@@ -143,11 +160,9 @@ export default function SignUpPage() {
                 { id: "name", type: "text", label: "Name", placeholder: "Enter your full name" },
                 { id: "email", type: "email", label: "Email Address", placeholder: "Enter your email address" },
                 { id: "phone", type: "tel", label: "Phone Number", placeholder: "Enter your Phone Number" },
-                { id: "password", type: "password", label: "Password", placeholder: "Enter your password" },
-                { id: "confirmPassword", type: "password", label: "Confirm Password", placeholder: "Enter Confirm password" },
               ].map(({ id, type, label, placeholder }) => (
                 <div key={id} className="grid gap-2">
-                  <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor={id}>
+                  <Label htmlFor={id} className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium">
                     {label}
                   </Label>
                   <Input
@@ -162,6 +177,56 @@ export default function SignUpPage() {
                 </div>
               ))}
 
+              <div className="grid gap-2">
+                <Label htmlFor="password" className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    required
+                    value={formData.password}
+                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <Eye className="h-5 w-5" /> :   <EyeOff className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="confirmPassword" className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium">
+                  Confirm Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Enter Confirm password"
+                    required
+                    value={formData.confirmPassword}
+                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                    className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleConfirmPasswordVisibility}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  >
+                    {showConfirmPassword ? <Eye className="h-5 w-5" /> :   <EyeOff className="h-5 w-5" /> }
+                  </button>
+                </div>
+              </div>
+
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="terms"
@@ -169,7 +234,10 @@ export default function SignUpPage() {
                   onCheckedChange={(v) => handleInputChange("agreeTerms", v as boolean)}
                 />
                 <Label htmlFor="terms" className="text-sm sm:text-[14px] text-gray-600">
-                  I agree to the Terms & Conditions
+                  I agree to the{" "}
+                  <Link href="/terms-of-service">
+                    <span className="hover:underline">Terms & Conditions</span>
+                  </Link>
                 </Label>
               </div>
 
@@ -192,5 +260,5 @@ export default function SignUpPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
