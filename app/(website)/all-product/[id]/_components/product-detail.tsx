@@ -1,36 +1,130 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { Minus, Plus, Share } from "lucide-react"
-import Image from "next/image"
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Minus, Plus, Share } from "lucide-react";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 interface Product {
-  _id: string
-  title: string
-  description: string
-  price: number
-  quantity: number
-  productImage: string
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  quantity: number;
+  productImage: string;
   category: {
-    _id: string
-    title: string
-  }
+    _id: string;
+    title: string;
+  };
 }
 
-export function ProductDetail({ product }: { product: Product }) {
-  const [selectedSize, setSelectedSize] = useState("")
-  const [quantity, setQuantity] = useState(1)
-  const [total, setTotal] = useState(product.price)
+interface ProductDetailProps {
+  id: string;
+}
+
+export function ProductDetail({ id }: ProductDetailProps) {
+  const [quantity, setQuantity] = useState(1);
+  const session = useSession();
+  const token = session.data?.accessToken;
+
+  // Fetch product details
+  const {
+    data: product,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<Product>({
+    queryKey: ["products", id],
+    queryFn: () =>
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${id}`)
+        .then((res) => res.json())
+        .then((response) => response.data),
+  });
+
+  // Mutation for submitting the product
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/add-product`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+          body: JSON.stringify({
+            productId: product?._id,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Product already added to the shop");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success("Product added successfully!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Product already added to the shop");
+    },
+  });
+
+  const total = product ? product.price * quantity : 0;
 
   const updateQuantity = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= product.quantity) {
-      setQuantity(newQuantity)
-      setTotal(product.price * newQuantity)
+    if (product && newQuantity >= 1 && newQuantity <= product.quantity) {
+      setQuantity(newQuantity);
     }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: product?.title,
+          text: product?.description,
+          url: window.location.href,
+        })
+        .catch(() => toast.error("Failed to share product"));
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard!");
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!product) {
+      toast.error("Product not available");
+      return;
+    }
+    if (!token) {
+      toast.error("Please log in to add the product");
+      return;
+    }
+    mutation.mutate();
+  };
+
+  if (isLoading) {
+    return <div className="container mx-auto px-4 py-8">Loading...</div>;
+  }
+
+  if (isError && error instanceof Error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        Error: {error.message || "Failed to load product. Please try again later."}
+      </div>
+    );
+  }
+
+  if (!product) {
+    return <div className="container mx-auto px-4 py-8">Product not found</div>;
   }
 
   return (
@@ -41,8 +135,9 @@ export function ProductDetail({ product }: { product: Product }) {
             <Image
               src={product.productImage || "/placeholder.svg"}
               alt={product.title}
-              fill
-              className="object-cover rounded-lg"
+              width={400}
+              height={400}
+              className="object-cover rounded-lg w-full h-full"
             />
           </div>
         </div>
@@ -50,81 +145,77 @@ export function ProductDetail({ product }: { product: Product }) {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-            <p className="text-2xl font-bold text-blue-600 mb-4">Price: ${product.price}</p>
+            <p className="text-2xl font-bold text-blue-600 mb-4">
+              Price: ${product.price}
+            </p>
           </div>
 
-          <Card>
-            <CardContent className="p-6 space-y-4">
-              <div>
-                <Label htmlFor="size">Size</Label>
-                <Select value={selectedSize} onValueChange={setSelectedSize}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select size" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="xs">XS</SelectItem>
-                    <SelectItem value="s">S</SelectItem>
-                    <SelectItem value="m">M</SelectItem>
-                    <SelectItem value="l">L</SelectItem>
-                    <SelectItem value="xl">XL</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>QTY</Label>
-                <div className="flex items-center space-x-2 mt-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(quantity - 1)}
-                    disabled={quantity <= 1}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="w-12 text-center">{quantity}</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(quantity + 1)}
-                    disabled={quantity >= product.quantity}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+          <div>
+            <div>
+              <div className="flex justify-between">
+                <div>
+                  <Label>QTY</Label>
+                  <div className="flex items-center space-x-2 p-1 mt-2 border border-[#595959] rounded">
+                    <button
+                      onClick={() => updateQuantity(quantity - 1)}
+                      disabled={quantity <= 1}
+                    >
+                      <Minus className="h-4 w-4 text-[#F0217A]" />
+                    </button>
+                    <span className="w-12 text-center">{quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(quantity + 1)}
+                      disabled={quantity >= product.quantity}
+                    >
+                      <Plus className="h-4 w-4 text-[#F0217A]" />
+                    </button>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-gray-600">Total</div>
+                  <div className="text-2xl font-bold">${total}</div>
                 </div>
               </div>
+            </div>
 
-              <div className="text-right">
-                <div className="text-sm text-gray-600">Total</div>
-                <div className="text-2xl font-bold">${total.toFixed(2)}</div>
-              </div>
-
-              <div className="space-y-2">
-                <Button className="w-full" size="lg">
-                  Submit
-                </Button>
-                <Button variant="outline" className="w-full bg-transparent" size="lg">
-                  <Share className="h-4 w-4 mr-2" />
-                  Share
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            <div className="space-y-2 py-4">
+              <Button
+                className="bg-[#D9AD5E] hover:bg-[#f5b641] w-[172px] rounded"
+                onClick={handleSubmit}
+                disabled={mutation.isPending}
+              >
+                {mutation.isPending ? "Submitting..." : "Submit"}
+              </Button>
+              <span
+                className="bg-transparent flex items-center py-2 text-sm text-black font-semibold hover:bg-gray-50"
+                onClick={handleShare}
+              >
+                <Share className="h-4 w-4 mr-2" />
+                Share
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">Product Description</h2>
-        <div className="prose max-w-none">
-          <p>{product.description}</p>
-          <ul className="mt-4 space-y-2">
-            <li>• Color: Available in multiple colors</li>
-            <li>• Season: All Year Round</li>
-            <li>• Range: Premium Collection</li>
-            <li>• SKU: {product._id}</li>
-          </ul>
+      <div>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          Product Description
+        </h2>
+        <div className="mt-12 grid grid-cols-8 gap-12">
+          <div className="col-span-6">
+            <p>{product.description}</p>
+          </div>
+          <div className="col-span-2">
+            <ul className="mt-4 space-y-2">
+              <li>• Storage: 256GB / 512GB / 1TB</li>
+              <li>• Display: 6.9-inch Super Retina XDR</li>
+              <li>• Chip: A18 Pro</li>
+              <li>• SKU: {product._id}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

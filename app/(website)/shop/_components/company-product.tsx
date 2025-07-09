@@ -69,7 +69,7 @@ async function getProducts(
   }
 }
 
-export async function ProductsGrid({
+export async function CompanyProducts({
   searchParams,
 }: {
   searchParams: GetProductsParams;

@@ -21,7 +21,7 @@ async function getCategories(): Promise<Category[]> {
   }
 }
 
-export async function ProductFilters() {
+export async function CompanyProductFilters() {
   const categories = await getCategories()
 
   return (
