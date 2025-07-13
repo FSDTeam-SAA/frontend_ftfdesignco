@@ -91,7 +91,7 @@ export default function CheckoutPage() {
             deals, delivery/discover convenience, quality, and style all in one place.
           </p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="">
           {/* Order Summary */}
           <div>
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -199,7 +199,7 @@ export default function CheckoutPage() {
                       Agree with shipping & billing address
                     </Label>
                   </div>
-                  <Button className="w-full bg-orange-500 hover:bg-orange-600 mt-6" onClick={handleConfirmation}>
+                  <Button className="w-full bg-[#D9AD5E] hover:bg-[#f5b641] mt-6" onClick={handleConfirmation}>
                     💰 Make Your Confirmation
                   </Button>
                 </div>

@@ -102,8 +102,8 @@ export default function CartPage() {
         {cartItems.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 mb-4">Your cart is empty</p>
-            <Link href="/products">
-              <Button className="bg-orange-500 hover:bg-orange-600">Continue Shopping</Button>
+            <Link href="/shop">
+              <Button className="bg-[#D9AD5E] hover:bg-[#f5b641]">Continue Shopping</Button>
             </Link>
           </div>
         ) : (
@@ -175,8 +175,8 @@ export default function CartPage() {
                 </div>
               </div>
               <div className="mt-6">
-                <Link href="/products">
-                  <Button className="bg-orange-500 hover:bg-orange-600">Continue Shopping</Button>
+                <Link href="/shop">
+                  <Button className="bg-[#D9AD5E] hover:bg-[#f5b641]">Continue Shopping</Button>
                 </Link>
               </div>
             </div>
