@@ -40,7 +40,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
   } = useQuery<Product>({
     queryKey: ["products", id],
     queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/product/${id}`)
         .then((res) => res.json())
         .then((response) => response.data),
   });
@@ -49,7 +49,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
   const mutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/add-product`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/product/add-product`,
         {
           method: "POST",
           headers: {

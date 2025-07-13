@@ -14,7 +14,7 @@ interface PricingPlan {
 
 async function getPricingPlans(): Promise<PricingPlan[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscription-plan`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/subscription-plan`, {
       cache: "no-store",
     })
     const data = await response.json()

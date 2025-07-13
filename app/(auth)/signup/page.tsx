@@ -40,7 +40,7 @@ interface ApiResponse {
 const registerUser = async (data: RegisterData): Promise<ApiResponse> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

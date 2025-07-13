@@ -31,7 +31,7 @@ export function CreateStoreModal() {
   // Mutation for posting form data
   const createStoreMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shop/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/shop/create`, {
         method: "POST",
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }), // Include token if available

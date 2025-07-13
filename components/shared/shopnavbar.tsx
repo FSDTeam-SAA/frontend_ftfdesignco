@@ -51,7 +51,7 @@ export default function ShopNavbar() {
     queryKey: ["shopData", token],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/shop/my-shop`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shop/my-shop`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

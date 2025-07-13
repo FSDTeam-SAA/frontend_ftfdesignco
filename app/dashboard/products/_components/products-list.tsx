@@ -64,7 +64,7 @@ export default function ProductsList() {
         data: null
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/assigned-product/my-shop`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop`, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -92,7 +92,7 @@ export default function ProductsList() {
   // Delete product mutation
   const deleteProduct = useMutation({
     mutationFn: async (productId: string) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/assigned-product/${productId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/${productId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +118,7 @@ export default function ProductsList() {
   // Update coin mutation
   const updateCoin = useMutation({
     mutationFn: async ({ productId, coin }: { productId: string; coin: number }) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/assigned-product/add-coin/${productId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/add-coin/${productId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

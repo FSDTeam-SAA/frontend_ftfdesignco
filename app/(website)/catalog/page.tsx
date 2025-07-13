@@ -18,7 +18,7 @@ export default function CategorySection() {
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/category`, {
           cache: "no-store",
         })
         const data = await response.json()
