@@ -1,10 +1,10 @@
 import React from 'react'
-import EmployeesList from './_components/employees-list'
+import ProductsList from './_components/products-list'
 
 function page() {
   return (
     <div>
-      <EmployeesList />
+        <ProductsList />
     </div>
   )
 }
