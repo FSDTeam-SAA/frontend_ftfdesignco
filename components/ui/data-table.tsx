@@ -58,49 +58,7 @@ export function DataTable<T>({ data, columns, itemsPerPage = 12 }: DataTableProp
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-700">
-          Showing {startIndex + 1} to {Math.min(endIndex, data.length)} of {data.length} results
-        </p>
-
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-
-          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-            const page = i + 1
-            return (
-              <Button
-                key={page}
-                variant={currentPage === page ? "default" : "outline"}
-                size="sm"
-                onClick={() => goToPage(page)}
-              >
-                {page}
-              </Button>
-            )
-          })}
-
-          {totalPages > 5 && (
-            <>
-              <span className="text-gray-500">...</span>
-              <Button variant="outline" size="sm" onClick={() => goToPage(totalPages)}>
-                {totalPages}
-              </Button>
-            </>
-          )}
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+   
     </div>
   )
 }
