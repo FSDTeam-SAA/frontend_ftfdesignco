@@ -51,7 +51,7 @@ export default function ShopNavbar() {
     queryKey: ["shopData", token],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/shop/my-shop`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shop/my-shop`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,13 +92,13 @@ export default function ShopNavbar() {
                 </div>
               </div>
               <Link
-                href="/"
+                href="/shop"
                 className="block px-2 py-1 text-lg hover:text-foreground/80"
               >
-                Home
+                Shop
               </Link>
               <Link
-                href="/products"
+                href="/shop"
                 className="block px-2 py-1 text-lg hover:text-foreground/80"
               >
                 All Products
@@ -126,17 +126,17 @@ export default function ShopNavbar() {
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
                 <Link
-                  href="/"
+                  href="/shop"
                   className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                 >
-                  Home
+                  Shop
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
                 <Link
-                  href="/products"
+                  href="/shop"
                   className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                 >
                   All Products
@@ -149,16 +149,19 @@ export default function ShopNavbar() {
         {/* Right side actions */}
         <div className="flex items-center space-x-4">
           {/* Shopping Cart */}
-          <Button variant="ghost" size="icon" className="relative">
-            <ShoppingCart className="h-5 w-5" />
-            <Badge
-              variant="destructive"
-              className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs bg-black/80 text-white flex items-center justify-center"
+          {role === "employee" && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative h-10 w-10"
+              aria-label="Shopping Cart"
             >
-              4
-            </Badge>
-            <span className="sr-only">Shopping cart</span>
-          </Button>
+              <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-gratisswag-dark-gray" />
+              <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-[#424242] px-1.5 text-xs font-semibold text-white">
+                0
+              </Badge>
+            </Button>
+          )}
 
           {/* User Dropdown */}
           {(role === "company_admin" || role === "employee") && (
@@ -172,7 +175,7 @@ export default function ShopNavbar() {
                 >
                   <Avatar className="h-8 w-8 sm:h-9 sm:w-9">
                     <AvatarImage src="/placeholder.svg" alt="User Avatar" />
-                    <AvatarFallback className="bg-blue-500 text-white">
+                    <AvatarFallback className="bg-[#D9AD5E] hover:bg-[#f5b641] text-white">
                       <User className="h-4 w-4 sm:h-5 sm:w-5" />
                     </AvatarFallback>
                   </Avatar>

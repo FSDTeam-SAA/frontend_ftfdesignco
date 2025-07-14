@@ -17,7 +17,7 @@ interface ResetPasswordData {
 }
 
 async function resetPassword({ token, data }: { token: string; data: ResetPasswordData }) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reset-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

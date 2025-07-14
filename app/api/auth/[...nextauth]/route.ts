@@ -32,13 +32,13 @@ const handler = NextAuth({
         let loginPayload: Record<string, string> = {};
 
         if (credentials.role === "company") {
-          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
+          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`;
           loginPayload = {
             email: credentials.email,
             password: credentials.password,
           };
         } else if (credentials.role === "employee") {
-          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/employee-login`;
+          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/employee-login`;
           loginPayload = {
             employeeId: credentials.employeeId,
             password: credentials.password,

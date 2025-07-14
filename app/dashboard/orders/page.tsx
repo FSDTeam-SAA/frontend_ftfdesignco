@@ -8,6 +8,8 @@ import { Breadcrumb } from "../_components/breadcrumb"
 export default function OrderHistoryPage() {
   const { data: orders = [], isLoading } = useOrders()
 
+  console.log(orders)
+
   const columns = [
     {
       key: "productName",
@@ -62,6 +64,9 @@ export default function OrderHistoryPage() {
   if (isLoading) {
     return <div>Loading...</div>
   }
+
+
+  console.log(orders)
 
   return (
     <div className="space-y-6">

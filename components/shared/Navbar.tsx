@@ -59,6 +59,8 @@ export function Navbar() {
     <Hideon
       routes={[
         "/shop",
+        "/cart",
+        "/checkout"
       ]}
     >
       <header className="w-full sticky top-0 z-50 bg-white shadow-sm">
@@ -93,7 +95,7 @@ export function Navbar() {
               className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-[#D9AD5E] hover:bg-[#f5b641]"
               aria-label="Submit search"
             >
-              <Search className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#131313]" />
             </Button>
           </div>
 
@@ -131,12 +133,12 @@ export function Navbar() {
                             src="/placeholder.svg"
                             alt="User Avatar"
                           />
-                          <AvatarFallback className="bg-gratisswag-accent-blue text-white">
+                          <AvatarFallback className="bg-[#1059EF] text-white">
                             <User className="h-4 w-4 sm:h-5 sm:w-5" />
                           </AvatarFallback>
                         </Avatar>
                       </Button>
-                    </DropdownMenuTrigger>
+                    </DropdownMenuTrigger> 
                     <DropdownMenuContent
                       className="bg-white w-48 cursor-pointer"
                       align="end"

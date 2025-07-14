@@ -25,7 +25,7 @@ const createPaymentIntent = async ({
   token,
 }: CheckoutFormProps & { token: string | undefined }) => {
   console.log("Creating payment intent with:", { userId, planId, amount })
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/create-payment`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/payment/create-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const confirmPayment = async ({
   paymentIntentId: string
   token: string | undefined
 }) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/confirm-payment`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/payment/confirm-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

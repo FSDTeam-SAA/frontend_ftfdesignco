@@ -56,6 +56,7 @@ interface UserProfile {
   company?: string
   gender?: string
   dateOfBirth?: string
+  imageLink?: string
 }
 
 export const useProducts = () => {
