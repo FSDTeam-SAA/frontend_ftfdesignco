@@ -8,7 +8,7 @@ import { toast, Toaster } from "sonner"
 import { Breadcrumb } from "../../_components/breadcrumb"
 import { useSession } from "next-auth/react"
 
-const API_BASE_URL = "https://ftfdesignco-backend.onrender.com/api/v1"
+
 
 interface Product {
   _id: string
@@ -61,7 +61,7 @@ export default function RequestedProductsList() {
         data: null
       }
 
-      const response = await fetch(`${API_BASE_URL}/assigned-product/my-shop`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop`, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -87,7 +87,7 @@ export default function RequestedProductsList() {
   // Status update mutation
   const updateStatus = useMutation({
     mutationFn: async ({ productId, status }: { productId: string; status: string }) => {
-      const response = await fetch(`${API_BASE_URL}/assigned-product/${productId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/${productId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
