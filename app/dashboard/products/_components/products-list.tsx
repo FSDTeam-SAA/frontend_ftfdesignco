@@ -9,15 +9,17 @@ import { toast, Toaster } from "sonner"
 import { Breadcrumb } from "../../_components/breadcrumb"
 import { EditCoinModal } from "./edit-coin-modal"
 import { useSession } from "next-auth/react"
-
+import Image from "next/image"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export interface Product {
   _id: string
-  productId: {
+  product: {
     _id: string
     title: string
     price: number
     quantity: number
+    productImage: string
     category: {
       _id: string
       title: string
@@ -44,6 +46,8 @@ interface ApiResponse {
 export default function ProductsList() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null)
   const queryClient = useQueryClient()
   const session = useSession()
   const token = session?.data?.accessToken
@@ -72,7 +76,6 @@ export default function ProductsList() {
       })
 
       if (!response.ok) {
-        // const errorText = await response.text()
         throw new Error(`Failed to fetch products: ${response.statusText}`)
       }
 
@@ -109,9 +112,13 @@ export default function ProductsList() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] })
       toast.success("Product deleted successfully")
+      setIsDeleteModalOpen(false)
+      setProductToDelete(null)
     },
     onError: (error: Error) => {
       toast.error(`Failed to delete product: ${error.message}`)
+      setIsDeleteModalOpen(false)
+      setProductToDelete(null)
     },
   })
 
@@ -174,10 +181,20 @@ export default function ProductsList() {
     setSelectedProduct(null)
   }
 
-  const handleDeleteClick = async (productId: string, productName: string) => {
-    if (window.confirm(`Are you sure you want to delete "${productName}"?`)) {
-      deleteProduct.mutate(productId)
+  const handleDeleteClick = (productId: string, productName: string) => {
+    setProductToDelete({ id: productId, name: productName })
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (productToDelete) {
+      deleteProduct.mutate(productToDelete.id)
     }
+  }
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false)
+    setProductToDelete(null)
   }
 
   const handleRefresh = () => {
@@ -196,12 +213,10 @@ export default function ProductsList() {
       render: (item: Product) => (
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">
-              {item.productId?.title?.substring(0, 2).toUpperCase() || "PR"}
-            </span>
+           <Image src={item.product?.productImage || ""} width={100} height={100} alt="Product Image" />
           </div>
           <div>
-            <span className="font-medium">{item.productId?.title || "Product"}</span>
+            <span className="font-medium">{item.product?.title || "Product"}</span>
             <div className="text-sm text-gray-500">{item.shopId?.companyName}</div>
           </div>
         </div>
@@ -210,14 +225,14 @@ export default function ProductsList() {
     {
       key: "price",
       header: "Price",
-      render: (item: Product) => <span className="font-medium">${item.productId?.price || 0}</span>,
+      render: (item: Product) => <span className="font-medium">${item.product?.price || 0}</span>,
     },
     {
       key: "quantity",
       header: "Quantity",
       render: (item: Product) => (
-        <span className={`${item.productId?.quantity < 10 ? "text-red-600" : "text-gray-900"}`}>
-          {item.productId?.quantity || 0}
+        <span className={`${item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"}`}>
+          {item.product?.quantity || 0}
         </span>
       ),
     },
@@ -235,7 +250,7 @@ export default function ProductsList() {
       header: "Category",
       render: (item: Product) => (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          {item.productId?.category?.title || "N/A"}
+          {item.product?.category?.title || "N/A"}
         </span>
       ),
     },
@@ -265,7 +280,7 @@ export default function ProductsList() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => handleDeleteClick(item._id, item.productId?.title || "Product")}
+            onClick={() => handleDeleteClick(item._id, item.product?.title || "Product")}
             disabled={deleteProduct.isPending}
             className="text-red-600 hover:text-red-800 hover:bg-red-50"
             title="Delete product"
@@ -346,6 +361,34 @@ export default function ProductsList() {
         onUpdateCoin={handleUpdateCoin}
         isUpdating={updateCoin.isPending}
       />
+
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &quot{productToDelete?.name}&quot? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleCancelDelete}
+              disabled={deleteProduct.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={deleteProduct.isPending}
+              className="bg-red-600 hover:bg-red-800 text-white"
+            >
+              {deleteProduct.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

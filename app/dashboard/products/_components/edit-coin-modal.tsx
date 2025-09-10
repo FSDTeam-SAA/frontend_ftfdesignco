@@ -55,7 +55,7 @@ export function EditCoinModal({ product, isOpen, onClose, onUpdateCoin, isUpdati
         <DialogHeader>
           <DialogTitle>Edit Coin Value</DialogTitle>
           <DialogDescription>
-            Update the coin value for <strong>{product.productId.title}</strong>
+            Update the coin value for <strong>{product.product.title}</strong>
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -80,7 +80,7 @@ export function EditCoinModal({ product, isOpen, onClose, onUpdateCoin, isUpdati
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right text-sm text-gray-500">Price:</Label>
-              <span className="col-span-3 text-sm text-gray-600">${product.productId.price}</span>
+              <span className="col-span-3 text-sm text-gray-600">${product.product.price}</span>
             </div>
           </div>
           <DialogFooter>

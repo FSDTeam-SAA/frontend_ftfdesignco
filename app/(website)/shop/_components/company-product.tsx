@@ -17,11 +17,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 interface Product {
   _id: string
-  productId: {
+  product: {
     _id: string
     title: string
     price: number
     quantity: number
+    productImage: string
     category: {
       _id: string
       title: string
@@ -170,15 +171,15 @@ export default function CompanyProducts({
   // Use pagination data from API if available, otherwise use defaults
   const currentPage = productsData?.currentPage || Number.parseInt(searchParams.page || "1")
   const totalPages = productsData?.totalPages || 1
-  const totalProducts = productsData?.totalProducts || filteredProducts.length
+  
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">All Products</h1>
-        <div className="text-sm text-gray-600">
+        {/* <div className="text-sm text-gray-600">
           Showing {filteredProducts.length} of {totalProducts} products
-        </div>
+        </div> */}
       </div>
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12">
@@ -189,12 +190,12 @@ export default function CompanyProducts({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-8">
             {filteredProducts.map((product) => (
               <div key={product._id} className="group relative">
-                <Link href={`/shop/${product.productId._id}`} className="block">
+                <Link href={`/shop/${product?.product?._id}`} className="block">
                   <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                     <div className="relative aspect-square">
                       <Image
-                        src="/placeholder.svg?height=300&width=300"
-                        alt={product.productId.title}
+                        src={product?.product?.productImage || "/placeholder.svg?height=300&width=300"}
+                        alt={product?.product?.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-200"
                       />
@@ -204,7 +205,7 @@ export default function CompanyProducts({
                           className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md"
                           onClick={(e) => {
                             e.preventDefault() // Prevent navigating to product detail page
-                            addToCartMutation.mutate({ productId: product.productId._id, quantity: 1 })
+                            addToCartMutation.mutate({ productId: product.product._id, quantity: 1 })
                           }}
                           disabled={addToCartMutation.isPending}
                         >
@@ -214,10 +215,10 @@ export default function CompanyProducts({
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold mb-2 line-clamp-2 text-sm sm:text-base">
-                        {product.productId.title}
+                        {product?.product?.title}
                       </h3>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">${product.productId.price}</span>
+                        <span className="text-sm text-gray-600">${product?.product?.price}</span>
                         <div className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
                           {product.coin} Coins
                         </div>
