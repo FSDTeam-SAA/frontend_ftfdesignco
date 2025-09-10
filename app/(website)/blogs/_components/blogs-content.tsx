@@ -87,7 +87,10 @@ function BlogsContent() {
               </div>
               <CardHeader>
                 <CardTitle className="line-clamp-2">{blog.blogTitle}</CardTitle>
-                <CardDescription className="line-clamp-3">{blog.blogDescription}</CardDescription>
+                <CardDescription
+                  className="line-clamp-3"
+                  dangerouslySetInnerHTML={{ __html: blog.blogDescription }}
+                />
               </CardHeader>
               <CardContent className="mt-auto">
                 <div className="text-sm text-gray-500">

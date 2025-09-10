@@ -87,13 +87,16 @@ export default function BlogDetails({ params }: BlogDetailsProps) {
           />
         </div>
 
-        <div className="whitespace-pre-line text-lg leading-relaxed">
-          {blog?.blogDescription}
-        </div>
+        {blog && (
+          <div
+            className="line-clamp-3"
+            dangerouslySetInnerHTML={{ __html: blog.blogDescription }}
+          />
+        )}
 
         <footer className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
           <Link
-            href="/blog"
+            href="/blogs"
             className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
           >
             ← Back to all blogs
