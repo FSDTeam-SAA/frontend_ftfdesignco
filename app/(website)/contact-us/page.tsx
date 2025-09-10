@@ -8,7 +8,7 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 export default function Page() {
   return (
     <section className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center py-12 sm:py-16 lg:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center py-12 sm:py-16 lg:py-10 border ">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#131313] mb-4">
           Get in Touch with a <span className="text-[#3258DA]">Swag Solutions Executive</span>
         </h2>
@@ -16,13 +16,13 @@ export default function Page() {
           Our team is always ready to assist you with any questions or concerns you might have. Fill out the form below and we&apos;ll get back to you as soon as possible
         </p>
       </div>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-8 gap-6 lg:gap-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-7">
+        <div className="grid grid-cols-1 lg:grid-cols-9 gap-6 lg:gap-12">
           <div className="lg:col-span-6">
             <CardContent className="space-y-4 p-4 sm:p-6">
               <div className="space-y-1">
                 <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="firstName">First Name</Label>
-                <Input id="firstName" placeholder="Your first name" className="text-sm sm:text-base" />
+                <Input id="firstName" placeholder="Your first name" className="text-sm sm:text-base h-[45px] border-[#5A5A5A] rounded-[8px]" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="email">Email</Label>
@@ -30,16 +30,16 @@ export default function Page() {
                   id="email"
                   type="email"
                   placeholder="your.email@example.com"
-                  className="text-sm sm:text-base"
+                  className="text-sm sm:text-base h-[45px] border-[#5A5A5A] rounded-[8px]"
                 />
               </div>
               <div className="space-y-1">
                 <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="phone">Phone Number</Label>
-                <Input id="phone" placeholder="(555) 000-0000" className="text-sm sm:text-base" />
+                <Input id="phone" placeholder="(555) 000-0000" className="text-sm sm:text-base h-[45px] border-[#5A5A5A] rounded-[8px]" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="subject">Subject</Label>
-                <Input id="subject" placeholder="How can we help?" className="text-sm sm:text-base" />
+                <Input id="subject" placeholder="How can we help?" className="text-sm sm:text-base h-[45px] border-[#5A5A5A] rounded-[8px]" />
               </div>
               <div className="space-y-1 mb-6 sm:mb-10">
                 <Label className="text-[#2A2A2A] text-sm sm:text-base font-medium" htmlFor="message">Your Message</Label>
@@ -47,7 +47,7 @@ export default function Page() {
                   id="message"
                   placeholder="Tell us more about your needs..."
                   rows={4}
-                  className="placeholder:text-gray-400 text-sm sm:text-base"
+                  className="placeholder:text-gray-400 text-sm sm:text-base border-[#5A5A5A] rounded-[8px]"
                 />
               </div>
               <Button className="w-full bg-[#D9AD5E] h-10 sm:h-12 rounded-lg hover:bg-[#D9AD5E]/90 text-black text-sm sm:text-base">
@@ -56,9 +56,9 @@ export default function Page() {
             </CardContent>
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <CardContent className="p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold mb-4">
+              <h3 className="text-base text-[#424242] sm:text-lg font-semibold mb-4">
                 Contact Information
               </h3>
               <div className="space-y-4">
