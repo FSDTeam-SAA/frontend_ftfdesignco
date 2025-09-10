@@ -8,12 +8,13 @@ import { Breadcrumb } from "../_components/breadcrumb"
 export default function OrderHistoryPage() {
   const { data: orders = [], isLoading } = useOrders()
 
-  console.log(orders)
+
 
   const columns = [
     {
       key: "productName",
       header: "Product Name",
+      // eslint-disable-next-line
       render: (item: any) => (
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
@@ -26,6 +27,7 @@ export default function OrderHistoryPage() {
     {
       key: "coins",
       header: "Coins",
+      // eslint-disable-next-line
       render: (item: any) => item.coin || 200,
     },
     {

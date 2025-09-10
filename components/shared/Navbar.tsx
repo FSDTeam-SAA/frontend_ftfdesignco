@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -20,13 +21,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { CreateStoreModal } from "../web_components/create-store-modal";
-import { useRouter, usePathname } from "next/navigation"; // Import usePathname
+import { useRouter, usePathname } from "next/navigation";
 import Hideon from "@/provider/Hideon";
 
 export function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
-  const pathname = usePathname(); // Get current pathname
+  const pathname = usePathname();
   const role = session?.user?.role;
   const isLoggedIn = !!role;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,23 +46,24 @@ export function Navbar() {
     }
   };
 
+  const handleShopClick = () => {
+    window.location.href = "https://shop.companycasuals.com/";
+  };
+
   const navLinks = [
     { name: "Home", href: "/" },
+    { name: "Shop", href: "#", onClick: handleShopClick },
     { name: "Swag Store", href: "#" },
     { name: "Swag Packs", href: "#" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Catalog", href: "/catalog" },
+    { name: "Products Catalog", href: "/catalog" },
     { name: "Contact Us", href: "/contact-us" },
     { name: "All products", href: "/all-product" },
   ];
 
   return (
     <Hideon
-      routes={[
-        "/shop",
-        "/cart",
-        "/checkout"
-      ]}
+      routes={["/shop", "/cart", "/checkout"]}
     >
       <header className="w-full sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Bar */}
@@ -138,7 +140,7 @@ export function Navbar() {
                           </AvatarFallback>
                         </Avatar>
                       </Button>
-                    </DropdownMenuTrigger> 
+                    </DropdownMenuTrigger>
                     <DropdownMenuContent
                       className="bg-white w-48 cursor-pointer"
                       align="end"
@@ -234,12 +236,12 @@ export function Navbar() {
                     <Link
                       key={link.name}
                       href={link.href}
+                      onClick={link.onClick || (() => setIsSheetOpen(false))}
                       className={`text-base font-medium transition-colors ${
                         pathname === link.href
                           ? "text-[#D9AD5E] font-semibold"
                           : "text-gratisswag-dark-gray hover:text-[#D9AD5E]"
                       }`}
-                      onClick={() => setIsSheetOpen(false)}
                     >
                       {link.name}
                     </Link>
@@ -286,6 +288,7 @@ export function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={link.onClick}
                 className={`text-sm lg:text-base transition-colors ${
                   pathname === link.href
                     ? "text-[#D9AD5E] font-semibold"

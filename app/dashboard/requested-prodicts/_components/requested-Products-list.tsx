@@ -7,20 +7,23 @@ import { DataTable } from "@/components/ui/data-table"
 import { toast, Toaster } from "sonner"
 import { Breadcrumb } from "../../_components/breadcrumb"
 import { useSession } from "next-auth/react"
+import Image from "next/image"
 
 
 
 interface Product {
   _id: string
-  productId: {
+  product: {
     _id: string
     title: string
     price: number
     quantity: number
+    productImage: string
     category: {
       _id: string
       title: string
     }
+    
   }
   userId: string
   shopId: {
@@ -149,14 +152,13 @@ export default function RequestedProductsList() {
       key: "productName",
       header: "Product Name",
       render: (item: Product) => (
+        console.log(item),
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">
-              {item.productId?.title?.substring(0, 2).toUpperCase() || "PR"}
-            </span>
+          <div className="w-12 h-12  rounded-lg flex items-center justify-center">
+           <Image src={item.product?.productImage} alt="No Image" width={50} height={50} />
           </div>
           <div>
-            <span className="font-medium">{item.productId?.title || "Product"}</span>
+            <span className="font-medium">{item.product?.title || "Product"}</span>
             <div className="text-sm text-gray-500">{item.shopId?.companyName}</div>
           </div>
         </div>
@@ -165,14 +167,14 @@ export default function RequestedProductsList() {
     {
       key: "price",
       header: "Price",
-      render: (item: Product) => <span className="font-medium">${item.productId?.price || 0}</span>,
+      render: (item: Product) => <span className="font-medium">${item.product?.price || 0}</span>,
     },
     {
       key: "quantity",
       header: "Quantity",
       render: (item: Product) => (
-        <span className={`${item.productId?.quantity < 10 ? "text-red-600" : "text-gray-900"}`}>
-          {item.productId?.quantity || 0}
+        <span className={`${item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"}`}>
+          {item.product?.quantity || 0}
         </span>
       ),
     },
@@ -181,7 +183,7 @@ export default function RequestedProductsList() {
       header: "Category",
       render: (item: Product) => (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          {item.productId?.category?.title || "N/A"}
+          {item.product?.category?.title || "N/A"}
         </span>
       ),
     },
@@ -245,9 +247,7 @@ export default function RequestedProductsList() {
           <h1 className="text-2xl font-bold text-gray-900">Requested Products</h1>
           <Breadcrumb items={[{ label: "Dashboard" }, { label: "Products" }, { label: "Requests" }]} />
         </div>
-        <Button onClick={handleRefresh}>
-          <RefreshCw className="h-4 w-4 mr-2" /> Refresh
-        </Button>
+       
       </div>
 
       <div className="bg-white rounded-lg border shadow-sm">

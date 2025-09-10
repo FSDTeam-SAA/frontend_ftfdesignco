@@ -32,9 +32,9 @@ export function Banner() {
       <div className="container mx-auto grid items-center gap-6 px-4 sm:gap-8 md:grid-cols-2 md:px-6 lg:gap-12 xl:gap-1">
         {/* Left Content */}
         <div className="flex flex-col items-start order-2 md:order-1">
-          <span className="mb-2 text-xs font-semibold uppercase tracking-wider text-gratisswag-orange sm:text-sm">
+          {/* <span className="mb-2 text-xs font-semibold uppercase tracking-wider text-gratisswag-orange sm:text-sm">
             Company
-          </span>
+          </span> */}
           <h2 className="mb-4 text-2xl font-bold leading-tight text-gratisswag-dark-gray sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl max-w-[90vw] sm:max-w-[513px]">
             Gratitude Given.{" "}
             <span className="text-gratisswag-accent-blue">Engagement</span>{" "}

@@ -24,6 +24,7 @@ export default function MySalesPage() {
     {
       key: "productName",
       header: "Product Name",
+      // eslint-disable-next-line
       render: (item: any) => (
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
@@ -36,11 +37,13 @@ export default function MySalesPage() {
     {
       key: "quantity",
       header: "Quantity",
+      // eslint-disable-next-line
       render: (item: any) => item.quantity,
     },
     {
       key: "coins",
       header: "Coins",
+      // eslint-disable-next-line
       render: (item: any) => item.coins,
     },
   ]
