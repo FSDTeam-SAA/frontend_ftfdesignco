@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { X, Filter } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
+import { useRouter, useSearchParams } from "next/navigation"
 
 interface Category {
   _id: string
@@ -15,111 +16,144 @@ interface Category {
 }
 
 async function getCategories(): Promise<Category[]> {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/category`, {
-      cache: "no-store",
-    })
-    const data = await response.json()
-    return data.success ? data.data : []
-  } catch (error) {
-    console.error("Failed to fetch categories:", error)
-    return []
-  }
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/category`, { cache: "no-store" })
+  const data = await res.json()
+  return data.success ? data.data : []
 }
 
 export function CompanyProductFilters() {
   const [isOpen, setIsOpen] = useState(false)
   const [priceRange, setPriceRange] = useState([0, 1000])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
 
-  // Use useQuery to fetch categories
-  const {
-    data: categories,
-    isLoading: categoriesLoading,
-    error: categoriesError,
-  } = useQuery<Category[]>({
+
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // categories
+  const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: getCategories,
   })
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
+  const applyFilters = () => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (selectedCategories.length > 0) {
+      params.set("category", selectedCategories.join(","))
+    } else {
+      params.delete("category")
+    }
+    if (selectedBrands.length > 0) {
+      params.set("brands", selectedBrands.join(","))
+    } else {
+      params.delete("brands")
+    }
+    params.set("minPrice", priceRange[0].toString())
+    params.set("maxPrice", priceRange[1].toString())
+   
+    router.push(`?${params.toString()}`)
+    setIsOpen(false) // close mobile sidebar
+  }
+
   const FilterContent = () => (
     <div className="space-y-6">
+     
+
+      {/* Categories */}
       <Card>
         <CardHeader>
           <CardTitle>Categories</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {categoriesLoading && <div className="text-gray-500">Loading categories...</div>}
-          {categoriesError && <div className="text-red-500">Failed to load categories.</div>}
-          {categories?.map((category) => (
-            <div key={category._id} className="flex items-center space-x-2">
-              <Checkbox id={category._id} />
-              <Label htmlFor={category._id} className="text-sm font-normal">
-                {category.title}
-              </Label>
+          {categories.map((cat) => (
+            <div key={cat._id} className="flex items-center space-x-2">
+              <Checkbox
+                id={cat._id}
+                checked={selectedCategories.includes(cat._id)}
+                onCheckedChange={(checked) =>
+                  setSelectedCategories((prev) =>
+                    checked ? [...prev, cat._id] : prev.filter((id) => id !== cat._id)
+                  )
+                }
+              />
+              <Label htmlFor={cat._id}>{cat.title}</Label>
             </div>
           ))}
         </CardContent>
       </Card>
+
+      {/* Coins / Price */}
       <Card>
         <CardHeader>
           <CardTitle>Coins</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <Slider value={priceRange} onValueChange={setPriceRange} max={1000} step={10} className="w-full" />
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>{priceRange[0]} Coins</span>
-              <span>{priceRange[1]}+ Coins</span>
-            </div>
+          <Slider className="text-gray-300 bg-gray-300 rounded-full" value={priceRange} onValueChange={setPriceRange} max={1000} step={10} />
+          <div className="flex justify-between text-sm text-gray-600 mt-5">
+            <span>{priceRange[0]}+</span>
+            <span>{priceRange[1]}+</span>
           </div>
         </CardContent>
       </Card>
+
+      {/* Brands */}
       <Card>
         <CardHeader>
-          <CardTitle>Brands</CardTitle> {/* Changed "Size" to "Brands" */}
+          <CardTitle>Brands</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {["Nike", "Adidas", "Puma", "Champion"].map((brand) => (
             <div key={brand} className="flex items-center space-x-2">
-              <Checkbox id={brand} />
-              <Label htmlFor={brand} className="text-sm font-normal">
-                {brand}
-              </Label>
+              <Checkbox
+                id={brand}
+                checked={selectedBrands.includes(brand)}
+                onCheckedChange={(checked) =>
+                  setSelectedBrands((prev) =>
+                    checked ? [...prev, brand] : prev.filter((b) => b !== brand)
+                  )
+                }
+              />
+              <Label htmlFor={brand}>{brand}</Label>
             </div>
           ))}
         </CardContent>
       </Card>
+
+      {/* Apply Button */}
+      <Button onClick={applyFilters} className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+        Apply Filters
+      </Button>
     </div>
   )
 
   return (
     <>
-      {/* Mobile Filter Button */}
+      {/* Mobile Toggle */}
       <div className="lg:hidden mb-4">
-        <Button onClick={toggleSidebar} variant="outline" className="flex items-center gap-2 bg-transparent">
-          <Filter className="h-4 w-4" />
-          Filters
+        <Button onClick={toggleSidebar} variant="outline" className="flex items-center gap-2">
+          <Filter className="h-4 w-4" /> Filters
         </Button>
       </div>
-      {/* Desktop Sidebar */}
+
+      {/* Desktop */}
       <div className="hidden lg:block">
         <FilterContent />
       </div>
-      {/* Mobile Sidebar Overlay */}
+
+      {/* Mobile Sidebar */}
       {isOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
-          <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-lg overflow-y-auto">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold">Filters</h2>
-                <Button onClick={toggleSidebar} variant="ghost" size="sm" className="p-1">
-                  <X className="h-5 w-5" />
-                </Button>
-              </div>
-              <FilterContent />
+          <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-lg overflow-y-auto p-4">
+            <div className="flex justify-between mb-4">
+              <h2 className="font-semibold">Filters</h2>
+              <Button onClick={toggleSidebar} variant="ghost" size="sm">
+                <X className="h-5 w-5" />
+              </Button>
             </div>
+            <FilterContent />
           </div>
         </div>
       )}

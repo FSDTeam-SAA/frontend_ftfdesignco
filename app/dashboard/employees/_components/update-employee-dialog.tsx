@@ -55,7 +55,7 @@ export function UpdateEmployeeDialog({ isOpen, onClose, employee, token, apiBase
     mutationFn: async (updateData: UpdateFormData) => {
       if (!employee) throw new Error("No employee selected")
 
-      const response = await fetch(`${apiBaseUrl}/employee/${employee._id}`, {
+      const response = await fetch(`${apiBaseUrl}api/v1/employee/update/${employee._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

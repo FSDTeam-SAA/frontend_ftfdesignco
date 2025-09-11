@@ -1,3 +1,5 @@
+import Image from "next/image"
+import Link from "next/link"
 import {
   Pagination,
   PaginationContent,
@@ -7,8 +9,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import Image from "next/image"
-import Link from "next/link"
+
+export interface GetProductsParams {
+  category?: string
+  page?: string
+  limit?: string
+  sort?: string
+  prices?: string
+  search?: string
+  brand?: string
+}
 
 interface Product {
   _id: string
@@ -16,10 +26,7 @@ interface Product {
   description: string
   price: number
   productImage: string
-  category: {
-    _id: string
-    title: string
-  }
+  category: { _id: string; title: string }
 }
 
 interface ProductsResponse {
@@ -30,35 +37,21 @@ interface ProductsResponse {
   totalPages: number
 }
 
-interface GetProductsParams {
-  category?: string
-  page?: string
-  limit?: string
-  sort?: string
-}
-
 async function getProducts(searchParams: GetProductsParams): Promise<ProductsResponse> {
-  const { category, page = "1", limit = "12", sort = "createdAt" } = searchParams
+  const { category, page = "1", limit = "12", sort = "createdAt", prices, search, brand } = searchParams
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/product/get-all?page=${page}&limit=${limit}&sort=${sort}`
-
-  if (category) {
-    url += `&category=${category}`
-  }
+  if (category) url += `&category=${category}`
+  if (prices) url += `&prices=${prices}`
+  if (search) url += `&search=${search}`
+  if (brand) url += `&brand=${brand}`
 
   try {
     const response = await fetch(url, { cache: "no-store" })
     const data: ProductsResponse = await response.json()
     return data
-  } catch (error) {
-    console.error("Failed to fetch products:", error)
-    return {
-      success: false,
-      data: [],
-      totalProducts: 0,
-      currentPage: 1,
-      totalPages: 1,
-    }
+  } catch {
+    return { success: false, data: [], totalProducts: 0, currentPage: 1, totalPages: 1 }
   }
 }
 
@@ -85,7 +78,7 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
             {products.map((product) => (
               <div key={product._id} className="group">
                 <Link href={`/all-product/${product._id}`} className="block">
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border">
+                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden border">
                     <div className="relative aspect-square">
                       <Image
                         src={product.productImage || "/placeholder.svg?height=300&width=300"}
@@ -98,9 +91,7 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
                       <h3 className="font-semibold mb-2 line-clamp-2 text-sm sm:text-base">{product.title}</h3>
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-bold text-gray-900">${product.price}</span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                          {product.category.title}
-                        </span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{product.category.title}</span>
                       </div>
                     </div>
                   </div>
@@ -114,7 +105,7 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href={`/products?page=${Math.max(1, currentPage - 1)}`}
+                    href={`/all-product?page=${Math.max(1, currentPage - 1)}`}
                     className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                   />
                 </PaginationItem>
@@ -127,7 +118,7 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
                   ) {
                     return (
                       <PaginationItem key={pageNum}>
-                        <PaginationLink href={`/products?page=${pageNum}`} isActive={pageNum === currentPage}>
+                        <PaginationLink href={`/all-product?page=${pageNum}`} isActive={pageNum === currentPage}>
                           {pageNum}
                         </PaginationLink>
                       </PaginationItem>
@@ -143,7 +134,7 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
                 })}
                 <PaginationItem>
                   <PaginationNext
-                    href={`/products?page=${Math.min(totalPages, currentPage + 1)}`}
+                    href={`/all-product?page=${Math.min(totalPages, currentPage + 1)}`}
                     className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
                   />
                 </PaginationItem>

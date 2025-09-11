@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Pagination,
   PaginationContent,
@@ -7,78 +7,92 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import Image from "next/image"
-import Link from "next/link"
-import { useSession } from "next-auth/react"
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner" // Assuming Shadcn/UI toast
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+} from "@/components/ui/pagination";
+import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner"; // Assuming Shadcn/UI toast
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Product {
-  _id: string
+  _id: string;
   product: {
-    _id: string
-    title: string
-    price: number
-    quantity: number
-    productImage: string
+    _id: string;
+    title: string;
+    price: number;
+    quantity: number;
+    productImage: string;
     category: {
-      _id: string
-      title: string
-    }
-  }
-  userId: string
+      _id: string;
+      title: string;
+    };
+  };
+  userId: string;
   shopId: {
-    _id: string
-    companyId: string
-    companyName: string
-  }
-  coin: number
-  status: string
-  __v: number
+    _id: string;
+    companyId: string;
+    companyName: string;
+  };
+  coin: number;
+  status: string;
+  __v: number;
 }
 
 interface ProductsResponse {
-  success: boolean
-  code: number
-  message: string
-  data: Product[]
-  totalProducts?: number
-  currentPage?: number
-  totalPages?: number
+  success: boolean;
+  code: number;
+  message: string;
+  data: Product[];
+  totalProducts?: number;
+  currentPage?: number;
+  totalPages?: number;
 }
 
 interface GetProductsParams {
-  category?: string
-  page?: string
-  limit?: string
-  sort?: string
+  category?: string;
+  page?: string;
+  limit?: string;
+  sort?: string;
 }
 
 async function fetchProducts({
   searchParams,
   token,
 }: {
-  searchParams: GetProductsParams
-  token: string
+  searchParams: GetProductsParams & {
+    brands?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    search?: string;
+  };
+  token: string;
 }): Promise<ProductsResponse> {
-  const { category, page = "1", limit = "12", sort = "createdAt" } = searchParams
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop?page=${page}&limit=${limit}&sort=${sort}`
-  if (category) {
-    url += `&category=${category}`
-  }
+  const {
+    category,
+    page = "1",
+    limit = "12",
+    sort = "createdAt",
+    brands,
+    minPrice,
+    maxPrice,
+    search,
+  } = searchParams;
+
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop?page=${page}&limit=${limit}&sort=${sort}`;
+
+  if (category) url += `&category=${category}`;
+  if (brands) url += `&brands=${brands}`;
+  if (minPrice) url += `&minPrice=${minPrice}`;
+  if (maxPrice) url += `&maxPrice=${maxPrice}`;
+  if (search) url += `&search=${encodeURIComponent(search)}`;
+
   const response = await fetch(url, {
     cache: "no-store",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
-  }
-  const data: ProductsResponse = await response.json()
-  return data
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  return response.json();
 }
 
 async function addToCart({
@@ -86,36 +100,39 @@ async function addToCart({
   quantity,
   token,
 }: {
-  productId: string
-  quantity: number
-  token: string
+  productId: string;
+  quantity: number;
+  token: string;
 }) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/add-to-cart`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      productId,
-      quantity,
-    }),
-  })
-  const result = await response.json()
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/add-to-cart`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        productId,
+        quantity,
+      }),
+    }
+  );
+  const result = await response.json();
   if (!response.ok) {
-    throw new Error(result.message || "Failed to add product to cart")
+    throw new Error(result.message || "Failed to add product to cart");
   }
-  return result
+  return result;
 }
 
 export default function CompanyProducts({
   searchParams,
 }: {
-  searchParams: GetProductsParams
+  searchParams: GetProductsParams;
 }) {
-  const { data: session } = useSession()
-  const token = session?.accessToken
-  const queryClient = useQueryClient()
+  const { data: session } = useSession();
+  const token = session?.accessToken;
+  const queryClient = useQueryClient();
 
   const {
     data: productsData,
@@ -125,27 +142,32 @@ export default function CompanyProducts({
     queryKey: ["products", searchParams, token],
     queryFn: () => fetchProducts({ searchParams, token: token! }),
     enabled: !!token, // Only fetch if token exists
-  })
+  });
 
   const addToCartMutation = useMutation({
-    mutationFn: ({ productId, quantity }: { productId: string; quantity: number }) =>
-      addToCart({ productId, quantity, token: token! }),
+    mutationFn: ({
+      productId,
+      quantity,
+    }: {
+      productId: string;
+      quantity: number;
+    }) => addToCart({ productId, quantity, token: token! }),
     onSuccess: (data) => {
-      toast.success(data.message)
+      toast.success(data.message);
       // Optionally invalidate cart-related queries
-      queryClient.invalidateQueries({ queryKey: ["cart"] })
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
     onError: (error: Error) => {
-      toast.error(error.message)
+      toast.error(error.message);
     },
-  })
+  });
 
   if (!token) {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500">Please sign in to view products.</p>
       </div>
-    )
+    );
   }
 
   if (isLoading) {
@@ -153,7 +175,7 @@ export default function CompanyProducts({
       <div className="text-center py-12">
         <p className="text-gray-500">Loading products...</p>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -161,17 +183,19 @@ export default function CompanyProducts({
       <div className="text-center py-12">
         <p className="text-red-500">Failed to load products: {error.message}</p>
       </div>
-    )
+    );
   }
 
   // Filter products where coin > 0 and status is "approved"
   const filteredProducts =
-    productsData?.data.filter((product) => product.coin > 0 && product.status === "approved") || []
+    productsData?.data.filter(
+      (product) => product.coin > 0 && product.status === "approved"
+    ) || [];
 
   // Use pagination data from API if available, otherwise use defaults
-  const currentPage = productsData?.currentPage || Number.parseInt(searchParams.page || "1")
-  const totalPages = productsData?.totalPages || 1
-  
+  const currentPage =
+    productsData?.currentPage || Number.parseInt(searchParams.page || "1");
+  const totalPages = productsData?.totalPages || 1;
 
   return (
     <div>
@@ -183,7 +207,9 @@ export default function CompanyProducts({
       </div>
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">No approved products with coins available.</p>
+          <p className="text-gray-500">
+            No approved products with coins available.
+          </p>
         </div>
       ) : (
         <>
@@ -194,7 +220,10 @@ export default function CompanyProducts({
                   <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                     <div className="relative aspect-square">
                       <Image
-                        src={product?.product?.productImage || "/placeholder.svg?height=300&width=300"}
+                        src={
+                          product?.product?.productImage ||
+                          "/placeholder.svg?height=300&width=300"
+                        }
                         alt={product?.product?.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-200"
@@ -204,12 +233,17 @@ export default function CompanyProducts({
                         <Button
                           className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md"
                           onClick={(e) => {
-                            e.preventDefault() // Prevent navigating to product detail page
-                            addToCartMutation.mutate({ productId: product.product._id, quantity: 1 })
+                            e.preventDefault(); // Prevent navigating to product detail page
+                            addToCartMutation.mutate({
+                              productId: product.product._id,
+                              quantity: 1,
+                            });
                           }}
                           disabled={addToCartMutation.isPending}
                         >
-                          {addToCartMutation.isPending ? "Adding..." : "Add to Cart"}
+                          {addToCartMutation.isPending
+                            ? "Adding..."
+                            : "Add to Cart"}
                         </Button>
                       </div>
                     </div>
@@ -218,7 +252,6 @@ export default function CompanyProducts({
                         {product?.product?.title}
                       </h3>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">${product?.product?.price}</span>
                         <div className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
                           {product.coin} Coins
                         </div>
@@ -235,11 +268,13 @@ export default function CompanyProducts({
                 <PaginationItem>
                   <PaginationPrevious
                     href={`/products?page=${Math.max(1, currentPage - 1)}`}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    className={
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }
                   />
                 </PaginationItem>
                 {[...Array(totalPages)].map((_, i) => {
-                  const pageNum = i + 1
+                  const pageNum = i + 1;
                   if (
                     pageNum === 1 ||
                     pageNum === totalPages ||
@@ -247,24 +282,37 @@ export default function CompanyProducts({
                   ) {
                     return (
                       <PaginationItem key={pageNum}>
-                        <PaginationLink href={`/products?page=${pageNum}`} isActive={pageNum === currentPage}>
+                        <PaginationLink
+                          href={`/products?page=${pageNum}`}
+                          isActive={pageNum === currentPage}
+                        >
                           {pageNum}
                         </PaginationLink>
                       </PaginationItem>
-                    )
-                  } else if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                    );
+                  } else if (
+                    pageNum === currentPage - 2 ||
+                    pageNum === currentPage + 2
+                  ) {
                     return (
                       <PaginationItem key={pageNum}>
                         <PaginationEllipsis />
                       </PaginationItem>
-                    )
+                    );
                   }
-                  return null
+                  return null;
                 })}
                 <PaginationItem>
                   <PaginationNext
-                    href={`/products?page=${Math.min(totalPages, currentPage + 1)}`}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    href={`/products?page=${Math.min(
+                      totalPages,
+                      currentPage + 1
+                    )}`}
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -273,5 +321,5 @@ export default function CompanyProducts({
         </>
       )}
     </div>
-  )
+  );
 }

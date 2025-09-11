@@ -34,6 +34,8 @@ export default function CategorySection() {
 
     getCategories()
   }, [])
+  console.log('categories data',categories);
+  
 
   if (loading) {
     return <div className="p-10 text-center">Loading categories...</div>
@@ -50,7 +52,7 @@ export default function CategorySection() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <Link key={category._id} href={`/products?category=${category._id}`}>
+            <Link key={category._id} href={`/all-product?category=${category.title}`}>
               <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardContent className="p-6 text-center">
                   <div className="relative w-24 h-24 mx-auto mb-4">
