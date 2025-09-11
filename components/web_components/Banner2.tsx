@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import { Button } from '../ui/button'
+import Link from 'next/link'
 
 const Banner2 = () => {
   return (
@@ -41,9 +42,12 @@ const Banner2 = () => {
                     </div>
                 </div>
                 <div className='mt-6 md:mt-10'>
+                    <Link href='/all-product'>
+                    
                     <Button className='bg-[#D9AD5E] text-[#131313] text-sm sm:text-base md:text-[18px] h-10 md:h-[48px] px-6 md:px-[42px] rounded-[8px]'>
                         See More
                     </Button>
+                    </Link>
                 </div>
             </div>
             <div>
