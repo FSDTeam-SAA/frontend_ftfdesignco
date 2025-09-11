@@ -1,67 +1,60 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
-import { Button } from "@/components/ui/button"
-import { X, Filter } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { X, Filter } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface Category {
-  _id: string
-  title: string
+  _id: string;
+  title: string;
 }
 
 async function getCategories(): Promise<Category[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/category`, { cache: "no-store" })
-  const data = await res.json()
-  return data.success ? data.data : []
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/category`,
+    { cache: "no-store" }
+  );
+  const data = await res.json();
+  return data.success ? data.data : [];
 }
 
-export function CompanyProductFilters() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [priceRange, setPriceRange] = useState([0, 1000])
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+interface CompanyProductFiltersProps {
+  onApply: (filters: {
+    categories: string[];
+    brands: string[];
+    priceRange: number[];
+  }) => void;
+}
 
+export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  // categories
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: getCategories,
-  })
+  });
 
-  const toggleSidebar = () => setIsOpen(!isOpen)
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   const applyFilters = () => {
-    const params = new URLSearchParams(searchParams.toString())
-    if (selectedCategories.length > 0) {
-      params.set("category", selectedCategories.join(","))
-    } else {
-      params.delete("category")
-    }
-    if (selectedBrands.length > 0) {
-      params.set("brands", selectedBrands.join(","))
-    } else {
-      params.delete("brands")
-    }
-    params.set("minPrice", priceRange[0].toString())
-    params.set("maxPrice", priceRange[1].toString())
-   
-    router.push(`?${params.toString()}`)
-    setIsOpen(false) // close mobile sidebar
-  }
+    onApply({
+      categories: selectedCategories,
+      brands: selectedBrands,
+      priceRange,
+    });
+    setIsOpen(false);
+  };
 
   const FilterContent = () => (
     <div className="space-y-6">
-     
-
       {/* Categories */}
       <Card>
         <CardHeader>
@@ -75,7 +68,9 @@ export function CompanyProductFilters() {
                 checked={selectedCategories.includes(cat._id)}
                 onCheckedChange={(checked) =>
                   setSelectedCategories((prev) =>
-                    checked ? [...prev, cat._id] : prev.filter((id) => id !== cat._id)
+                    checked
+                      ? [...prev, cat._id]
+                      : prev.filter((id) => id !== cat._id)
                   )
                 }
               />
@@ -85,13 +80,18 @@ export function CompanyProductFilters() {
         </CardContent>
       </Card>
 
-      {/* Coins / Price */}
+      {/* Price Range */}
       <Card>
         <CardHeader>
           <CardTitle>Coins</CardTitle>
         </CardHeader>
         <CardContent>
-          <Slider className="text-gray-300 bg-gray-300 rounded-full" value={priceRange} onValueChange={setPriceRange} max={1000} step={10} />
+          <Slider
+            value={priceRange}
+            onValueChange={setPriceRange}
+            max={1000}
+            step={10}
+          />
           <div className="flex justify-between text-sm text-gray-600 mt-5">
             <span>{priceRange[0]}+</span>
             <span>{priceRange[1]}+</span>
@@ -123,17 +123,24 @@ export function CompanyProductFilters() {
       </Card>
 
       {/* Apply Button */}
-      <Button onClick={applyFilters} className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+      <Button
+        onClick={applyFilters}
+        className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+      >
         Apply Filters
       </Button>
     </div>
-  )
+  );
 
   return (
     <>
       {/* Mobile Toggle */}
       <div className="lg:hidden mb-4">
-        <Button onClick={toggleSidebar} variant="outline" className="flex items-center gap-2">
+        <Button
+          onClick={toggleSidebar}
+          variant="outline"
+          className="flex items-center gap-2"
+        >
           <Filter className="h-4 w-4" /> Filters
         </Button>
       </div>
@@ -158,5 +165,5 @@ export function CompanyProductFilters() {
         </div>
       )}
     </>
-  )
+  );
 }

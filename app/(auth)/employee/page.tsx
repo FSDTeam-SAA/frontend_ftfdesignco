@@ -25,14 +25,17 @@ export default function EmployeeLoginPage() {
     e.preventDefault()
     setLoading(true)
     setError("")
+   
 
+    console.log(employeeId,password);
+    
     const res = await signIn("credentials", {
       redirect: false,
       role: "employee",
       employeeId,
       password,
     })
-
+  console.log('loing',res)
     if (res?.ok) {
       toast.success("Login successful!")
       router.push("/")
