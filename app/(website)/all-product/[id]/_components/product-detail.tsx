@@ -44,7 +44,8 @@ export function ProductDetail({ id }: ProductDetailProps) {
         .then((res) => res.json())
         .then((response) => response.data),
   });
-
+ 
+  console.log('details product',product)
   // Mutation for submitting the product
   const mutation = useMutation({
     mutationFn: async () => {
@@ -129,7 +130,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:items-center lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           <div className="relative aspect-square">
             <Image
@@ -198,7 +199,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
         </div>
       </div>
 
-      <div>
+      <div className="py-[48px]">
         <h2 className="text-2xl font-bold mb-4 text-center">
           Product Description
         </h2>

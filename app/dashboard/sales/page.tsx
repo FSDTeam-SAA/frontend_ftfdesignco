@@ -14,7 +14,7 @@ const salesData = [
   { productName: "T-Shirt", quantity: 4, coins: 200 },
   { productName: "T-Shirt", quantity: 4, coins: 200 },
   { productName: "T-Shirt", quantity: 4, coins: 200 },
-  { productName: "T-Shirt", quantity: 4, coins: 200 },
+  { productName: "Shirt", quantity: 4, coins: 200 },
 ]
 
 export default function MySalesPage() {

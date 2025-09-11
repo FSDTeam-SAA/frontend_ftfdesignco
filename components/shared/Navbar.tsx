@@ -65,7 +65,7 @@ export function Navbar() {
     <Hideon
       routes={["/shop", "/cart", "/checkout"]}
     >
-      <header className="w-full sticky top-0 z-50 bg-white shadow-sm">
+      <header className="w-full py-5 sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Bar */}
         <div className="bg-gratisswag-dark-gray h-2 w-full" />
 
