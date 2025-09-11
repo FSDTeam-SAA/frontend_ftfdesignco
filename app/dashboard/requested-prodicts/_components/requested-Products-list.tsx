@@ -70,7 +70,7 @@ export default function RequestedProductsList() {
           "Authorization": `Bearer ${token}`,
         },
       })
-
+ console.log('request productddddddddddd',response)
       if (!response.ok) {
         // const errorText = await response.text()
         throw new Error(`Failed to fetch products: ${response.statusText}`)
