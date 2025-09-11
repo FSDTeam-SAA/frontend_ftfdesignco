@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
 import { CreateStoreModal } from "./create-store-modal";
+import Link from "next/link";
 
 export function Banner() {
   const { data: session } = useSession();
@@ -15,7 +16,6 @@ export function Banner() {
 
   const token = session?.accessToken;
   const accessSubScription = session?.user?.isPaid === true;
-
 
   const handleClick = () => {
     if (!token) {
@@ -57,6 +57,11 @@ export function Banner() {
               </DialogTrigger>
               <CreateStoreModal />
             </Dialog>
+            <Link href="/all-product">
+              <Button className="py-2 px-10 rounded bg-[#131313] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg">
+                See More
+              </Button>
+            </Link>
           </div>
         </div>
 
