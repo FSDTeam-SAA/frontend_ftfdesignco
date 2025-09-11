@@ -5,17 +5,17 @@ import Subscribe from "./subscribe"
 
 export function Footer() {
   return (
-    <footer className="bg-[#035F8A] py-8 sm:py-12 md:py-16 text-white">
+    <footer className="bg-[#035F8A] py-8 sm:py-12 md:py-16 text-white border ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-11 gap-4 sm:gap-6 py-6 sm:py-8">
           {/* Left Section - Logo and Description */}
           <div className="md:col-span-4 mb-6 md:mb-0">
             <div className="mb-4 flex items-center gap-2">
               <Image
-                src="/assets/logo.png"
+                src="/assets/logo1.png"
                 alt="GratiSwag Logo"
-                width={40}
-                height={40}
+                width={1000}
+                height={1000}
                 className="w-16 h-10 sm:w-[104px] sm:h-[64px] z-10"
               />
             </div>
@@ -34,19 +34,19 @@ export function Footer() {
                   About Us
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/blogs" className="text-gray-300 hover:text-white">
                   Blog
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
                   All Awag
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/contact-us" className="text-gray-300 hover:text-white">
-                  Contact
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -71,11 +71,11 @@ export function Footer() {
                   FAQ
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
                   Help Center
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 

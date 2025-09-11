@@ -207,14 +207,14 @@ export function ProductDetail({ id }: ProductDetailProps) {
           <div className="col-span-6">
             <p>{product.description}</p>
           </div>
-          <div className="col-span-2">
+          {/* <div className="col-span-2">
             <ul className="mt-4 space-y-2">
               <li>• Storage: 256GB / 512GB / 1TB</li>
               <li>• Display: 6.9-inch Super Retina XDR</li>
               <li>• Chip: A18 Pro</li>
               <li>• SKU: {product._id}</li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
