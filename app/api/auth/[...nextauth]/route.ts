@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 declare module "next-auth" {
   interface User {
+    companyId?:string;
     employeeId?: string;
     userId?: string;
     shop: string;
@@ -24,6 +25,7 @@ const handler = NextAuth({
         email: { label: "Email", type: "email" },
         employeeId: { label: "Employee ID", type: "text" },
         password: { label: "Password", type: "password" },
+        companyId:{label:'compnayId',type:'text'}
       },
       async authorize(credentials) {
         if (!credentials) return null;
@@ -40,6 +42,7 @@ const handler = NextAuth({
         } else if (credentials.role === "employee") {
           loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/employee-login`;
           loginPayload = {
+            companyId:credentials.companyId,
             employeeId: credentials.employeeId,
             password: credentials.password,
           };
@@ -120,6 +123,7 @@ const handler = NextAuth({
 
         if (user.role === "employee") {
           token.user = {
+            
             id: user._id,
             employeeId: user.employeeId,
             email: user.email,

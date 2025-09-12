@@ -201,13 +201,13 @@ function PaymentForm({
       )}
 
       <div className="flex gap-3 pt-4">
-        <Button variant="outline" onClick={onCancel} disabled={loading} className="flex-1 bg-transparent">
+        <Button variant="outline" onClick={onCancel} disabled={loading} className="flex-1 bg-transparent rounded-xl hover:bg-green-300 hover:text-white">
           Cancel
         </Button>
         <Button
           onClick={handleSubmit}
           disabled={!stripe || !elements || !isPaymentElementReady || loading}
-          className="flex-1"
+          className="flex-1 bg-[#28A745] text-white hover:bg-green-300  rounded-xl"
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {loading ? "Processing..." : `Pay $${amount}`}
