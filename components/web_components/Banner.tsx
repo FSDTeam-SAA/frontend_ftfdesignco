@@ -58,7 +58,7 @@ export function Banner() {
               <CreateStoreModal />
             </Dialog>
             <Link href="/all-product">
-              <Button className="py-2 px-10 rounded bg-[#131313] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg">
+              <Button className="py-2 px-12 rounded bg-[#131313] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg">
                 See More
               </Button>
             </Link>

@@ -7,8 +7,8 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export default function Page() {
   return (
-    <section className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center py-12 sm:py-16 lg:py-10 border ">
+    <section className="min-h-screen bg-[#FCF7EF]">
+      <div className="container mx-auto  px-4 sm:px-6  lg:px-8 text-center py-12 sm:py-16 lg:py-10 ">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#131313] mb-4">
           Get in Touch with a <span className="text-[#3258DA]">Swag Solutions Executive</span>
         </h2>
