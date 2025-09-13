@@ -1,5 +1,5 @@
-import Image from "next/image"
-import Link from "next/link"
+import Image from "next/image";
+import Link from "next/link";
 import {
   Pagination,
   PaginationContent,
@@ -8,56 +8,81 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
 export interface GetProductsParams {
-  category?: string
-  page?: string
-  limit?: string
-  sort?: string
-  prices?: string
-  search?: string
-  brand?: string
+  category?: string;
+  page?: string;
+  limit?: string;
+  sort?: string;
+  prices?: string;
+  search?: string;
+  brand?: string;
 }
 
 interface Product {
-  _id: string
-  title: string
-  description: string
-  price: number
-  productImage: string
-  category: { _id: string; title: string }
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  productImage: string;
+  category: { _id: string; title: string };
 }
 
 interface ProductsResponse {
-  success: boolean
-  data: Product[]
-  totalProducts: number
-  currentPage: number
-  totalPages: number
+  success: boolean;
+  data: Product[];
+  totalProducts: number;
+  currentPage: number;
+  totalPages: number;
 }
 
-async function getProducts(searchParams: GetProductsParams): Promise<ProductsResponse> {
-  const { category, page = "1", limit = "12", sort = "createdAt", prices, search, brand } = searchParams
+async function getProducts(
+  searchParams: GetProductsParams
+): Promise<ProductsResponse> {
+  const {
+    category,
+    page = "1",
+    limit = "12",
+    sort = "createdAt",
+    prices,
+    search,
+    brand,
+  } = searchParams;
 
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/product/get-all?page=${page}&limit=${limit}&sort=${sort}`
-  if (category) url += `&category=${category}`
-  if (prices) url += `&prices=${prices}`
-  if (search) url += `&search=${search}`
-  if (brand) url += `&brand=${brand}`
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/product/get-all?page=${page}&limit=${limit}&sort=${sort}`;
+  if (category) url += `&category=${category}`;
+  if (prices) url += `&prices=${prices}`;
+  if (search) url += `&search=${search}`;
+  if (brand) url += `&brand=${brand}`;
 
   try {
-    const response = await fetch(url, { cache: "no-store" })
-    const data: ProductsResponse = await response.json()
-    return data
+    const response = await fetch(url, { cache: "no-store" });
+    const data: ProductsResponse = await response.json();
+    return data;
   } catch {
-    return { success: false, data: [], totalProducts: 0, currentPage: 1, totalPages: 1 }
+    return {
+      success: false,
+      data: [],
+      totalProducts: 0,
+      currentPage: 1,
+      totalPages: 1,
+    };
   }
 }
 
-export async function ProductsGrid({ searchParams }: { searchParams: GetProductsParams }) {
-  const productsData = await getProducts(searchParams)
-  const { data: products, totalProducts, currentPage, totalPages } = productsData
+export async function ProductsGrid({
+  searchParams,
+}: {
+  searchParams: GetProductsParams;
+}) {
+  const productsData = await getProducts(searchParams);
+  const {
+    data: products,
+    totalProducts,
+    currentPage,
+    totalPages,
+  } = productsData;
 
   return (
     <div>
@@ -79,19 +104,28 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
               <div key={product._id} className="group">
                 <Link href={`/all-product/${product._id}`} className="block">
                   <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden border">
-                    <div className="relative aspect-square">
+                    <div className="relative  aspect-square bg-[#E9E9E9]">
                       <Image
-                        src={product.productImage || "/placeholder.svg?height=300&width=300"}
+                        src={
+                          product.productImage ||
+                          "/placeholder.svg?height=300&width=300"
+                        }
                         alt={product.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-200"
                       />
                     </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold mb-2 line-clamp-2 text-sm sm:text-base">{product.title}</h3>
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold text-gray-900">${product.price}</span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{product.category.title}</span>
+                    <div className="p-4 text-center">
+                      <h3 className="font-semibold mb-2 line-clamp-2 text-sm sm:text-base">
+                        {product.title}
+                      </h3>
+                      <div className="flex flex-col gap-3 items-center justify-between">
+                        <span className="text-lg md:text-[40px] font-semibold py-1 text-gray-900">
+                          ${product.price}
+                        </span>
+                        <span className="text-xs md:text-[18px] text-[#000000]  px-2 ">
+                          {product.category.title}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -106,11 +140,13 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
                 <PaginationItem>
                   <PaginationPrevious
                     href={`/all-product?page=${Math.max(1, currentPage - 1)}`}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    className={
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }
                   />
                 </PaginationItem>
                 {[...Array(totalPages)].map((_, i) => {
-                  const pageNum = i + 1
+                  const pageNum = i + 1;
                   if (
                     pageNum === 1 ||
                     pageNum === totalPages ||
@@ -118,24 +154,37 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
                   ) {
                     return (
                       <PaginationItem key={pageNum}>
-                        <PaginationLink href={`/all-product?page=${pageNum}`} isActive={pageNum === currentPage}>
+                        <PaginationLink
+                          href={`/all-product?page=${pageNum}`}
+                          isActive={pageNum === currentPage}
+                        >
                           {pageNum}
                         </PaginationLink>
                       </PaginationItem>
-                    )
-                  } else if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                    );
+                  } else if (
+                    pageNum === currentPage - 2 ||
+                    pageNum === currentPage + 2
+                  ) {
                     return (
                       <PaginationItem key={pageNum}>
                         <PaginationEllipsis />
                       </PaginationItem>
-                    )
+                    );
                   }
-                  return null
+                  return null;
                 })}
                 <PaginationItem>
                   <PaginationNext
-                    href={`/all-product?page=${Math.min(totalPages, currentPage + 1)}`}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    href={`/all-product?page=${Math.min(
+                      totalPages,
+                      currentPage + 1
+                    )}`}
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -144,5 +193,5 @@ export async function ProductsGrid({ searchParams }: { searchParams: GetProducts
         </>
       )}
     </div>
-  )
+  );
 }
