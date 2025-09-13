@@ -44,8 +44,8 @@ export function ProductDetail({ id }: ProductDetailProps) {
         .then((res) => res.json())
         .then((response) => response.data),
   });
- 
-  console.log('details product',product)
+
+  console.log("details product", product);
   // Mutation for submitting the product
   const mutation = useMutation({
     mutationFn: async () => {
@@ -119,7 +119,8 @@ export function ProductDetail({ id }: ProductDetailProps) {
   if (isError && error instanceof Error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        Error: {error.message || "Failed to load product. Please try again later."}
+        Error:{" "}
+        {error.message || "Failed to load product. Please try again later."}
       </div>
     );
   }
@@ -153,9 +154,11 @@ export function ProductDetail({ id }: ProductDetailProps) {
 
           <div>
             <div>
-              <div className="flex justify-between">
+              <div className="flex items-center gap-5">
                 <div>
-                  <Label>QTY</Label>
+                  <Label className="text-[16px] font-medium leading-[120%] text-[#707070]">
+                    QTY
+                  </Label>
                   <div className="flex items-center space-x-2 p-1 mt-2 border border-[#595959] rounded">
                     <button
                       onClick={() => updateQuantity(quantity - 1)}
@@ -172,16 +175,20 @@ export function ProductDetail({ id }: ProductDetailProps) {
                     </button>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm text-gray-600">Total</div>
-                  <div className="text-2xl font-bold">${total}</div>
+                <div className="text-right flex flex-col gap-2 items-start">
+                  <div className="text-[16px] font-medium leading-[120%] text-[#707070]">
+                    Total
+                  </div>
+                  <div className="text-2xl text-[#2F2F2F] leading-[120%] font-semibold ">
+                    ${total}
+                  </div>
                 </div>
               </div>
             </div>
 
             <div className="space-y-2 py-4">
               <Button
-                className="bg-[#D9AD5E] hover:bg-[#f5b641] w-[172px] rounded"
+                className="bg-[#D9AD5E] hover:bg-[#f5b641] w-[172px] rounded-xl"
                 onClick={handleSubmit}
                 disabled={mutation.isPending}
               >
@@ -200,21 +207,23 @@ export function ProductDetail({ id }: ProductDetailProps) {
       </div>
 
       <div className="py-[48px]">
-        <h2 className="text-2xl font-bold mb-4 text-center">
+        <h2 className="text-2xl font-semibold text-[#212121] md:text-[40px] leading-[120%] mb-4 text-center font-manrope">
           Product Description
         </h2>
         <div className="mt-12 grid grid-cols-8 gap-12">
           <div className="col-span-6">
-            <p>{product.description}</p>
+            <p className="text-[#4E4E4E] leading-[150%] text-[20px] font-poppins">
+              {product.description}
+            </p>
           </div>
-          <div className="col-span-2">
+          {/* <div className="col-span-2">
             <ul className="mt-4 space-y-2">
               <li>• Storage: 256GB / 512GB / 1TB</li>
               <li>• Display: 6.9-inch Super Retina XDR</li>
               <li>• Chip: A18 Pro</li>
               <li>• SKU: {product._id}</li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
