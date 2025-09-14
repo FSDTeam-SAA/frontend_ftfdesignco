@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -53,8 +52,8 @@ export function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Shop", href: "#", onClick: handleShopClick },
-    { name: "Swag Store", href: "#" },
-    { name: "Swag Packs", href: "#" },
+    { name: "Swag Store", href: "/swagstore" },
+    { name: "Swag Packs", href: "/SwagPacks" },
     { name: "Pricing", href: "/pricing" },
     { name: "Products Catalog", href: "/catalog" },
     { name: "Contact Us", href: "/contact-us" },
@@ -63,7 +62,7 @@ export function Navbar() {
 
   return (
     <Hideon
-      routes={["/shop", "/cart", "/checkout"]}
+      routes={["/shop", "/cart", "/checkout", "/my-account", "/order-history"]}
     >
       <header className="w-full  sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Bar */}

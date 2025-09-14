@@ -1,22 +1,25 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { User, Lock, LogOut } from "lucide-react"
+import { useState } from "react";
+import { User, Lock, List } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
-import { cn } from "@/lib/utils"
-import PersonalInformationForm from "@/components/web_components/personal-information-form"
-import ChangePasswordForm from "@/components/web_components/change-password-form"
-import { signOut } from "next-auth/react"
+import { cn } from "@/lib/utils";
+import PersonalInformationForm from "@/components/web_components/personal-information-form";
+import ChangePasswordForm from "@/components/web_components/change-password-form";
+
+import OrdersPage from "../order-history/page";
+import ShopNavbar from "@/components/shared/shopnavbar";
 
 export default function AccountsPage() {
-  const [activeTab, setActiveTab] = useState("personal-information")
+  const [activeTab, setActiveTab] = useState("personal-information");
 
   return (
     <div className=" py-8 px-4 sm:px-6 lg:px-8">
+      <ShopNavbar />
       <div className=" container mx-auto  p-6 ">
         <h1 className="text-3xl font-bold text-center mb-8">Accounts</h1>
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8">
@@ -44,7 +47,8 @@ export default function AccountsPage() {
                 variant="ghost"
                 className={cn(
                   "justify-start px-4 py-2 text-base",
-                  activeTab === "personal-information" && "bg-gray-100 text-gray-900 font-semibold",
+                  activeTab === "personal-information" &&
+                    "bg-gray-100 text-gray-900 font-semibold"
                 )}
                 onClick={() => setActiveTab("personal-information")}
               >
@@ -55,7 +59,8 @@ export default function AccountsPage() {
                 variant="ghost"
                 className={cn(
                   "justify-start px-4 py-2 text-base",
-                  activeTab === "change-password" && "bg-gray-100 text-gray-900 font-semibold",
+                  activeTab === "change-password" &&
+                    "bg-gray-100 text-gray-900 font-semibold"
                 )}
                 onClick={() => setActiveTab("change-password")}
               >
@@ -64,22 +69,29 @@ export default function AccountsPage() {
               </Button>
               <Button
                 variant="ghost"
-                className="justify-start px-4 py-2 text-base text-red-600 hover:bg-red-50 hover:text-red-700"
-              onClick={() => signOut( { callbackUrl: "/" })}
+                className={cn(
+                  "justify-start px-4 py-2 text-base",
+                  activeTab === "order-history" &&
+                    "bg-gray-100 text-gray-900 font-semibold"
+                )}
+                onClick={() => setActiveTab("order-history")}
               >
-                <LogOut className="w-5 h-5 mr-3" />
-                Log out
+                <List className="w-5 h-5 mr-3" />
+                OrderHistory
               </Button>
             </div>
           </div>
 
           {/* Right Content Area */}
           <div className="flex-1">
-            {activeTab === "personal-information" && <PersonalInformationForm />}
+            {activeTab === "personal-information" && (
+              <PersonalInformationForm />
+            )}
             {activeTab === "change-password" && <ChangePasswordForm />}
+            {activeTab === "order-history" && <OrdersPage />}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
