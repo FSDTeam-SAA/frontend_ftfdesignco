@@ -1,11 +1,12 @@
 "use client";
 
-import { Menu, ShoppingCart, User } from "lucide-react";
+import { LogOut, Menu, ShoppingCart, User } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { signOut, useSession } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +22,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 
 // const fetchShopData = async (token) => {
 //   const response = await fetch(
@@ -82,11 +83,29 @@ export default function ShopNavbar() {
                 <div className="flex items-center">
                   <Link href="/" className="flex items-center space-x-2">
                     <div className="flex h-10 w-32 items-center justify-center rounded bg-muted text-sm font-medium text-muted-foreground">
-                      {isLoading
-                        ? "Loading..."
-                        : error
-                        ? "Company Logo"
-                        : shopData?.data?.companyName || "Company Logo"}
+                      {isLoading ? (
+                        "Loading..."
+                      ) : error ? (
+                        <Image
+                          src="/assets/logo.png"
+                          alt="GratiSwag Logo"
+                          width={104}
+                          height={64}
+                          className="h-10 w-auto sm:h-12 lg:h-16"
+                          priority
+                        />
+                      ) : (
+                        shopData?.data?.companyName || (
+                          <Image
+                            src="/assets/logo.png"
+                            alt="GratiSwag Logo"
+                            width={104}
+                            height={64}
+                            className="h-10 w-auto sm:h-12 lg:h-16"
+                            priority
+                          />
+                        )
+                      )}
                     </div>
                   </Link>
                 </div>
@@ -192,7 +211,14 @@ export default function ShopNavbar() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild className="cursor-pointer">
-                      <Link href="/order-history">Order History</Link>
+                      <Button
+                        variant="ghost"
+                        className="justify-start px-4 py-2 text-base text-red-600 hover:bg-red-50 hover:text-red-700"
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                      >
+                        <LogOut className="w-5 h-5 mr-3" />
+                        Log out
+                      </Button>
                     </DropdownMenuItem>
                   </>
                 ) : (

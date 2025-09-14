@@ -46,7 +46,7 @@ export function CreateStore() {
           body: formData,
         }
       );
-     
+
       return response.json();
     },
     onSuccess: (data) => {
@@ -121,7 +121,7 @@ export function CreateStore() {
   };
 
   return (
-    <section id='swagecreatestore'>
+    <section id="swagecreatestore">
       <div className="container mx-auto py-[40px] md:py-[72px]">
         <Card className="max-w-[900px] mx-auto h-auto overflow-y-auto rounded-xl bg-white shadow-md">
           <CardHeader className="text-center">
