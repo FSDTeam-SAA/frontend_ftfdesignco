@@ -30,7 +30,7 @@ export async function SubScriptionPlan() {
   const plans = await getPricingPlans();
   console.log("plansss", plans);
   return (
-    <section className="py-16 bg-[#FCF7EF]">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h3 className="text-lg font-semibold font-manrope leading-[120%] text-[#D9AD5E] mb-3">
