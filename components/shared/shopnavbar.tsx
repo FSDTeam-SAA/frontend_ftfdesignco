@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Image from "next/image";
+import { employeecard } from "@/lib/api";
 
 // const fetchShopData = async (token) => {
 //   const response = await fetch(
@@ -50,20 +51,7 @@ export default function ShopNavbar() {
     error,
   } = useQuery({
     queryKey: ["shopData", token],
-    queryFn: async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shop/my-shop`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
+    queryFn: () => employeecard(),
   });
 
   return (
@@ -169,17 +157,19 @@ export default function ShopNavbar() {
         <div className="flex items-center space-x-4">
           {/* Shopping Cart */}
           {role === "employee" && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative h-10 w-10"
-              aria-label="Shopping Cart"
-            >
-              <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-gratisswag-dark-gray" />
-              <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-[#424242] px-1.5 text-xs font-semibold text-white">
-                0
-              </Badge>
-            </Button>
+            <Link href="/cart">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative h-10 w-10"
+                aria-label="Shopping Cart"
+              >
+                <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-gratisswag-dark-gray" />
+                <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-[#424242] px-1.5 text-xs font-semibold text-white">
+                  0
+                </Badge>
+              </Button>
+            </Link>
           )}
 
           {/* User Dropdown */}

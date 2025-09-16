@@ -1,13 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { X, Filter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface Category {
   _id: string;
@@ -55,72 +61,78 @@ export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
 
   const FilterContent = () => (
     <div className="space-y-6">
-      {/* Categories */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Categories</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {categories.map((cat) => (
-            <div key={cat._id} className="flex items-center space-x-2">
-              <Checkbox
-                id={cat._id}
-                checked={selectedCategories.includes(cat._id)}
-                onCheckedChange={(checked) =>
-                  setSelectedCategories((prev) =>
-                    checked
-                      ? [...prev, cat._id]
-                      : prev.filter((id) => id !== cat._id)
-                  )
-                }
-              />
-              <Label htmlFor={cat._id}>{cat.title}</Label>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+      <Accordion type="multiple" className="w-full space-y-6">
+        {/* Categories */}
+        <AccordionItem value="categories" className="border rounded-xl px-2">
+          <AccordionTrigger className="font-semibold">
+            Categories
+          </AccordionTrigger>
+          <AccordionContent className="space-y-3">
+            {categories.map((cat) => (
+              <div key={cat._id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={cat._id}
+                  checked={selectedCategories.includes(cat._id)}
+                  onCheckedChange={(checked) =>
+                    setSelectedCategories((prev) =>
+                      checked
+                        ? [...prev, cat._id]
+                        : prev.filter((id) => id !== cat._id)
+                    )
+                  }
+                />
+                <Label htmlFor={cat._id}>{cat.title}</Label>
+              </div>
+            ))}
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Price Range */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Coins</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Slider
-            value={priceRange}
-            onValueChange={setPriceRange}
-            max={1000}
-            step={10}
-          />
-          <div className="flex justify-between text-sm text-gray-600 mt-5">
-            <span>{priceRange[0]}+</span>
-            <span>{priceRange[1]}+</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Brands */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Brands</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {["Nike", "Adidas", "Puma", "Champion"].map((brand) => (
-            <div key={brand} className="flex items-center space-x-2">
-              <Checkbox
-                id={brand}
-                checked={selectedBrands.includes(brand)}
-                onCheckedChange={(checked) =>
-                  setSelectedBrands((prev) =>
-                    checked ? [...prev, brand] : prev.filter((b) => b !== brand)
-                  )
-                }
+        {/* Price Range */}
+        <AccordionItem
+          value="price"
+          className="bg-[#E9EEF2] px-4 py-2 rounded-xl"
+        >
+          <AccordionTrigger className="font-semibold">Coins</AccordionTrigger>
+          <AccordionContent>
+            <div>
+              <Slider
+                value={priceRange}
+                onValueChange={setPriceRange}
+                max={1000}
+                step={10}
+                className="w-full bg-gray-300 rounded-full my-4"
               />
-              <Label htmlFor={brand}>{brand}</Label>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>${priceRange[0]}</span>
+                <span>${priceRange[1]}+</span>
+              </div>
             </div>
-          ))}
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Brands */}
+        <AccordionItem value="brands" className="border rounded-xl px-2">
+          <AccordionTrigger className="font-semibold">Brands</AccordionTrigger>
+          <AccordionContent className="space-y-3">
+            {["Nike", "Adidas", "Puma", "Champion"].map((brand) => (
+              <div key={brand} className="flex items-center space-x-2">
+                <Checkbox
+                  id={brand}
+                  checked={selectedBrands.includes(brand)}
+                  onCheckedChange={(checked) =>
+                    setSelectedBrands((prev) =>
+                      checked
+                        ? [...prev, brand]
+                        : prev.filter((b) => b !== brand)
+                    )
+                  }
+                />
+                <Label htmlFor={brand}>{brand}</Label>
+              </div>
+            ))}
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       {/* Apply Button */}
       <Button

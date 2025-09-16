@@ -53,7 +53,7 @@ export function Navbar() {
     { name: "Home", href: "/" },
     { name: "Shop", href: "#", onClick: handleShopClick },
     { name: "Swag Store", href: "/swagstore" },
-    { name: "Swag Packs", href: "/SwagPacks" },
+    { name: "Swag Packs", href: "/swagpacks" },
     { name: "Pricing", href: "/pricing" },
     { name: "Products Catalog", href: "/catalog" },
     { name: "Contact Us", href: "/contact-us" },
@@ -73,7 +73,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/assets/logo.png"
+              src="/assets/logo.svg"
               alt="GratiSwag Logo"
               width={104}
               height={64}

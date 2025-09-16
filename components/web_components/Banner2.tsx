@@ -21,7 +21,7 @@ const Banner2 = () => {
                     </div>
                     <div>
                         <p className='text-sm sm:text-base md:text-lg text-[#424242]'>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididu
+                            Awesome Job
                         </p>
                     </div>
                 </div>
@@ -37,12 +37,12 @@ const Banner2 = () => {
                     </div>
                     <div>
                         <p className='text-sm sm:text-base md:text-lg text-[#424242]'>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididu
+                            Great for Corporate Events and for Marketing Gifts
                         </p>
                     </div>
                 </div>
                 <div className='mt-6 md:mt-10'>
-                    <Link href='/all-product'>
+                    <Link href='/swagpacks'>
                     
                     <Button className='bg-[#D9AD5E] text-[#131313] text-sm sm:text-base md:text-[18px] h-10 md:h-[48px] px-6 md:px-[42px] rounded-[8px]'>
                         See More

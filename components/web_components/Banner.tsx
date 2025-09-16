@@ -35,7 +35,7 @@ export function Banner() {
           {/* <span className="mb-2 text-xs font-semibold uppercase tracking-wider text-gratisswag-orange sm:text-sm">
             Company
           </span> */}
-          <h2 className="mb-4 text-2xl font-bold leading-tight text-gratisswag-dark-gray sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl max-w-[90vw] sm:max-w-[513px]">
+          <h2 className="mb-4 text-2xl font-bold leading-tight font-manrope text-gratisswag-dark-gray sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl max-w-[90vw] sm:max-w-[513px]">
             Gratitude Given.{" "}
             <span className="text-gratisswag-accent-blue">Engagement</span>{" "}
             Gained.
@@ -49,7 +49,7 @@ export function Banner() {
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
                 <Button
-                  className="py-2 px-6 rounded bg-[#D9AD5E] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg"
+                  className="py-2 px-6 rounded leading-[120%] font-manrope bg-[#D9AD5E] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg"
                   onClick={handleClick}
                 >
                   Create My Store
@@ -58,7 +58,7 @@ export function Banner() {
               <CreateStoreModal />
             </Dialog>
             <Link href="/all-product">
-              <Button className="py-2 px-12 rounded bg-[#131313] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg">
+              <Button className="py-2 px-12 rounded leading-[120%]  bg-[#131313] text-base font-semibold text-white hover:bg-[#f5b641] font-manrope hover:text-white sm:text-lg">
                 See More
               </Button>
             </Link>
@@ -72,7 +72,7 @@ export function Banner() {
             alt="GratiSwag branded merchandise"
             width={600}
             height={600}
-            className="h-auto w-full max-w-[90vw] rounded-lg object-cover shadow-lg sm:max-w-md md:max-w-lg lg:max-w-xl"
+            className="h-auto w-full max-w-[90vw] rounded-xl object-cover shadow-lg sm:max-w-md md:max-w-lg lg:max-w-xl"
             priority
           />
         </div>

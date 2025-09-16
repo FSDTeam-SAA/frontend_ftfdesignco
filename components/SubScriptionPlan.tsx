@@ -28,15 +28,15 @@ async function getPricingPlans(): Promise<PricingPlan[]> {
 
 export async function SubScriptionPlan() {
   const plans = await getPricingPlans();
-console.log('plansss',plans)
+  console.log("plansss", plans);
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-[#FCF7EF]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h3 className="text-lg font-semibold text-[#D9AD5E] mb-3">
+          <h3 className="text-lg font-semibold font-manrope leading-[120%] text-[#D9AD5E] mb-3">
             Get more from your swag Platform
           </h3>
-          <h2 className=" text-[28px] md:text-[40px] font-bold text-[#131313] max-w-[594px] mx-auto mb-4">
+          <h2 className=" text-[28px] md:text-[40px] font-bold leading-[120%] font-manrope text-center text-[#131313] max-w-[594px] mx-auto mb-4">
             A Plan for Every Grateful Business
           </h2>
         </div>

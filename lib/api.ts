@@ -44,12 +44,21 @@ export const apiEndpoints = {
   updateProfile: "/user/update-profile",
 };
 
-
-
-
 export async function employeorderhistory() {
   try {
     const res = await api.get(`/order/my-order`);
+    const data = await res.data;
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`${error}`);
+    }
+  }
+}
+
+export async function employeecard() {
+  try {
+    const res = await api.get(`/cart/my-cart`);
     const data = await res.data;
     return data;
   } catch (error) {
