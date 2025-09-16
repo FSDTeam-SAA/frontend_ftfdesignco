@@ -1,7 +1,7 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Separator } from "@/components/ui/separator"
-import Subscribe from "./subscribe"
+import Image from "next/image";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
+import Subscribe from "./subscribe";
 
 export function Footer() {
   return (
@@ -12,7 +12,7 @@ export function Footer() {
           <div className="md:col-span-4 mb-6 md:mb-0">
             <div className="mb-4 flex items-center gap-2">
               <Image
-                src="/assets/logo.png"
+                src="/assets/footerlogo.svg"
                 alt="GratiSwag Logo"
                 width={40}
                 height={40}
@@ -20,8 +20,9 @@ export function Footer() {
               />
             </div>
             <p className="text-xs sm:text-sm text-gray-300">
-              Connecting hearts through meaningful dedications, fostering deeper bonds, creating lasting memories, and
-              celebrating the beauty of shared emotions.
+              Connecting hearts through meaningful dedications, fostering deeper
+              bonds, creating lasting memories, and celebrating the beauty of
+              shared emotions.
             </p>
           </div>
 
@@ -30,23 +31,29 @@ export function Footer() {
             <h3 className="mb-4 text-base sm:text-lg font-semibold">Company</h3>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
-                <Link href="/about-us" className="text-gray-300 hover:text-white">
+                <Link
+                  href="/about-us"
+                  className="text-gray-300 hover:text-white"
+                >
                   About Us
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/blogs" className="text-gray-300 hover:text-white">
                   Blog
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
                   All Awag
                 </Link>
-              </li>
+              </li> */}
               <li>
-                <Link href="/contact-us" className="text-gray-300 hover:text-white">
-                  Contact
+                <Link
+                  href="/contact-us"
+                  className="text-gray-300 hover:text-white"
+                >
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -57,12 +64,18 @@ export function Footer() {
             <h3 className="mb-4 text-base sm:text-lg font-semibold">Support</h3>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
-                <Link href="/privacy-policy" className="text-gray-300 hover:text-white">
+                <Link
+                  href="/privacy-policy"
+                  className="text-gray-300 hover:text-white"
+                >
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-service" className="text-gray-300 hover:text-white">
+                <Link
+                  href="/terms-of-service"
+                  className="text-gray-300 hover:text-white"
+                >
                   Terms Of Service
                 </Link>
               </li>
@@ -71,20 +84,23 @@ export function Footer() {
                   FAQ
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
                   Help Center
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
           {/* Newsletter Signup */}
           <div className="md:col-span-3">
             <h3 className="mb-4 text-base sm:text-lg font-semibold">
-              Subscribe To Our <span className="text-[#D9AD5E]">NEWSLETTER</span>
+              Subscribe To Our{" "}
+              <span className="text-[#D9AD5E]">NEWSLETTER</span>
             </h3>
-            <p className="mb-4 text-xs sm:text-sm text-gray-300">Connect with us on social media and stay in the loop.</p>
+            <p className="mb-4 text-xs sm:text-sm text-gray-300">
+              Connect with us on social media and stay in the loop.
+            </p>
             <Subscribe />
           </div>
         </div>
@@ -92,8 +108,10 @@ export function Footer() {
         <Separator className="my-6 sm:my-8 bg-gray-600" />
 
         {/* Copyright */}
-        <div className="text-center text-xs sm:text-sm text-gray-400">{"© 2025 Swag. All Rights Reserved"}</div>
+        <div className="text-center text-xs sm:text-sm text-gray-400">
+          {"© 2025 Swag. All Rights Reserved"}
+        </div>
       </div>
     </footer>
-  )
+  );
 }

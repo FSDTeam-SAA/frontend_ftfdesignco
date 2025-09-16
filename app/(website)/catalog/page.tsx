@@ -44,7 +44,7 @@ export default function CategorySection() {
   }
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-[#FCF7EF]">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl md:text-[40px] font-manrope leading-[120%] text-[#131313] font-semibold">
@@ -73,7 +73,9 @@ export default function CategorySection() {
                       className="object-contain h-full  w-full"
                     />
                   </div>
-                  <h3 className="text-lg font-semibold  bg-[#E7EEFDB8] mx-0 text-[20px] leading-[120%] font-manrope py-1 text-[#1059EF]">{category.title}</h3>
+                  <h3 className="text-lg font-semibold  bg-[#E7EEFDB8] mx-0 text-[20px] leading-[120%] font-manrope py-1 text-[#1059EF]">
+                    {category.title}
+                  </h3>
                 </CardContent>
               </Card>
             </Link>

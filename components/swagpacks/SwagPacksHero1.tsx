@@ -26,14 +26,14 @@ const SwagPacksHero1 = () => {
           <p className="text-[#424242] text-[16px] leading-[120%] font-normal font-manrope  mb-4 md:mb-6">
             Our tree seog stay to your empityees and{" "}
           </p>
-          <div className="flex gap-4 mb-4">
+          <div className="flex items-center gap-4 mb-4">
             <div>
               <Image
                 src="/assets/check-circle-broken.png"
                 alt="Check Icon"
                 width={40}
                 height={40}
-                className="w-8 h-8 sm:w-8 sm:h-8 md:w-12 md:h-12"
+                className="w-8 h-8 sm:w-8 sm:h-8 md:max-w-12 md:max-h-12"
               />
             </div>
             <div>
@@ -43,14 +43,14 @@ const SwagPacksHero1 = () => {
               </p>
             </div>
           </div>
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-4 items-center mb-4">
             <div>
               <Image
                 src="/assets/check-circle-broken.png"
                 alt="Check Icon"
                 width={40}
                 height={40}
-                className="w-8 h-8 sm:w-8 sm:h-8 md:w-12 md:h-12"
+                className="w-8 h-8 sm:w-8 sm:h-8 md:max-w-12 md:max-h-12"
               />
             </div>
             <div>
@@ -67,7 +67,7 @@ const SwagPacksHero1 = () => {
                 alt="Check Icon"
                 width={40}
                 height={40}
-                className="w-8 h-8 sm:w-8 sm:h-8 md:w-12 md:h-12"
+                className="w-8 h-8 sm:w-8 sm:h-8 md:max-w-12 md:max-h-12"
               />
             </div>
             <div>
