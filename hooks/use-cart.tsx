@@ -38,7 +38,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     queryFn: async () => {
       if (!token) return { data: {} };
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/my-cart`,
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/my-cart`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,15 +56,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Add to cart mutation
   const addToCartMutation = useMutation({
-    mutationFn: async ({ productId }: { productId: string }) => {
+    mutationFn: async ({
+      productId,
+      quantity,
+    }: {
+      productId: string;
+      quantity: number;
+    }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/decrement/${productId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/add-to-cart`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({ productId, quantity }),
         }
       );
       if (!response.ok) throw new Error("Failed to add to cart");
@@ -83,7 +90,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeFromCartMutation = useMutation({
     mutationFn: async (itemId: string) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/${itemId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/${itemId}`,
         {
           method: "DELETE",
           headers: {
@@ -103,12 +110,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  const addToCart = (productId: string) => {
+  const addToCart = (productId: string, quantity: number) => {
     if (!token) {
       toast.error("User authentication required. Please log in.");
       return;
     }
-    addToCartMutation.mutate({ productId });
+    addToCartMutation.mutate({ productId, quantity });
   };
 
   const removeFromCart = (itemId: string) => {
@@ -122,7 +129,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeFromCart(item._id);
       }
     } else {
-      addToCart(productId);
+      addToCart(productId, quantity);
     }
   };
 

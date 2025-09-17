@@ -10,12 +10,13 @@ import ShopNavbar from "@/components/shared/shopnavbar";
 import { employeecarddicrement, employeecardincrement } from "@/lib/api";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/query-client";
+import { useCart } from "@/hooks/use-cart";
 
 interface Product {
   _id: string;
   title: string;
   price: number;
-  image:string;
+  image: string;
 }
 
 interface CartItem {
@@ -24,10 +25,11 @@ interface CartItem {
   quantity: number;
   totalCoin: number;
   product: Product;
-  image:string
+  // image:string;
 }
 
 export default function CartPage() {
+  const { removeFromCart } = useCart();
   const { data: session } = useSession();
   const token = session?.accessToken;
 
@@ -36,7 +38,7 @@ export default function CartPage() {
     queryKey: ["cart"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/my-cart`,
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/my-cart`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -108,8 +110,8 @@ export default function CartPage() {
           <h1 className="text-3xl font-bold mb-2">Cart Page</h1>
           <p className="text-gray-600">
             From everyday essentials to the latest trends, we bring you a
-            seamless shopping experience with unbeatable deals, delivery/discover
-            convenience, quality, and style all in one place.
+            seamless shopping experience with unbeatable deals,
+            delivery/discover convenience, quality, and style all in one place.
           </p>
         </div>
         {cartItems.length === 0 ? (
@@ -190,7 +192,7 @@ export default function CartPage() {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-red-500 hover:text-red-700"
-                          onClick={() => toast.info("Remove API not hooked")}
+                          onClick={() => removeFromCart(item._id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

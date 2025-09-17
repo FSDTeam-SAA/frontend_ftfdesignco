@@ -1,6 +1,6 @@
 import { getSession, useSession } from "next-auth/react";
 
-const BASE_URL = "https://ftfdesignco-backend.onrender.com/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 import axios from "axios";
 import { EmployeeProfile } from "./types";
 
@@ -108,7 +108,18 @@ export async function updateEmployeeProfile(
   }
 }
 
-//
+// employ cart
+export async function fetchemployecartdata() {
+  try {
+    const res = await api.get(`/cart/my-cart`);
+    return res.data.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`${error}`);
+    }
+  }
+}
+
 export async function employeeaddtocart(productId: string, quantity: number) {
   try {
     const res = await api.post(`/cart/add-to-cart`, { productId, quantity });
@@ -124,9 +135,10 @@ export async function employeecardincrement(productId: string) {
   try {
     const res = await api.put(`/cart/increment/${productId}`);
     return res.data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`${error}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error:any) {
+   if (error.response && error.response.data) {  
+      throw new Error(error.response.data.message || "Something went wrong");
     }
   }
 }
@@ -135,10 +147,12 @@ export async function employeecarddicrement(productId: string) {
   try {
     const res = await api.put(`/cart/decrement/${productId}`);
     return res.data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`${error}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response && error.response.data) {  
+      throw new Error(error.response.data.message || "Something went wrong");
     }
+    throw error;
   }
 }
 

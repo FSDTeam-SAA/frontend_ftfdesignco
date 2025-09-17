@@ -1,6 +1,6 @@
-'use client';
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+"use client";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Pagination,
   PaginationContent,
@@ -8,10 +8,16 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+} from "@/components/ui/pagination";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 // Define interfaces for Blog and BlogsResponse
 interface Blog {
@@ -36,10 +42,15 @@ interface BlogsResponse {
 }
 
 // Fetch function with proper typing
-const fetchBlogs = async (page: number = 1, limit: number = 6): Promise<BlogsResponse> => {
-  const response = await fetch(`https://ftfdesignco-backend.onrender.com/api/v1/blog?page=${page}&limit=${limit}`);
+const fetchBlogs = async (
+  page: number = 1,
+  limit: number = 6
+): Promise<BlogsResponse> => {
+  const response = await fetch(
+    `https://ftfdesignco-backend.onrender.com/blog?page=${page}&limit=${limit}`
+  );
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error("Network response was not ok");
   }
   return response.json();
 };
@@ -50,7 +61,7 @@ function BlogsContent() {
 
   // UseQuery with explicit typing
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['blogs', page, limit],
+    queryKey: ["blogs", page, limit],
     queryFn: () => fetchBlogs(page, limit),
     // Use placeholderData to retain previous data during pagination (equivalent to keepPreviousData in v4)
     placeholderData: (previousData) => previousData,
@@ -61,7 +72,11 @@ function BlogsContent() {
   }
 
   if (isError) {
-    return <div className="text-center py-12 text-red-500">Error: {error.message}</div>;
+    return (
+      <div className="text-center py-12 text-red-500">
+        Error: {error.message}
+      </div>
+    );
   }
 
   // Safely access meta and data with fallback values
@@ -79,7 +94,7 @@ function BlogsContent() {
             <Card className="hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
               <div className="relative aspect-video">
                 <Image
-                  src={blog.image || '/placeholder.svg'}
+                  src={blog.image || "/placeholder.svg"}
                   alt={blog.blogTitle}
                   fill
                   className="object-cover rounded-t-lg"
@@ -108,25 +123,33 @@ function BlogsContent() {
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => setPage((old) => Math.max(old - 1, 1))}
-                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                className={
+                  currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                }
               />
             </PaginationItem>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-              <PaginationItem key={pageNum}>
-                <PaginationLink
-                  onClick={() => setPage(pageNum)}
-                  isActive={pageNum === currentPage}
-                >
-                  {pageNum}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNum) => (
+                <PaginationItem key={pageNum}>
+                  <PaginationLink
+                    onClick={() => setPage(pageNum)}
+                    isActive={pageNum === currentPage}
+                  >
+                    {pageNum}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
 
             <PaginationItem>
               <PaginationNext
                 onClick={() => setPage((old) => Math.min(old + 1, totalPages))}
-                className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }
               />
             </PaginationItem>
           </PaginationContent>

@@ -14,13 +14,15 @@ function Subscribe() {
     key: string;
   }
 
-  const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubscribe = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       const response: Response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/newsletter/subscribe`,
+        `${process.env.NEXT_PUBLIC_API_URL}/newsletter/subscribe`,
         {
           method: "POST",
           headers: {
@@ -35,7 +37,9 @@ function Subscribe() {
         setEmail("");
       } else {
         const errorData: SubscribeResponse = await response.json();
-        toast.error(errorData.message || "Subscription failed. Please try again.");
+        toast.error(
+          errorData.message || "Subscription failed. Please try again."
+        );
       }
     } catch (error) {
       console.error("Error subscribing to newsletter:", error);

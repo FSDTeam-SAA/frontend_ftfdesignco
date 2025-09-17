@@ -37,7 +37,7 @@ export function CreateStoreModal() {
   const createStoreMutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shop/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/shop/create`,
         {
           method: "POST",
           headers: {

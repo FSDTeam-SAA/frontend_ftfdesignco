@@ -21,10 +21,9 @@ interface Category {
 }
 
 async function getCategories(): Promise<Category[]> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/category`,
-    { cache: "no-store" }
-  );
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`, {
+    cache: "no-store",
+  });
   const data = await res.json();
   return data.success ? data.data : [];
 }

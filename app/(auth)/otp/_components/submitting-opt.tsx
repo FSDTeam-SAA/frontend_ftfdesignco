@@ -27,7 +27,7 @@ const verifyEmailApi = async (otp: string, token: string | null) => {
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/verify-email`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/verify-email`,
     {
       method: "POST",
       headers,
@@ -62,7 +62,7 @@ const verifyForgotPasswordApi = async (otp: string, token: string | null) => {
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/verify-token`,
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-token`,
     {
       method: "POST",
       headers,
@@ -189,7 +189,7 @@ export default function OtpPage() {
 
     setIsResending(true);
     try {
-      const response = await fetch(`/api/v1/auth/user/resend-otp`, {
+      const response = await fetch(`/auth/user/resend-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
