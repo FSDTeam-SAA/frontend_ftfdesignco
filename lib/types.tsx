@@ -1,3 +1,5 @@
+// import { profile } from "console";
+
 // employe order histoy
 export interface Employee {
   employeeId?: string;
@@ -42,3 +44,21 @@ export interface OrdersResponse {
 }
 
 // employe order histoy  end
+
+
+// employe profile
+
+// types/employee.ts
+export interface EmployeeProfile {
+  employeeId: string;
+  coin: string;
+  name: string;
+  email: string;
+  phone: string;
+  country: string;
+  city: string;
+  roadOrArea: string;
+  postalCode: string;
+  companyAddress?: string;
+  imageLink?: string;
+}

@@ -12,7 +12,7 @@ import {
   Users,
   FileText,
   DollarSign,
-  Coins,
+  // Coins,
   Settings,
   LogOut,
   Menu,
@@ -52,11 +52,11 @@ const navigation = [
     href: "/dashboard/sales",
     icon: DollarSign,
   },
-  {
-    name: "Company Coins",
-    href: "/dashboard/coins",
-    icon: Coins,
-  },
+  // {
+  //   name: "Company Coins",
+  //   href: "/dashboard/coins",
+  //   icon: Coins,
+  // },
   {
     name: "Setting",
     href: "/dashboard/settings",

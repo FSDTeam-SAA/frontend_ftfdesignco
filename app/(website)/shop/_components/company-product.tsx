@@ -53,6 +53,7 @@ interface ProductsResponse {
 async function fetchProducts({
   filters,
   token,
+  role,
 }: {
   filters: {
     categories: string[];
@@ -62,10 +63,16 @@ async function fetchProducts({
     sort?: string;
   };
   token: string;
+  role: string;
 }): Promise<ProductsResponse> {
   const { categories, sort = "createdAt", page } = filters;
-
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop/approved?page=${page}&limit=12&sort=${sort}`;
+  let url;
+  if (role == "company_admin") {
+    url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop/approved?page=${page}&limit=12&sort=${sort}`;
+  } else {
+    url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/shop-products`;
+  }
+  console.log(role);
 
   // ✅ Only category filter is applied
   if (categories.length > 0) {
@@ -132,6 +139,9 @@ export default function CompanyProducts({
   const { data: session } = useSession();
   const token = session?.accessToken;
   const queryClient = useQueryClient();
+  console.log("1", session?.user.role);
+  const role = session?.user.role || "";
+  console.log("role", role);
 
   const {
     data: productsData,
@@ -139,7 +149,7 @@ export default function CompanyProducts({
     error,
   } = useQuery<ProductsResponse>({
     queryKey: ["products", filters, token],
-    queryFn: () => fetchProducts({ filters, token: token! }),
+    queryFn: () => fetchProducts({ filters, token: token!, role }),
     enabled: !!token,
   });
 
@@ -189,7 +199,7 @@ export default function CompanyProducts({
 
   const currentPage = productsData?.currentPage || filters.page;
   const totalPages = productsData?.totalPages || 1;
-console.log('filter productsss',filteredProducts);
+  console.log("filter productsss", filteredProducts);
 
   return (
     <div>
@@ -207,7 +217,10 @@ console.log('filter productsss',filteredProducts);
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-8">
             {filteredProducts.map((product) => (
               <div key={product._id} className="group relative">
-                <Link href={`/shop/${product?.productId?._id}`} className="block">
+                <Link
+                  href={`/shop/${product?.productId?._id}`}
+                  className="block"
+                >
                   <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                     <div className="relative aspect-square">
                       <Image
@@ -259,7 +272,10 @@ console.log('filter productsss',filteredProducts);
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() =>
-                      setFilters((f) => ({ ...f, page: Math.max(1, f.page - 1) }))
+                      setFilters((f) => ({
+                        ...f,
+                        page: Math.max(1, f.page - 1),
+                      }))
                     }
                     className={
                       currentPage === 1 ? "pointer-events-none opacity-50" : ""
