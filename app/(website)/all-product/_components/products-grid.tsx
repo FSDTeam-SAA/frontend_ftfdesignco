@@ -50,7 +50,7 @@ async function getProducts(
     brand,
   } = searchParams;
 
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/product/get-all?page=${page}&limit=${limit}&sort=${sort}`;
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/product/get-all?page=${page}&limit=${limit}&sort=${sort}`;
   if (category) url += `&category=${category}`;
   if (prices) url += `&prices=${prices}`;
   if (search) url += `&search=${search}`;

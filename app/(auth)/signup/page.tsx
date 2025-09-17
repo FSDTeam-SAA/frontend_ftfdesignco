@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useState } from "react";
@@ -40,7 +38,7 @@ interface ApiResponse {
 const registerUser = async (data: RegisterData): Promise<ApiResponse> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/register`,
+      `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -157,12 +155,30 @@ export default function SignUpPage() {
           <form onSubmit={handleSubmit}>
             <CardContent className="grid gap-4 sm:gap-6 px-0 pb-0">
               {[
-                { id: "name", type: "text", label: "Name", placeholder: "Enter your full name" },
-                { id: "email", type: "email", label: "Email Address", placeholder: "Enter your email address" },
-                { id: "phone", type: "tel", label: "Phone Number", placeholder: "Enter your Phone Number" },
+                {
+                  id: "name",
+                  type: "text",
+                  label: "Name",
+                  placeholder: "Enter your full name",
+                },
+                {
+                  id: "email",
+                  type: "email",
+                  label: "Email Address",
+                  placeholder: "Enter your email address",
+                },
+                {
+                  id: "phone",
+                  type: "tel",
+                  label: "Phone Number",
+                  placeholder: "Enter your Phone Number",
+                },
               ].map(({ id, type, label, placeholder }) => (
                 <div key={id} className="grid gap-2">
-                  <Label htmlFor={id} className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium">
+                  <Label
+                    htmlFor={id}
+                    className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium"
+                  >
                     {label}
                   </Label>
                   <Input
@@ -178,7 +194,10 @@ export default function SignUpPage() {
               ))}
 
               <div className="grid gap-2">
-                <Label htmlFor="password" className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium">
+                <Label
+                  htmlFor="password"
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -188,22 +207,33 @@ export default function SignUpPage() {
                     placeholder="Enter your password"
                     required
                     value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
                   />
                   <button
                     type="button"
                     onClick={togglePasswordVisibility}
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    {showPassword ? <Eye className="h-5 w-5" /> :   <EyeOff className="h-5 w-5" />}
+                    {showPassword ? (
+                      <Eye className="h-5 w-5" />
+                    ) : (
+                      <EyeOff className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="confirmPassword" className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium"
+                >
                   Confirm Password
                 </Label>
                 <div className="relative">
@@ -213,16 +243,26 @@ export default function SignUpPage() {
                     placeholder="Enter Confirm password"
                     required
                     value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("confirmPassword", e.target.value)
+                    }
                     className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
                   />
                   <button
                     type="button"
                     onClick={toggleConfirmPasswordVisibility}
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
-                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
                   >
-                    {showConfirmPassword ? <Eye className="h-5 w-5" /> :   <EyeOff className="h-5 w-5" /> }
+                    {showConfirmPassword ? (
+                      <Eye className="h-5 w-5" />
+                    ) : (
+                      <EyeOff className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -231,9 +271,14 @@ export default function SignUpPage() {
                 <Checkbox
                   id="terms"
                   checked={formData.agreeTerms}
-                  onCheckedChange={(v) => handleInputChange("agreeTerms", v as boolean)}
+                  onCheckedChange={(v) =>
+                    handleInputChange("agreeTerms", v as boolean)
+                  }
                 />
-                <Label htmlFor="terms" className="text-sm sm:text-[14px] text-gray-600">
+                <Label
+                  htmlFor="terms"
+                  className="text-sm sm:text-[14px] text-gray-600"
+                >
                   I agree to the{" "}
                   <Link href="/terms-of-service">
                     <span className="hover:underline">Terms & Conditions</span>
@@ -251,7 +296,10 @@ export default function SignUpPage() {
 
               <p className="text-sm sm:text-[14px] text-gray-600 text-center mt-4">
                 Already have an account?{" "}
-                <Link href="/login" className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline">
+                <Link
+                  href="/login"
+                  className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline"
+                >
                   Sign in
                 </Link>
               </p>

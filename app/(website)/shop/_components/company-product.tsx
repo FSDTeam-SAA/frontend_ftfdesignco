@@ -68,9 +68,9 @@ async function fetchProducts({
   const { categories, sort = "createdAt", page } = filters;
   let url;
   if (role == "company_admin") {
-    url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop/approved?page=${page}&limit=12&sort=${sort}`;
+    url = `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/my-shop/approved?page=${page}&limit=12&sort=${sort}`;
   } else {
-    url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/shop-products`;
+    url = `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/shop-products`;
   }
   console.log(role);
 
@@ -97,7 +97,7 @@ async function addToCart({
   token: string;
 }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/add-to-cart`,
+    `${process.env.NEXT_PUBLIC_API_URL}/cart/add-to-cart`,
     {
       method: "POST",
       headers: {

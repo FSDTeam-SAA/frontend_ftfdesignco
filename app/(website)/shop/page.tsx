@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import { CompanyProductFilters } from "./_components/company-product-filters";
 import ShopNavbar from "@/components/shared/shopnavbar";
 import CompanyProducts from "./_components/company-product";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 
 export default function ProductsPage() {
   const [filters, setFilters] = useState({
@@ -14,9 +14,9 @@ export default function ProductsPage() {
     page: 1,
   });
 
-  const searchParams = useSearchParams();
-  const companyId = searchParams.get("companyId");
-  console.log("Company ID:", companyId);
+  // const searchParams = useSearchParams();
+  // const companyId = searchParams.get("companyId");
+  // console.log("Company ID:", companyId);
 
   return (
     <div className="min-h-screen bg-gray-50">

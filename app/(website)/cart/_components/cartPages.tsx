@@ -1,74 +1,88 @@
-"use client"
-import Image from "next/image"
-import Link from "next/link"
-import { Minus, Plus, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { useCart } from "@/hooks/use-cart"
-import { useQuery } from "@tanstack/react-query"
-import { useSession } from "next-auth/react"
-import ShopNavbar from "@/components/shared/shopnavbar"
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import ShopNavbar from "@/components/shared/shopnavbar";
+import { employeecarddicrement, employeecardincrement } from "@/lib/api";
+import { toast } from "sonner";
+import { queryClient } from "@/lib/query-client";
+import { useCart } from "@/hooks/use-cart";
 
 interface Product {
-  _id: string
-  title: string
-  price: number
-  category: {
-    _id: string
-    title: string
-  }
+  _id: string;
+  title: string;
+  price: number;
+  image: string;
+}
+
+interface CartItem {
+  _id: string;
+  productId: string;
+  quantity: number;
+  totalCoin: number;
+  product: Product;
+  // image:string;
 }
 
 export default function CartPage() {
-  const { cartData, removeFromCart, updateQuantity, isLoading } = useCart()
-  const { data: session } = useSession()
-  const token = session?.accessToken
+  const { removeFromCart } = useCart();
+  const { data: session } = useSession();
+  const token = session?.accessToken;
 
-  // Fetch product details for cart items
-  const { data: productsData } = useQuery({
-    queryKey: ["cartProducts", Object.keys(cartData)],
+  // ✅ Fetch cart data (directly from API)
+  const { data: cartItems = [], isLoading } = useQuery<CartItem[]>({
+    queryKey: ["cart"],
     queryFn: async () => {
-      const productIds = Object.keys(cartData)
-      if (productIds.length === 0) return []
-      const productPromises = productIds.map(async (productId) => {
-        // The original code was fetching from /api/v1/cart/my-cart/${productId}
-        // but it should fetch product details from /api/v1/product/${productId}
-        // as cartData already contains the cart item details.
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/product/${productId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        if (response.ok) {
-          const data = await response.json()
-          return data.data
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/my-cart`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
-        return null
-      })
-      const products = await Promise.all(productPromises)
-      return products.filter(Boolean)
+      );
+      if (!res.ok) throw new Error("Failed to fetch cart");
+      const json = await res.json();
+      return json.data as CartItem[];
     },
-    enabled: !!token && Object.keys(cartData).length > 0,
-  })
+    enabled: !!token,
+  });
 
-  const cartItems = Object.entries(cartData).map(([productId, cartItem]) => {
-    const product = productsData?.find((p: Product) => p._id === productId)
-    return {
-      ...cartItem,
-      product,
-    }
-  })
+  // ✅ Mutations for increment/decrement
+  const QuantityIncrementMutation = useMutation({
+    mutationKey: ["cart"],
+    mutationFn: (id: string) => employeecardincrement(id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success(`${data.message}`);
+    },
+    onError: (error) => toast.error(error.message),
+  });
 
-  const totalCoins = cartItems.reduce((total, item) => {
-    return total + item.coin * item.quantity
-  }, 0)
+  const QuantityDecrementMutation = useMutation({
+    mutationKey: ["cart"],
+    mutationFn: (id: string) => employeecarddicrement(id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success(`${data.message}`);
+    },
+    onError: (error) => toast.error(error.message),
+  });
 
-  const handleQuantityChange = (productId: string, currentQuantity: number, change: number) => {
-    const newQuantity = currentQuantity + change
-    if (newQuantity > 0) {
-      updateQuantity(productId, newQuantity)
-    }
-  }
+  const handleQuantityIncrement = (id: string) => {
+    QuantityIncrementMutation.mutate(id);
+  };
+  const handleQuantityDecrement = (id: string) => {
+    QuantityDecrementMutation.mutate(id);
+  };
+
+  // ✅ Calculate total coins
+  const totalCoins = cartItems.reduce(
+    (total, item) => total + item.totalCoin,
+    0
+  );
 
   if (isLoading) {
     return (
@@ -85,7 +99,7 @@ export default function CartPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -95,15 +109,18 @@ export default function CartPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Cart Page</h1>
           <p className="text-gray-600">
-            From everyday essentials to the latest trends, we bring you a seamless shopping experience with unbeatable
-            deals, delivery/discover convenience, quality, and style all in one place.
+            From everyday essentials to the latest trends, we bring you a
+            seamless shopping experience with unbeatable deals,
+            delivery/discover convenience, quality, and style all in one place.
           </p>
         </div>
         {cartItems.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 mb-4">Your cart is empty</p>
             <Link href="/shop">
-              <Button className="bg-[#D9AD5E] hover:bg-[#f5b641]">Continue Shopping</Button>
+              <Button className="bg-[#D9AD5E] hover:bg-[#f5b641]">
+                Continue Shopping
+              </Button>
             </Link>
           </div>
         ) : (
@@ -121,12 +138,18 @@ export default function CartPage() {
                 {/* Cart Items */}
                 <div className="divide-y">
                   {cartItems.map((item) => (
-                    <div key={item.productId} className="grid grid-cols-12 gap-4 p-4 items-center">
+                    <div
+                      key={item._id}
+                      className="grid grid-cols-12 gap-4 p-4 items-center"
+                    >
                       {/* Product Info */}
                       <div className="col-span-6 flex items-center space-x-4">
                         <div className="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0">
                           <Image
-                            src="/placeholder.svg?height=64&width=64"
+                            src={
+                              item.product?.image ||
+                              "/placeholder.svg?height=64&width=64"
+                            }
                             alt={item.product?.title || "Product"}
                             width={64}
                             height={64}
@@ -134,7 +157,9 @@ export default function CartPage() {
                           />
                         </div>
                         <div>
-                          <h3 className="font-medium text-sm">{item.product?.title || "Loading..."}</h3>
+                          <h3 className="font-medium text-sm">
+                            {item.product?.title}
+                          </h3>
                         </div>
                       </div>
                       {/* Quantity Controls */}
@@ -143,7 +168,7 @@ export default function CartPage() {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 bg-transparent"
-                          onClick={() => handleQuantityChange(item.productId, item.quantity, -1)}
+                          onClick={() => handleQuantityDecrement(item._id)}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
@@ -152,20 +177,22 @@ export default function CartPage() {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 bg-transparent"
-                          onClick={() => handleQuantityChange(item.productId, item.quantity, 1)}
+                          onClick={() => handleQuantityIncrement(item._id)}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
                       </div>
                       {/* Coins */}
-                      <div className="col-span-2 text-center font-medium">{item.coin * item.quantity}</div>
+                      <div className="col-span-2 text-center font-medium">
+                        {item.totalCoin}
+                      </div>
                       {/* Remove Button */}
                       <div className="col-span-2 text-center">
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-red-500 hover:text-red-700"
-                          onClick={() => removeFromCart(item._id)} // Changed item.productId to item._id
+                          onClick={() => removeFromCart(item._id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -176,7 +203,9 @@ export default function CartPage() {
               </div>
               <div className="mt-6">
                 <Link href="/shop">
-                  <Button className="bg-[#D9AD5E] hover:bg-[#f5b641]">Continue Shopping</Button>
+                  <Button className="bg-[#D9AD5E] hover:bg-[#f5b641]">
+                    Continue Shopping
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -198,7 +227,9 @@ export default function CartPage() {
                     </div>
                   </div>
                   <Link href="/checkout" className="block mt-6">
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600">Checkout</Button>
+                    <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                      Checkout
+                    </Button>
                   </Link>
                 </CardContent>
               </Card>
@@ -207,5 +238,5 @@ export default function CartPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

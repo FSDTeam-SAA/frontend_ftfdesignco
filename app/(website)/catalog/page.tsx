@@ -19,7 +19,7 @@ export default function CategorySection() {
     const getCategories = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/category`,
+          `${process.env.NEXT_PUBLIC_API_URL}/category`,
           {
             cache: "no-store",
           }
