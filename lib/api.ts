@@ -109,7 +109,7 @@ export async function updateEmployeeProfile(
 }
 
 //
-export async function addtocart(productId: string, quantity: number) {
+export async function employeeaddtocart(productId: string, quantity: number) {
   try {
     const res = await api.post(`/cart/add-to-cart`, { productId, quantity });
     return res.data;
@@ -120,9 +120,9 @@ export async function addtocart(productId: string, quantity: number) {
   }
 }
 
-export async function increment(productId: string) {
+export async function employeecardincrement(productId: string) {
   try {
-    const res = await api.post(`/cart/increment/${productId}`);
+    const res = await api.put(`/cart/increment/${productId}`);
     return res.data;
   } catch (error) {
     if (error instanceof Error) {
@@ -131,9 +131,9 @@ export async function increment(productId: string) {
   }
 }
 
-export async function dicrement(productId: string) {
+export async function employeecarddicrement(productId: string) {
   try {
-    const res = await api.post(`/cart/decrement/${productId}`);
+    const res = await api.put(`/cart/decrement/${productId}`);
     return res.data;
   } catch (error) {
     if (error instanceof Error) {

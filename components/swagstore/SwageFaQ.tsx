@@ -43,9 +43,9 @@ export default function SwageFaQ() {
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi
           </p>
         </div>
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="single" collapsible className="w-full ">
           {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
+            <AccordionItem className="border-2" key={index} value={`item-${index}`}>
               <AccordionTrigger className="text-[#0F0F0F] text-base sm:text-lg md:text-xl font-medium text-left">
                 {faq.question}
               </AccordionTrigger>

@@ -1,55 +1,59 @@
-"use client"
-import { useState, useCallback } from "react"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { DataTable } from "@/components/ui/data-table"
-import { Button } from "@/components/ui/button"
-import { Edit, Trash2, Coins } from "lucide-react"
-import { Breadcrumb } from "../../_components/breadcrumb"
-import { useSession } from "next-auth/react"
-import { toast } from "sonner"
-import { DeleteConfirmationDialog } from "./delete-confirmation-dialog"
-import { AddEmployeeDialog } from "./add-employee-dialog"
-import { UpdateEmployeeDialog } from "./update-employee-dialog"
-import { AddCoinsDialog } from "./add-coins-dialog"
+"use client";
+import { useState, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { DataTable } from "@/components/ui/data-table";
+import { Button } from "@/components/ui/button";
+import { Trash2, Coins } from "lucide-react";
+import { Breadcrumb } from "../../_components/breadcrumb";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { DeleteConfirmationDialog } from "./delete-confirmation-dialog";
+import { AddEmployeeDialog } from "./add-employee-dialog";
+import { UpdateEmployeeDialog } from "./update-employee-dialog";
+import { AddCoinsDialog } from "./add-coins-dialog";
 
-const API_BASE_URL = "https://ftfdesignco-backend.onrender.com/api/v1"
+const API_BASE_URL = "https://ftfdesignco-backend.onrender.com/api/v1";
 
 // Interfaces for type safety
 interface Shop {
-  _id: string
-  companyId: string
-  companyName: string
+  _id: string;
+  companyId: string;
+  companyName: string;
 }
 
 interface User {
-  _id: string
-  name: string
-  email: string
+  _id: string;
+  name: string;
+  email: string;
 }
 
 interface Employee {
-  _id: string
-  name: string
-  email: string
-  employeeId: string
-  coin: number
-  shop?: Shop
-  userId: User
+  _id: string;
+  name: string;
+  email: string;
+  employeeId: string;
+  coin: number;
+  shop?: Shop;
+  userId: User;
 }
 
 export default function EmployeesList() {
-  const { data: session, status } = useSession()
-  const token = session?.accessToken
-  const queryClient = useQueryClient()
+  const { data: session, status } = useSession();
+  const token = session?.accessToken;
+  const queryClient = useQueryClient();
 
   // Dialog states
-  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
-  const [isCoinsDialogOpen, setIsCoinsDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+  const [isCoinsDialogOpen, setIsCoinsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // Selected employee states
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
-  const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(null)
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
+  const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
+    null
+  );
 
   // Fetch employees
   const {
@@ -59,22 +63,22 @@ export default function EmployeesList() {
   } = useQuery<Employee[], Error>({
     queryKey: ["employees"],
     queryFn: async () => {
-      if (!token) throw new Error("No authentication token")
+      if (!token) throw new Error("No authentication token");
       const response = await fetch(`${API_BASE_URL}/employee`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      })
+      });
       if (!response.ok) {
-        throw new Error(`Failed to fetch employees: ${response.statusText}`)
+        throw new Error(`Failed to fetch employees: ${response.statusText}`);
       }
-      const data = await response.json()
-      return data.data as Employee[]
+      const data = await response.json();
+      return data.data as Employee[];
     },
     enabled: !!token,
     retry: 1,
-  })
+  });
 
   // Delete employee mutation
   const deleteEmployee = useMutation({
@@ -85,51 +89,51 @@ export default function EmployeesList() {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      })
+      });
       if (!response.ok) {
-        throw new Error(`Failed to delete employee: ${response.statusText}`)
+        throw new Error(`Failed to delete employee: ${response.statusText}`);
       }
-      return response.json()
+      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["employees"] })
-      toast.success("Employee deleted successfully")
-      setIsDeleteDialogOpen(false)
-      setEmployeeToDelete(null)
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      toast.success("Employee deleted successfully");
+      setIsDeleteDialogOpen(false);
+      setEmployeeToDelete(null);
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete employee")
-      setIsDeleteDialogOpen(false)
-      setEmployeeToDelete(null)
+      toast.error(error.message || "Failed to delete employee");
+      setIsDeleteDialogOpen(false);
+      setEmployeeToDelete(null);
     },
-  })
+  });
 
   // Action handlers
-  const handleUpdateClick = useCallback((employee: Employee) => {
-    setSelectedEmployee(employee)
-    setIsUpdateDialogOpen(true)
-  }, [])
+  // const handleUpdateClick = useCallback((employee: Employee) => {
+  //   setSelectedEmployee(employee)
+  //   setIsUpdateDialogOpen(true)
+  // }, [])
 
   const handleCoinsClick = useCallback((employee: Employee) => {
-    setSelectedEmployee(employee)
-    setIsCoinsDialogOpen(true)
-  }, [])
+    setSelectedEmployee(employee);
+    setIsCoinsDialogOpen(true);
+  }, []);
 
   const handleDeleteClick = useCallback((employee: Employee) => {
-    setEmployeeToDelete(employee)
-    setIsDeleteDialogOpen(true)
-  }, [])
+    setEmployeeToDelete(employee);
+    setIsDeleteDialogOpen(true);
+  }, []);
 
   const handleDeleteConfirm = useCallback(() => {
     if (employeeToDelete) {
-      deleteEmployee.mutate(employeeToDelete._id)
+      deleteEmployee.mutate(employeeToDelete._id);
     }
-  }, [employeeToDelete, deleteEmployee])
+  }, [employeeToDelete, deleteEmployee]);
 
   const handleDeleteCancel = useCallback(() => {
-    setIsDeleteDialogOpen(false)
-    setEmployeeToDelete(null)
-  }, [])
+    setIsDeleteDialogOpen(false);
+    setEmployeeToDelete(null);
+  }, []);
 
   // Column definitions
   const columns = [
@@ -175,14 +179,14 @@ export default function EmployeesList() {
           >
             <Coins className="h-4 w-4 mr-1" /> Add Coins
           </Button>
-          <Button
+          {/* <Button
             size="sm"
             variant="outline"
             onClick={() => handleUpdateClick(item)}
             className="text-blue-600 border-blue-200 hover:bg-blue-50"
           >
             <Edit className="h-4 w-4 mr-1" />
-          </Button>
+          </Button> */}
           <Button
             size="sm"
             variant="destructive"
@@ -194,7 +198,7 @@ export default function EmployeesList() {
         </div>
       ),
     },
-  ]
+  ];
 
   // Loading state
   if (status === "loading") {
@@ -205,7 +209,7 @@ export default function EmployeesList() {
           <p className="mt-2 text-gray-600">Loading session...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Authentication check
@@ -213,9 +217,11 @@ export default function EmployeesList() {
     return (
       <div className="text-center py-12">
         <p className="text-red-500 text-lg">Authentication required</p>
-        <p className="text-gray-400 text-sm mt-1">Please log in to view employees.</p>
+        <p className="text-gray-400 text-sm mt-1">
+          Please log in to view employees.
+        </p>
       </div>
-    )
+    );
   }
 
   // Loading employees
@@ -227,7 +233,7 @@ export default function EmployeesList() {
           <p className="mt-2 text-gray-600">Loading employees...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Error state
@@ -237,7 +243,7 @@ export default function EmployeesList() {
         <p className="text-red-500 text-lg">Error loading employees</p>
         <p className="text-gray-400 text-sm mt-1">{error.message}</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -245,7 +251,9 @@ export default function EmployeesList() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Employees</h1>
-          <Breadcrumb items={[{ label: "Dashboard" }, { label: "Employees" }]} />
+          <Breadcrumb
+            items={[{ label: "Dashboard" }, { label: "Employees" }]}
+          />
         </div>
         {token && <AddEmployeeDialog token={token} apiBaseUrl={API_BASE_URL} />}
       </div>
@@ -254,8 +262,8 @@ export default function EmployeesList() {
       <UpdateEmployeeDialog
         isOpen={isUpdateDialogOpen}
         onClose={() => {
-          setIsUpdateDialogOpen(false)
-          setSelectedEmployee(null)
+          setIsUpdateDialogOpen(false);
+          setSelectedEmployee(null);
         }}
         employee={selectedEmployee}
         token={token || ""}
@@ -266,8 +274,8 @@ export default function EmployeesList() {
       <AddCoinsDialog
         isOpen={isCoinsDialogOpen}
         onClose={() => {
-          setIsCoinsDialogOpen(false)
-          setSelectedEmployee(null)
+          setIsCoinsDialogOpen(false);
+          setSelectedEmployee(null);
         }}
         employee={selectedEmployee}
         token={token || ""}
@@ -305,12 +313,14 @@ export default function EmployeesList() {
               </svg>
             </div>
             <p className="text-gray-500 text-lg">No employees found</p>
-            <p className="text-gray-400 text-sm mt-1">Add new employees to get started</p>
+            <p className="text-gray-400 text-sm mt-1">
+              Add new employees to get started
+            </p>
           </div>
         ) : (
           <DataTable data={employees} columns={columns} />
         )}
       </div>
     </div>
-  )
+  );
 }

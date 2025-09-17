@@ -44,11 +44,15 @@ export default function FAQSection() {
         </div>
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-[#0F0F0F] text-base sm:text-lg md:text-xl font-medium font-manrope text-left">
+            <AccordionItem
+              className=" py-2 border-none "
+              key={index}
+              value={`item-${index}`}
+            >
+              <AccordionTrigger className="text-[#0F0F0F] text-base sm:text-lg md:text-xl font-medium font-manrope text-left border-2 border-gray-100 px-5 bg-[#FFFFFF]">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-[#424242] text-sm sm:text-base md:text-base font-normal font-manrope leading-[150%]">
+              <AccordionContent className="text-[#424242] text-sm sm:text-base md:text-base font-normal font-manrope leading-[150%] px-5 pt-3 bg-[#FFFFFF]">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

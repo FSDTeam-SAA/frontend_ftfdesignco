@@ -45,17 +45,17 @@ export function Navbar() {
     }
   };
 
-  const handleShopClick = () => {
-    window.location.href = "https://shop.companycasuals.com/";
-  };
+  // const handleShopClick = () => {
+  //   window.location.href = "https://shop.companycasuals.com/";
+  // };
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Shop", href: "#", onClick: handleShopClick },
-    { name: "Swag Store", href: "/swagstore" },
+    // { name: "Shop", href: "#", onClick: handleShopClick },
+    { name: "Swag Store", href: "https://shop.companycasuals.com"},
     { name: "Swag Packs", href: "/swagpacks" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Products Catalog", href: "/catalog" },
+    { name: "Products Catalog", href: "https://shop.companycasuals.com"},
     { name: "Contact Us", href: "/contact-us" },
     { name: "All products", href: "/all-product" },
   ];
@@ -235,7 +235,7 @@ export function Navbar() {
                     <Link
                       key={link.name}
                       href={link.href}
-                      onClick={link.onClick || (() => setIsSheetOpen(false))}
+                      // onClick={link.onClick || (() => setIsSheetOpen(false))}
                       className={`text-base font-medium transition-colors ${
                         pathname === link.href
                           ? "text-[#D9AD5E] font-semibold"
@@ -287,7 +287,7 @@ export function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                onClick={link.onClick}
+                // onClick={link.onClick}
                 className={`text-sm lg:text-base transition-colors ${
                   pathname === link.href
                     ? "text-[#D9AD5E] font-semibold"
