@@ -18,7 +18,7 @@ export default function PersonalInformationForm({
   onUpdate,
   isUpdating = false,
 }: PersonalInformationFormProps) {
-  console.log('personal data',profile)
+  console.log('personal dataaaa',profile)
   const [formData, setFormData] = useState<Partial<EmployeeProfile>>({
     name: profile.name || "",
     companyAddress: profile.shop.companyName || "",

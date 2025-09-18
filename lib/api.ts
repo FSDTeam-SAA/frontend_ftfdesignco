@@ -2,7 +2,7 @@ import { getSession, useSession } from "next-auth/react";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 import axios from "axios";
-import { EmployeeProfile } from "./types";
+import { EmployeeProfile, SalesResponse } from "./types";
 
 export const useAuthToken = () => {
   const { data: session } = useSession();
@@ -155,5 +155,15 @@ export async function employeecarddicrement(productId: string) {
     throw error;
   }
 }
+
+
+// company salse 
+export async function fetchMySales(employeeId?: string): Promise<SalesResponse> {
+  let url = `/order/my-sales`;
+  if (employeeId) url += `?employeeId=${employeeId}`; 
+  const res = await api.get<SalesResponse>(url);
+  return res.data;
+}
+
 
 export const createApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;

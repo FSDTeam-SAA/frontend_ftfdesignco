@@ -17,7 +17,7 @@ interface DataTableProps<T> {
   itemsPerPage?: number
 }
 
-export function DataTable<T>({ data, columns, itemsPerPage = 12 }: DataTableProps<T>) {
+export function DataTable<T>({ data, columns, itemsPerPage = 10 }: DataTableProps<T>) {
   const [currentPage] = useState(1)
 
   // const totalPages = Math.ceil(data.length / itemsPerPage)
