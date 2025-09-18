@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { contactUs } from "@/lib/api";
+import { contactSchema } from "@/lib/validations/contact";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,15 +22,15 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 
-// ✅ Validation schema
-export const contactSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  address: z.string().optional(),
-  email: z.string().email("Invalid email"),
-  phone: z.string().min(6, "Phone is required"),
-  subject: z.string().min(2, "Subject is required"),
-  message: z.string().min(5, "Message must be at least 5 characters"),
-});
+// // ✅ Validation schema
+// export const contactSchema = z.object({
+//   name: z.string().min(2, "Name is required"),
+//   address: z.string().optional(),
+//   email: z.string().email("Invalid email"),
+//   phone: z.string().min(6, "Phone is required"),
+//   subject: z.string().min(2, "Subject is required"),
+//   message: z.string().min(5, "Message must be at least 5 characters"),
+// });
  
 // interface contactdataform{
 //     name: string;
