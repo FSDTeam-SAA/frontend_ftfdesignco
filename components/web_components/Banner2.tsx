@@ -52,7 +52,7 @@ const Banner2 = () => {
             </div>
             <div>
                 <Image 
-                    src="/assets/banner2.jpg" 
+                    src="/assets/swagpack.png" 
                     alt="Banner Image" 
                     width={1000} 
                     height={1000} 
