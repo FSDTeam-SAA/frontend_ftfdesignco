@@ -98,20 +98,20 @@ export default function RequestedProductsList() {
   const updateStatus = useMutation({
     mutationFn: async ({
       productId,
-      status,
+      // status,
     }: {
       productId: string;
       status: string;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/${productId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/shop-product/${productId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ status }),
+          // body: JSON.stringify({ status }),
         }
       );
 
