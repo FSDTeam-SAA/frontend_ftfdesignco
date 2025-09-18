@@ -18,9 +18,10 @@ export default function PersonalInformationForm({
   onUpdate,
   isUpdating = false,
 }: PersonalInformationFormProps) {
+  console.log('personal data',profile)
   const [formData, setFormData] = useState<Partial<EmployeeProfile>>({
     name: profile.name || "",
-    companyAddress: profile.companyAddress || "",
+    companyAddress: profile.shop.companyName || "",
     email: profile.email || "",
     phone: profile.phone || "",
     country: profile.country || "",
@@ -54,14 +55,14 @@ export default function PersonalInformationForm({
           <Label htmlFor="name">Name</Label>
           <Input id="name" value={formData.name ?? ""} onChange={handleChange} />
         </div>
-        <div className="grid gap-2">
+        {/* <div className="grid gap-2">
           <Label htmlFor="companyAddress">Company Address</Label>
           <Input
             id="companyAddress"
-            value={formData.companyAddress ?? ""}
+            value={formData?.shop?.companyName ?? ""}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email Address</Label>

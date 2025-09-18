@@ -49,16 +49,35 @@ export interface OrdersResponse {
 // employe profile
 
 // types/employee.ts
+export interface CartItem {
+  quantity: number;
+  totalCoin: number;
+  productId: string;
+  _id: string;
+}
+
 export interface EmployeeProfile {
-  employeeId: string;
-  coin: string;
+  _id: string;
   name: string;
   email: string;
-  phone: string;
-  country: string;
+  employeeId: string;
+  password: string;
+  needPasswordChange: boolean;
+  imageLink: string | null;
+  role: string;
+  coin: number;
+  remainingCoin: number;
+  totalOrder: number;
   city: string;
+  country: string;
   roadOrArea: string;
-  postalCode: string;
+  shop: Shop;
+  userId: string;
+  cartData: Record<string, CartItem>;
+  __v: number;
+
+  // Optional fields (not in API, but you had them originally)
+  phone?: string;
+  postalCode?: string;
   companyAddress?: string;
-  imageLink?: string;
 }
