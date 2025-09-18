@@ -3,6 +3,7 @@ import { getSession, useSession } from "next-auth/react";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 import axios from "axios";
 import { EmployeeProfile, SalesResponse } from "./types";
+import { OrdersResponse } from "./companytypes";
 
 export const useAuthToken = () => {
   const { data: session } = useSession();
@@ -94,7 +95,7 @@ export async function updateEmployeeProfile(
     if (image) {
       fd.append("image", image);
     }
-    console.log('fd',fd)
+    console.log("fd", fd);
     const res = await api.patch<EmployeeProfile>(`/employee/update`, fd, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -136,8 +137,8 @@ export async function employeecardincrement(productId: string) {
     const res = await api.put(`/cart/increment/${productId}`);
     return res.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error:any) {
-   if (error.response && error.response.data) {  
+  } catch (error: any) {
+    if (error.response && error.response.data) {
       throw new Error(error.response.data.message || "Something went wrong");
     }
   }
@@ -149,21 +150,67 @@ export async function employeecarddicrement(productId: string) {
     return res.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    if (error.response && error.response.data) {  
+    if (error.response && error.response.data) {
       throw new Error(error.response.data.message || "Something went wrong");
     }
     throw error;
   }
 }
 
-
-// company salse 
-export async function fetchMySales(employeeId?: string): Promise<SalesResponse> {
+// company salse
+export async function fetchMySales(
+  employeeId?: string
+): Promise<SalesResponse> {
   let url = `/order/my-sales`;
-  if (employeeId) url += `?employeeId=${employeeId}`; 
+  if (employeeId) url += `?employeeId=${employeeId}`;
   const res = await api.get<SalesResponse>(url);
   return res.data;
 }
 
+export async function fetchOrders(): Promise<OrdersResponse> {
+  try {
+    const res = await api.get(`/order/all-orders`);
+    return res.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Something went wrong");
+    }
+    throw error;
+  }
+}
+export async function orderStatus(employeId: string, status: string) {
+  try {
+    const res = await api.put(`/order/status/${employeId}`, {
+      status,
+    });
+    return res.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Something went wrong");
+    }
+    throw error;
+  }
+}
 
+export async function contactUs(data: {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  address?: string;
+}) {
+  try {
+    const res = await api.post(`/contract/send-message`, data);
+    return res.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error) {
+  if (error instanceof Error) {
+      throw new Error(error.message || "Failed to Contact");
+    }
+    throw error;
+  }
+}
 export const createApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;

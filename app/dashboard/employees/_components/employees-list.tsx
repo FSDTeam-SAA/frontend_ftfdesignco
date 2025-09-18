@@ -83,16 +83,13 @@ export default function EmployeesList() {
   // Delete employee mutation
   const deleteEmployee = useMutation({
     mutationFn: async (employeeId: string) => {
-      const response = await fetch(`${API_BASE_URL}/employee/${employeeId}`, {
+      const response = await fetch(`${API_BASE_URL}/employee/remove/${employeeId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      if (!response.ok) {
-        throw new Error(`Failed to delete employee: ${response.statusText}`);
-      }
       return response.json();
     },
     onSuccess: () => {
