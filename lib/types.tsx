@@ -117,3 +117,6 @@ export interface SalesResponse {
   totalProductPrice: number;
   data: SaleItem[];
 }
+
+
+//company dashboard order

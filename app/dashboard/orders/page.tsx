@@ -1,85 +1,129 @@
-"use client"
+"use client";
 
-import { DataTable } from "@/components/ui/data-table"
-import { Badge } from "@/components/ui/badge"
-import { useOrders } from "@/hooks/use-api"
-import { Breadcrumb } from "../_components/breadcrumb"
+import { DataTable } from "@/components/ui/data-table";
+import { Badge } from "@/components/ui/badge";
+import { Breadcrumb } from "../_components/breadcrumb";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchOrders, orderStatus } from "@/lib/api";
+import { Order } from "@/lib/companytypes";
+import { toast } from "sonner";
 
 export default function OrderHistoryPage() {
-  const { data: orders = [], isLoading } = useOrders()
+  const { data: ordersResponse, isLoading } = useQuery({
+    queryKey: ["orders"],
+    queryFn: () => fetchOrders(),
+  });
+  const queryClient = useQueryClient();
 
+  const orderMutation = useMutation({
+    mutationKey: ["orders"],
+    mutationFn: ({ Id, status }: { Id: string; status: string }) =>
+      orderStatus(Id, status),
+    onSuccess: (data) => {
+      toast.success(`${data.message}`)
+     queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError:(error)=>{
+      toast.error(`${error}`)
 
+    }
+  });
+
+  const handelstatus = (Id: string, status: string) => {
+    orderMutation.mutate({ Id, status });
+  };
+  if (isLoading) return <div>Loading...</div>;
+
+  // Pass only the array of orders to the DataTable
+  const orders: Order[] = ordersResponse?.data || [];
 
   const columns = [
     {
       key: "productName",
       header: "Product Name",
-      // eslint-disable-next-line
-      render: (item: any) => (
+      render: (order: Order) => (
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">EK</span>
           </div>
-          <span className="font-medium">{item.productId?.title || "T-Shirt"}</span>
+          {/* Display first item's title for this order */}
+          <span className="font-medium">
+            {order.items?.[0]?.title || "T-Shirt"}
+          </span>
         </div>
       ),
     },
     {
       key: "coins",
       header: "Coins",
-      // eslint-disable-next-line
-      render: (item: any) => item.coin || 200,
+      render: (order: Order) => order.totalPayCoin || 0,
     },
     {
       key: "quantity",
       header: "Quantity",
-      render: () => "02",
+      render: (order: Order) =>
+        order.items?.reduce((sum, i) => sum + i.quantity, 0) || 0,
     },
     {
       key: "employeeId",
       header: "Employee Id",
-      render: () => "17456",
+      render: (order: Order) => order.employee,
     },
     {
       key: "date",
       header: "Date",
-      render: () => (
-        <div>
-          <div>04/21/2025</div>
-          <div className="text-sm text-gray-500">03:18pm</div>
-        </div>
-      ),
+      render: (order: Order) => {
+        const date = new Date(order.createdAt);
+        return (
+          <div>
+            <div>{date.toLocaleDateString()}</div>
+            <div className="text-sm text-gray-500">
+              {date.toLocaleTimeString()}
+            </div>
+          </div>
+        );
+      },
     },
     {
       key: "action",
       header: "Action",
-      render: () => (
+      render: (order: Order) => (
         <div className="flex items-center gap-2">
-          <Badge className="bg-green-100 text-green-800">Approved</Badge>
-          <Badge className="bg-blue-100 text-blue-800">Processing</Badge>
-          <Badge className="bg-red-100 text-red-800">Cancel</Badge>
+          <Badge
+            onClick={() => handelstatus(order._id, "approved")}
+            className="bg-green-100 text-green-800 cursor-pointer"
+          >
+            Approved
+          </Badge>
+          <Badge
+            onClick={() => handelstatus(order._id, "delivered")}
+            className="bg-blue-100 text-blue-800 cursor-pointer"
+          >
+            Processing
+          </Badge>
+          <Badge
+            onClick={() => handelstatus(order._id, "rejected")}
+            className="bg-red-100 text-red-800 cursor-pointer"
+          >
+            Cancel
+          </Badge>
         </div>
       ),
     },
-  ]
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-
-  console.log(orders)
+  ];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Order History</h1>
-        <Breadcrumb items={[{ label: "Dashboard" }, { label: "Order History" }]} />
+        <Breadcrumb
+          items={[{ label: "Dashboard" }, { label: "Order History" }]}
+        />
       </div>
 
       <div className="bg-white rounded-lg border">
         <DataTable data={orders} columns={columns} />
       </div>
     </div>
-  )
+  );
 }
