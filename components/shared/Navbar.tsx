@@ -52,18 +52,16 @@ export function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     // { name: "Shop", href: "#", onClick: handleShopClick },
-    { name: "Swag Store", href: "https://shop.companycasuals.com"},
+    { name: "Swag Store", href: "https://shop.companycasuals.com" },
     { name: "Swag Packs", href: "/swagpacks" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Products Catalog", href: "https://shop.companycasuals.com"},
+    { name: "Products Catalog", href: "https://shop.companycasuals.com" },
     { name: "Contact Us", href: "/contact-us" },
     { name: "All products", href: "/all-product" },
   ];
 
   return (
-    <Hideon
-      routes={["/shop", "/cart", "/checkout", "/my-account", "/order-history"]}
-    >
+    <Hideon routes={["/shop", "/cart", "/checkout", "/my-account"]}>
       <header className="w-full  sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Bar */}
         {/* <div className="bg-gratisswag-dark-gray h-2 w-full" /> */}
@@ -151,7 +149,14 @@ export function Navbar() {
                           </DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild className="cursor-pointer">
-                            <Link href="/order-history">Order History</Link>
+                            <Button
+                              variant="ghost"
+                              className="justify-start px-4 py-2 text-base text-red-600 hover:bg-red-50 hover:text-red-700"
+                              onClick={() => signOut({ callbackUrl: "/" })}
+                            >
+                              {/* <LogOut className="w-5 h-5 mr-3" /> */}
+                              Log out
+                            </Button>
                           </DropdownMenuItem>
                         </>
                       ) : (
