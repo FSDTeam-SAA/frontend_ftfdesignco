@@ -17,7 +17,7 @@ import { EmployeeProfile } from "@/lib/types";
 
 export default function AccountsPage() {
   const [activeTab, setActiveTab] = useState("personal-information");
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [image, setImageFile] = useState<File | null>(null);
   const queryClient = useQueryClient();
 
   // Fetch profile
@@ -30,17 +30,17 @@ export default function AccountsPage() {
   const { mutate: updateProfile, isPending } = useMutation({
     mutationFn: ({
       formData,
-      imageFile,
+      image,
     }: {
       formData: Partial<EmployeeProfile>;
-      imageFile?: File | null;
-    }) => updateEmployeeProfile(formData, imageFile),
+      image?: File | null;
+    }) => updateEmployeeProfile(formData, image),
     onSuccess: () => {
       toast.success("Profile updated successfully");
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update profile ");
+      toast.error(error.message || "Failed to update profile");
     },
   });
 
@@ -49,16 +49,17 @@ export default function AccountsPage() {
     if (e.target.files && e.target.files[0] && profile) {
       const file = e.target.files[0];
       setImageFile(file);
-      queryClient.setQueryData(["userProfile"], {
+
+      // 👇 Update cache immediately for instant preview
+      queryClient.setQueryData<EmployeeProfile>(["userProfile"], {
         ...profile,
-        imageUrl: URL.createObjectURL(file),
+        imageLink: URL.createObjectURL(file), // ✅ match backend field
       });
     }
   };
 
   if (isLoading || !profile)
     return <p className="text-center py-10">Loading...</p>;
-  console.log("profile data", profile);
 
   return (
     <div className="py-8 px-4 sm:px-6 lg:px-8">
@@ -73,12 +74,12 @@ export default function AccountsPage() {
               <div className="relative">
                 <Avatar className="w-24 h-24 mb-4 border-2 border-gray-200">
                   <AvatarImage
-                    src={profile.imageLink || "/placeholder-user.jpg"}
+                    src={profile.imageLink || "/assets/about.png"} // ✅ consistent field
                     alt={profile.name}
                   />
-
                   <AvatarFallback>{profile.name?.[0] || "U"}</AvatarFallback>
                 </Avatar>
+
                 {/* Pencil Icon for Image Change */}
                 <label className="absolute bottom-3 right-2 bg-white p-1 rounded-full shadow cursor-pointer">
                   <Pencil className="w-4 h-4 text-gray-600" />
@@ -150,7 +151,7 @@ export default function AccountsPage() {
             {activeTab === "personal-information" && (
               <PersonalInformationForm
                 profile={profile}
-                onUpdate={(formData) => updateProfile({ formData, imageFile })}
+                onUpdate={(formData) => updateProfile({ formData, image })}
                 isUpdating={isPending}
               />
             )}

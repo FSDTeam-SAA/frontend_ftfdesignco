@@ -86,16 +86,16 @@ export async function employeeprofile(): Promise<EmployeeProfile> {
 
 export async function updateEmployeeProfile(
   formData: Partial<EmployeeProfile>,
-  imageFile?: File | null
+  image?: File | null
 ): Promise<EmployeeProfile> {
   try {
     const fd = new FormData();
     fd.append("data", JSON.stringify(formData));
-    if (imageFile) {
-      fd.append("imageLink", imageFile);
+    if (image) {
+      fd.append("image", image);
     }
-
-    const res = await api.post<EmployeeProfile>(`/employee/update`, fd, {
+    console.log('fd',fd)
+    const res = await api.patch<EmployeeProfile>(`/employee/update`, fd, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
