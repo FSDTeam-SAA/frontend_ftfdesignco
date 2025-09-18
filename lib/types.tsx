@@ -5,6 +5,7 @@ export interface Employee {
   employeeId?: string;
   name?: string;
   _id?: string;
+  email?: string;
 }
 
 export interface Product {
@@ -80,4 +81,39 @@ export interface EmployeeProfile {
   phone?: string;
   postalCode?: string;
   companyAddress?: string;
+}
+
+// dashboard company salse
+
+// export interface Employee {
+//   employeeId: string;
+//   name: string;
+//   email: string;
+// }
+
+export interface SaleItem {
+  productName: string;
+  quantity: number;
+  coins: number;
+  totalPrice: number;
+  image: string;
+  employees: Employee[];
+}
+
+export interface SalesPagination {
+  totalOrders: number;
+  currentPage: number;
+  totalPages: number;
+  limit: number;
+}
+
+export interface SalesResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  pagination: SalesPagination;
+  totalProducts: number;
+  totalUserCoin: number;
+  totalProductPrice: number;
+  data: SaleItem[];
 }
