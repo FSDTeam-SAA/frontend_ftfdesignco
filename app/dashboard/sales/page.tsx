@@ -18,7 +18,7 @@ export default function MySalesPage() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["mySales", queryTerm],
     queryFn: () => fetchMySales(queryTerm),
-    enabled: false,
+    enabled:true,
   });
 
   const salesData: SaleItem[] = data?.data || [];
@@ -65,8 +65,8 @@ export default function MySalesPage() {
   ];
 
   const handleSearch = () => {
-    setQueryTerm(searchTerm); // Set the query term
-    refetch(); // Trigger fetch
+    setQueryTerm(searchTerm);
+    refetch();
   };
 
   const handleReset = () => {
