@@ -227,4 +227,22 @@ export async function employOrder(
   }
 }
 
+// company payment 
+
+export async function companyPyament(
+  data: { type: string; totalProductPrice: number;shopId:string;}) {
+  try {
+    const res = await api.post(`/payment/create-payment`, data,);
+    return res.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Something went wrong");
+    }
+    throw error;
+  }
+}
+
+
+
 export const createApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;

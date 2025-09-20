@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { DataTable } from "@/components/ui/data-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,16 +9,33 @@ import { Button } from "@/components/ui/button";
 import { Coins, TableProperties } from "lucide-react";
 import { Breadcrumb } from "../_components/breadcrumb";
 import { SaleItem } from "@/lib/types";
-import { fetchMySales } from "@/lib/api";
+import { companyPyament, fetchMySales } from "@/lib/api";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 export default function MySalesPage() {
+  const { data: session } = useSession();
   const [searchTerm, setSearchTerm] = useState("");
   const [queryTerm, setQueryTerm] = useState("");
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["mySales", queryTerm],
     queryFn: () => fetchMySales(queryTerm),
-    enabled:true,
+    enabled: true,
+  });
+
+  const pymentMutaition = useMutation({
+    mutationFn: (payload: {
+      type: string;
+      totalProductPrice: number;
+      shopId: string;
+    }) => companyPyament(payload),
+    onError:(error)=>{
+      toast.error(`${error.message}`)
+    },
+    onSuccess:(data)=>{
+      toast.success(`${data.message}`)
+    }
   });
 
   const salesData: SaleItem[] = data?.data || [];
@@ -74,6 +91,15 @@ export default function MySalesPage() {
     setQueryTerm("");
     refetch();
   };
+  console.log("salse data", salesData);
+  const handlePayment = () => {
+    const payload = {
+      type: "payOrder",
+      totalProductPrice: data?.totalProductPrice ?? 0,
+      shopId: session?.user?._id ?? "",
+    };
+    pymentMutaition.mutate(payload);
+  };
 
   return (
     <div className="space-y-6">
@@ -83,18 +109,18 @@ export default function MySalesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <Card className="bg-teal-600 text-white">
+        <Card className="bg-[#035F8A] text-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm opacity-90">Total Used Coins</p>
+                <p className="text-sm opacity-90">Total Product</p>
                 <p className="text-3xl font-bold">{data?.totalProducts ?? 0}</p>
               </div>
               <TableProperties className="h-8 w-8 opacity-75" />
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-teal-600 text-white">
+        <Card className="bg-[#035F8A] text-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -105,11 +131,11 @@ export default function MySalesPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-teal-600 text-white">
+        <Card className="bg-[#035F8A] text-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm opacity-90">Total Used Coins</p>
+                <p className="text-sm opacity-90">Total Product Price</p>
                 <p className="text-3xl font-bold">
                   {data?.totalProductPrice ?? 0}
                 </p>
@@ -118,6 +144,15 @@ export default function MySalesPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+      <div>
+        <Button
+          className="bg-[#035F8A] text-white hover:text-black rounded-xl px-14 py-4"
+          onClick={handlePayment}
+          disabled={pymentMutaition.isPending}
+        >
+          {pymentMutaition.isPending ? "Processing..." : "Payment"}
+        </Button>
       </div>
 
       <div className="space-y-4">

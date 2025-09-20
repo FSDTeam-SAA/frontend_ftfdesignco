@@ -23,13 +23,33 @@ export interface Shop {
 export type OrderStatus = "approved" | "cancelled" | "pending" | "delivered";
 
 export interface Order {
-  _id?: string;
-  employeeId?: Employee;
-  productId?: Product;
-  shopId?: Shop;
-  status?: OrderStatus;
+  _id: string;
+  employee: string; // employeeId was actually just a string ID in your response
+  shop: string;     // shopId was also just a string ID
+  items: OrderItem[]; // contains products in the order
+  status: OrderStatus;
+  name?: string;
+  address?: string;
+  country?: string;
+  zipCode?: string | null;
+  totalPayCoin?: number;
+  createdAt: string;
+  updatedAt: string;
   __v?: number;
 }
+
+export interface OrderItem {
+  _id: string;
+  productId: string; // reference to product
+  title: string;
+  image: string;
+  price: number;
+  quantity: number;
+  totalCoin: number;
+}
+
+// export type OrderStatus = "pending" | "approved" | "delivered" | "rejected";
+
 
 export interface Pagination {
   totalOrders?: number;
