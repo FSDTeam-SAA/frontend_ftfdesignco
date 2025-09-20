@@ -207,10 +207,24 @@ export async function contactUs(data: {
     return res.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error) {
-  if (error instanceof Error) {
+    if (error instanceof Error) {
       throw new Error(error.message || "Failed to Contact");
     }
     throw error;
   }
 }
+
+export async function employOrder(
+  data: { country: string; zipCode: string; name: string; address: string }) {
+  try {
+    const res = await api.post(`/order/create-order`, data,);
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message || "Failed to Contact");
+    }
+    throw error;
+  }
+}
+
 export const createApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;
