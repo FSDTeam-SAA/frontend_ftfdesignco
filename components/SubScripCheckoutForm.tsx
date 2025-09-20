@@ -18,6 +18,7 @@ interface CheckoutFormProps {
   userId: string;
   planId: string;
   amount: number;
+  type: "subscription" | "payOrder";
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -27,7 +28,8 @@ const createPaymentIntent = async ({
   planId,
   amount,
   token,
-}: CheckoutFormProps & { token: string | undefined }) => {
+  type,
+}: CheckoutFormProps & { token: string | undefined; type: string }) => {
   console.log("Creating payment intent with:", { userId, planId, amount });
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/payment/create-payment`,
@@ -37,7 +39,7 @@ const createPaymentIntent = async ({
         "Content-Type": "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),
       },
-      body: JSON.stringify({ userId, planId, amount }),
+      body: JSON.stringify({ userId, planId, amount, type }),
     }
   );
 
@@ -256,7 +258,14 @@ export default function CheckoutForm({
   const [message, setMessage] = useState("");
 
   const { mutate: createPaymentMutate, isPending: isCreating } = useMutation({
-    mutationFn: () => createPaymentIntent({ userId, planId, amount, token }),
+    mutationFn: () =>
+      createPaymentIntent({
+        userId,
+        planId,
+        amount,
+        token,
+        type: "subscription",
+      }),
     onSuccess: (data) => {
       console.log("Payment intent created:", data);
       if (data.clientSecret) {
