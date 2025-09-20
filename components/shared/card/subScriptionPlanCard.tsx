@@ -72,7 +72,9 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
       )}
 
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl border-b-2 pb-2 inline-block  w-full">{title}</CardTitle>
+        <CardTitle className="text-2xl border-b-2 pb-2 inline-block  w-full">
+          {title}
+        </CardTitle>
         <p className="text-gray-600">{description}</p>
         <div className="mt-4">
           <span className="text-4xl font-bold">${price}</span>
@@ -134,6 +136,7 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
                   amount={price}
                   onSuccess={handleModalClose}
                   onCancel={handleModalClose}
+                  type="subscription"
                 />
               )}
             </div>
