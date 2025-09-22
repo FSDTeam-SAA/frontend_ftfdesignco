@@ -7,6 +7,8 @@ import type { LucideIcon } from "lucide-react";
 import { ProductSellChart } from "./product-sell";
 import NewProductsChart from "./new-products-chart";
 import CoinsReportDashboard from "./coin-report";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
 
 // Breadcrumb Component (moved from components/breadcrumb.tsx)
 interface BreadcrumbItem {
@@ -70,7 +72,41 @@ function StatsCard({ title, value, icon: Icon, color }: StatsCardProps) {
   );
 }
 
+const fetchCompanySummary = async (token: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dashboard/company-summary`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch revenue report");
+    }
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.message || "Failed to fetch revenue data");
+    }
+    return data;
+  } catch (error) {
+    console.error("Error fetching revenue report:", error);
+    throw error;
+  }
+};
+
 export default function MainDashboard() {
+  const { data: session } = useSession();
+
+  // TanStack Query hook
+  const { data: stats } = useQuery({
+    queryKey: ["company-summary"],
+    queryFn: () => fetchCompanySummary(session?.accessToken || ""),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+  // console.log(stats.data);
   return (
     <div className="space-y-6 p-6">
       <div>
@@ -82,13 +118,13 @@ export default function MainDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatsCard
           title="Total Used Coins"
-          value="132,570"
+          value={stats?.data?.totalUsedCoin.toString() || "0"}
           icon={TrendingUp}
           color="green"
         />
         <StatsCard
           title="Live Product"
-          value="120"
+          value={stats?.data?.liveProducts.toString() || "0"}
           icon={Package}
           color="orange"
         />

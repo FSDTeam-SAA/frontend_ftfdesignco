@@ -315,7 +315,7 @@ const CoinsReportDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
+    <div className="space-y-6 py-6 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -335,7 +335,7 @@ const CoinsReportDashboard: React.FC = () => {
               size="sm"
               className={
                 filterBy === filter
-                  ? "bg-blue-600 hover:bg-orange-600 text-white"
+                  ? "!bg-blue-500 hover:bg-orange-600 text-white"
                   : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
               }
             >
