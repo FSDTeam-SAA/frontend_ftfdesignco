@@ -4,16 +4,15 @@
 //   redirect("/dashboard")
 // }
 
-
-import React from 'react'
-import MainDashboard from './_components/MainDashboard'
+import React, { Suspense } from "react";
+import MainDashboard from "./_components/MainDashboard";
 
 function page() {
   return (
-    <div>
-        <MainDashboard />
-    </div>
-  )
+    <Suspense fallback={<div>Loading...</div>}>
+      <MainDashboard />
+    </Suspense>
+  );
 }
 
-export default page
+export default page;
