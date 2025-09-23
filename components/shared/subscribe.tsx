@@ -14,13 +14,15 @@ function Subscribe() {
     key: string;
   }
 
-  const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubscribe = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       const response: Response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/newsletter/subscribe`,
+        `${process.env.NEXT_PUBLIC_API_URL}/newsletter/subscribe`,
         {
           method: "POST",
           headers: {
@@ -35,7 +37,9 @@ function Subscribe() {
         setEmail("");
       } else {
         const errorData: SubscribeResponse = await response.json();
-        toast.error(errorData.message || "Subscription failed. Please try again.");
+        toast.error(
+          errorData.message || "Subscription failed. Please try again."
+        );
       }
     } catch (error) {
       console.error("Error subscribing to newsletter:", error);
@@ -46,19 +50,19 @@ function Subscribe() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubscribe} className="flex border border-white">
+    <div className="">
+      <form onSubmit={handleSubscribe} className="flex border justify-between rounded-xl border-white/50">
         <Input
           type="email"
           placeholder="Enter Your Email..."
-          className="bg-gratisswag-blue px-4 py-2 text-white placeholder:text-white"
+          className="bg-gratisswag-blue px-4 py-2 text-white placeholder:text-white rounded-l-xl outline-none border-none "
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
         <Button
           type="submit"
-          className="rounded-md bg-[#D9AD5E] px-6 py-2 text-white hover:bg-[#f5b641]"
+          className="rounded-md bg-[#D9AD5E] px-6 py-2 text-white rounded-r-xl hover:bg-[#f5b641]"
           disabled={isLoading}
         >
           {isLoading ? "Subscribing..." : "Subscribe"}

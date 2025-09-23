@@ -33,22 +33,24 @@ export default function FAQSection() {
     <section className="py-8 md:py-12 lg:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 md:mb-10 lg:mb-12 space-y-4 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#131313] font-bold">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#131313] font-bold font-manrope">
             Frequently Asked Questions
           </h2>
-          <p className="mx-auto max-w-[90%] sm:max-w-[700px] md:max-w-[800px] lg:max-w-[905px] text-[#3F3F3F] text-sm sm:text-base md:text-lg font-normal leading-[150%]">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+          <p className="mx-auto max-w-[90%] sm:max-w-[700px] md:max-w-[800px] font-manrope lg:max-w-[905px] text-[#3F3F3F] text-sm sm:text-base md:text-lg font-normal leading-[150%]">
+           Here are a few questions that people usually ask, however, you don&apos;t need to read a screen if you want to talk to a human- call or text (302) 276-8557.
           </p>
         </div>
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-[#0F0F0F] text-base sm:text-lg md:text-xl font-medium text-left">
+            <AccordionItem
+              className=" py-2 border-none "
+              key={index}
+              value={`item-${index}`}
+            >
+              <AccordionTrigger className="text-[#0F0F0F] text-base sm:text-lg md:text-xl font-medium font-manrope text-left border-2 border-gray-100 px-5 bg-[#FFFFFF]">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-[#424242] text-sm sm:text-base md:text-base font-normal leading-[150%]">
+              <AccordionContent className="text-[#424242] text-sm sm:text-base md:text-base font-normal font-manrope leading-[150%] px-5 pt-3 bg-[#FFFFFF]">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

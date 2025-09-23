@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -46,35 +45,42 @@ export function Navbar() {
     }
   };
 
-  const handleShopClick = () => {
-    window.location.href = "https://shop.companycasuals.com/";
-  };
+  // const handleShopClick = () => {
+  //   window.location.href = "https://shop.companycasuals.com/";
+  // };
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Shop", href: "#", onClick: handleShopClick },
-    { name: "Swag Store", href: "#" },
-    { name: "Swag Packs", href: "#" },
+    // { name: "Shop", href: "#", onClick: handleShopClick },
+    { name: "Swag Store", href: "https://shop.companycasuals.com" },
+    { name: "Swag Packs", href: "/swagpacks" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Products Catalog", href: "/catalog" },
+    { name: "Products Catalog", href: "https://shop.companycasuals.com" },
     { name: "Contact Us", href: "/contact-us" },
     { name: "All products", href: "/all-product" },
   ];
 
   return (
+<<<<<<< HEAD
     <Hideon
       routes={["/shop", "/cart", "/checkout"]}
     >
       <header className="w-full py-5  bg-white shadow-sm  ">
         {/* Top Bar */}
        
+=======
+    <Hideon routes={["/shop", "/cart", "/checkout", "/my-account"]}>
+      <header className="w-full  sticky top-0 z-50 bg-white shadow-sm">
+        {/* Top Bar */}
+        {/* <div className="bg-gratisswag-dark-gray h-2 w-full" /> */}
+>>>>>>> 584772b25042a9d2b63dabdfd44e7780f2d0d3e1
 
         {/* Main Navbar */}
-        <nav className="container mx-auto flex h-16 items-center justify-between px-4 py-2 sm:h-20 sm:px-6 lg:px-8">
+        <nav className="container mx-auto flex h-16 items-center justify-between px-4 py-2 pt-5 sm:h-20 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/assets/logo.png"
+              src="/assets/logo.svg"
               alt="GratiSwag Logo"
               width={104}
               height={64}
@@ -152,7 +158,14 @@ export function Navbar() {
                           </DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild className="cursor-pointer">
-                            <Link href="/order-history">Order History</Link>
+                            <Button
+                              variant="ghost"
+                              className="justify-start px-4 py-2 text-base text-red-600 hover:bg-red-50 hover:text-red-700"
+                              onClick={() => signOut({ callbackUrl: "/" })}
+                            >
+                              {/* <LogOut className="w-5 h-5 mr-3" /> */}
+                              Log out
+                            </Button>
                           </DropdownMenuItem>
                         </>
                       ) : (
@@ -236,7 +249,7 @@ export function Navbar() {
                     <Link
                       key={link.name}
                       href={link.href}
-                      onClick={link.onClick || (() => setIsSheetOpen(false))}
+                      // onClick={link.onClick || (() => setIsSheetOpen(false))}
                       className={`text-base font-medium transition-colors ${
                         pathname === link.href
                           ? "text-[#D9AD5E] font-semibold"
@@ -288,7 +301,7 @@ export function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                onClick={link.onClick}
+                // onClick={link.onClick}
                 className={`text-sm lg:text-base transition-colors ${
                   pathname === link.href
                     ? "text-[#D9AD5E] font-semibold"

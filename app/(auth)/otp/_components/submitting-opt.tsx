@@ -27,7 +27,7 @@ const verifyEmailApi = async (otp: string, token: string | null) => {
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/verify-email`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/verify-email`,
     {
       method: "POST",
       headers,
@@ -62,7 +62,7 @@ const verifyForgotPasswordApi = async (otp: string, token: string | null) => {
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/verify-token`,
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-token`,
     {
       method: "POST",
       headers,
@@ -95,7 +95,7 @@ export default function OtpPage() {
   const email = searchParams.get("email");
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [isResending, setIsResending] = useState(false);
+  // const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(30);
 
   useEffect(() => {
@@ -181,44 +181,44 @@ export default function OtpPage() {
     mutation.mutate(otpCode);
   };
 
-  const handleResendOtp = async () => {
-    if (!email) {
-      toast.error("No email address found for resending OTP");
-      return;
-    }
+  // const handleResendOtp = async () => {
+  //   if (!email) {
+  //     toast.error("No email address found for resending OTP");
+  //     return;
+  //   }
 
-    setIsResending(true);
-    try {
-      const response = await fetch(`/api/v1/auth/user/resend-otp`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ email }),
-      });
+  //   setIsResending(true);
+  //   try {
+  //     const response = await fetch(`/auth/user/resend-otp`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         ...(token && { Authorization: `Bearer ${token}` }),
+  //       },
+  //       body: JSON.stringify({ email }),
+  //     });
 
-      const text = await response.text();
-      console.log("Raw response from server (resend OTP):", text);
+  //     const text = await response.text();
+  //     console.log("Raw response from server (resend OTP):", text);
 
-      const data = safeJsonParse(text);
+  //     const data = safeJsonParse(text);
 
-      if (!response.ok) {
-        const errorMsg = data?.message || text || "Failed to resend OTP";
-        throw new Error(errorMsg);
-      }
+  //     if (!response.ok) {
+  //       const errorMsg = data?.message || text || "Failed to resend OTP";
+  //       throw new Error(errorMsg);
+  //     }
 
-      toast.success("OTP resent successfully");
-      setCountdown(30);
-    } catch (error) {
-      console.error("Resend OTP error:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to resend OTP"
-      );
-    } finally {
-      setIsResending(false);
-    }
-  };
+  //     toast.success("OTP resent successfully");
+  //     setCountdown(30);
+  //   } catch (error) {
+  //     console.error("Resend OTP error:", error);
+  //     toast.error(
+  //       error instanceof Error ? error.message : "Failed to resend OTP"
+  //     );
+  //   } finally {
+  //     setIsResending(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (countdown > 0) {
@@ -311,7 +311,7 @@ export default function OtpPage() {
                 )}
               </Button>
 
-              <div className="text-center mt-2">
+              {/* <div className="text-center mt-2">
                 {countdown > 0 ? (
                   <p className="text-sm text-gray-500">
                     Resend OTP in {countdown} seconds
@@ -328,7 +328,7 @@ export default function OtpPage() {
                       : "Didn't receive code? Resend"}
                   </button>
                 )}
-              </div>
+              </div> */}
             </CardContent>
           </form>
         </Card>

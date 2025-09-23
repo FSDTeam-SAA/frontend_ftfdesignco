@@ -1,56 +1,71 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useQuery, useMutation, useQueryClient, UseQueryResult } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Trash2, Edit, RefreshCw } from "lucide-react"
-import { DataTable } from "@/components/ui/data-table"
-import { toast, Toaster } from "sonner"
-import { Breadcrumb } from "../../_components/breadcrumb"
-import { EditCoinModal } from "./edit-coin-modal"
-import { useSession } from "next-auth/react"
-import Image from "next/image"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useState } from "react";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Trash2, Edit, RefreshCw } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
+import { toast, Toaster } from "sonner";
+import { Breadcrumb } from "../../_components/breadcrumb";
+import { EditCoinModal } from "./edit-coin-modal";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export interface Product {
-  _id: string
+  _id: string;
   product: {
-    _id: string
-    title: string
-    price: number
-    quantity: number
-    productImage: string
+    _id: string;
+    title: string;
+    price: number;
+    quantity: number;
+    productImage: string;
     category: {
-      _id: string
-      title: string
-    }
-  }
-  userId: string
+      _id: string;
+      title: string;
+    };
+  };
+  userId: string;
   shopId: {
-    _id: string
-    companyId: string
-    companyName: string
-  }
-  coin: number
-  status: "pending" | "approved" | "rejected"
-  __v: number
+    _id: string;
+    companyId: string;
+    companyName: string;
+  };
+  coin: number;
+  status: "pending" | "approved" | "rejected";
+  __v: number;
 }
 
 interface ApiResponse {
-  success: boolean
-  code: number
-  message: string
-  data: Product[] | null
+  success: boolean;
+  code: number;
+  message: string;
+  data: Product[] | null;
 }
 
 export default function ProductsList() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null)
-  const queryClient = useQueryClient()
-  const session = useSession()
-  const token = session?.data?.accessToken
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const token = session?.data?.accessToken;
 
   // Fetch products query
   const {
@@ -61,93 +76,110 @@ export default function ProductsList() {
   }: UseQueryResult<ApiResponse, Error> = useQuery({
     queryKey: ["products"],
     queryFn: async (): Promise<ApiResponse> => {
-      if (!token) return {
-        success: false,
-        code: 401,
-        message: "Unauthorized",
-        data: null
-      }
+      if (!token)
+        return {
+          success: false,
+          code: 401,
+          message: "Unauthorized",
+          data: null,
+        };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/my-shop`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch products: ${response.statusText}`)
+        throw new Error(`Failed to fetch products: ${response.statusText}`);
       }
 
-      return response.json()
+      return response.json();
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: 2,
     enabled: !!token,
-  })
+  });
 
-  console.log(apiResponse)
+  console.log(apiResponse);
 
   // Filter only approved products
-  const approvedProducts = apiResponse?.data?.filter(product => product.status === "approved") || []
+  const approvedProducts =
+    apiResponse?.data?.filter((product) => product.status === "approved") || [];
 
   // Delete product mutation
   const deleteProduct = useMutation({
     mutationFn: async (productId: string) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/${productId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/${productId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to delete product")
+        throw new Error("Failed to delete product");
       }
 
-      return response.json()
+      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] })
-      toast.success("Product deleted successfully")
-      setIsDeleteModalOpen(false)
-      setProductToDelete(null)
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Product deleted successfully");
+      setIsDeleteModalOpen(false);
+      setProductToDelete(null);
     },
     onError: (error: Error) => {
-      toast.error(`Failed to delete product: ${error.message}`)
-      setIsDeleteModalOpen(false)
-      setProductToDelete(null)
+      toast.error(`Failed to delete product: ${error.message}`);
+      setIsDeleteModalOpen(false);
+      setProductToDelete(null);
     },
-  })
+  });
 
   // Update coin mutation
   const updateCoin = useMutation({
-    mutationFn: async ({ productId, coin }: { productId: string; coin: number }) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/add-coin/${productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ coin }),
-      })
+    mutationFn: async ({
+      productId,
+      coin,
+    }: {
+      productId: string;
+      coin: number;
+    }) => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/add-coin/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ coin }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to update coin")
+        throw new Error("Failed to update coin");
       }
 
-      return response.json()
+      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] })
-      toast.success("Coin value updated successfully")
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Coin value updated successfully");
     },
     onError: (error: Error) => {
-      toast.error(`Failed to update coin value: ${error.message}`)
+      toast.error(`Failed to update coin value: ${error.message}`);
     },
-  })
+  });
 
   // Session loading state
   if (session.status === "loading") {
@@ -158,7 +190,7 @@ export default function ProductsList() {
           <p className="mt-2 text-gray-600">Loading session...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Token validation
@@ -166,45 +198,47 @@ export default function ProductsList() {
     return (
       <div className="text-center py-12">
         <p className="text-red-500 text-lg">Authentication required</p>
-        <p className="text-gray-400 text-sm mt-1">Please log in to view products.</p>
+        <p className="text-gray-400 text-sm mt-1">
+          Please log in to view products.
+        </p>
       </div>
-    )
+    );
   }
 
   const handleEditClick = (product: Product) => {
-    setSelectedProduct(product)
-    setIsModalOpen(true)
-  }
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedProduct(null)
-  }
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   const handleDeleteClick = (productId: string, productName: string) => {
-    setProductToDelete({ id: productId, name: productName })
-    setIsDeleteModalOpen(true)
-  }
+    setProductToDelete({ id: productId, name: productName });
+    setIsDeleteModalOpen(true);
+  };
 
   const handleConfirmDelete = () => {
     if (productToDelete) {
-      deleteProduct.mutate(productToDelete.id)
+      deleteProduct.mutate(productToDelete.id);
     }
-  }
+  };
 
   const handleCancelDelete = () => {
-    setIsDeleteModalOpen(false)
-    setProductToDelete(null)
-  }
+    setIsDeleteModalOpen(false);
+    setProductToDelete(null);
+  };
 
   const handleRefresh = () => {
-    refetch()
-    toast.success("Product list has been updated")
-  }
+    refetch();
+    toast.success("Product list has been updated");
+  };
 
   const handleUpdateCoin = async (productId: string, coin: number) => {
-    updateCoin.mutate({ productId, coin })
-  }
+    updateCoin.mutate({ productId, coin });
+  };
 
   const columns = [
     {
@@ -213,11 +247,20 @@ export default function ProductsList() {
       render: (item: Product) => (
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
-           <Image src={item.product?.productImage || ""} width={100} height={100} alt="Product Image" />
+            <Image
+              src={item.product?.productImage || ""}
+              width={100}
+              height={100}
+              alt="Product Image"
+            />
           </div>
           <div>
-            <span className="font-medium">{item.product?.title || "Product"}</span>
-            <div className="text-sm text-gray-500">{item.shopId?.companyName}</div>
+            <span className="font-medium">
+              {item.product?.title || "Product"}
+            </span>
+            <div className="text-sm text-gray-500">
+              {item.shopId?.companyName}
+            </div>
           </div>
         </div>
       ),
@@ -225,13 +268,19 @@ export default function ProductsList() {
     {
       key: "price",
       header: "Price",
-      render: (item: Product) => <span className="font-medium">${item.product?.price || 0}</span>,
+      render: (item: Product) => (
+        <span className="font-medium">${item.product?.price || 0}</span>
+      ),
     },
     {
       key: "quantity",
       header: "Quantity",
       render: (item: Product) => (
-        <span className={`${item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"}`}>
+        <span
+          className={`${
+            item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"
+          }`}
+        >
           {item.product?.quantity || 0}
         </span>
       ),
@@ -280,7 +329,9 @@ export default function ProductsList() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => handleDeleteClick(item._id, item.product?.title || "Product")}
+            onClick={() =>
+              handleDeleteClick(item._id, item.product?.title || "Product")
+            }
             disabled={deleteProduct.isPending}
             className="text-red-600 hover:text-red-800 hover:bg-red-50"
             title="Delete product"
@@ -290,7 +341,7 @@ export default function ProductsList() {
         </div>
       ),
     },
-  ]
+  ];
 
   if (isLoading) {
     return (
@@ -300,7 +351,7 @@ export default function ProductsList() {
           <p className="mt-2 text-gray-600">Loading products...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -312,7 +363,7 @@ export default function ProductsList() {
           <RefreshCw className="h-4 w-4 mr-2" /> Try Again
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -320,8 +371,16 @@ export default function ProductsList() {
       <Toaster richColors />
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Approved Products</h1>
-          <Breadcrumb items={[{ label: "Dashboard" }, { label: "Products" }, { label: "Approved" }]} />
+          <h1 className="text-2xl font-bold text-gray-900">
+            Approved Products
+          </h1>
+          <Breadcrumb
+            items={[
+              { label: "Dashboard" },
+              { label: "Products" },
+              { label: "Approved" },
+            ]}
+          />
         </div>
         <Button onClick={handleRefresh}>
           <RefreshCw className="h-4 w-4 mr-2" /> Refresh
@@ -332,7 +391,12 @@ export default function ProductsList() {
         {approvedProducts.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
-              <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="mx-auto h-12 w-12"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -343,7 +407,8 @@ export default function ProductsList() {
             </div>
             <p className="text-gray-500 text-lg">No approved products found</p>
             <p className="text-gray-400 text-sm mt-1">
-              You may have pending or rejected products. Contact support or wait for approval.
+              You may have pending or rejected products. Contact support or wait
+              for approval.
             </p>
             <Button onClick={handleRefresh} className="mt-4">
               <RefreshCw className="h-4 w-4 mr-2" /> Refresh List
@@ -367,7 +432,8 @@ export default function ProductsList() {
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot{productToDelete?.name}&quot? This action cannot be undone.
+              Are you sure you want to delete &quot{productToDelete?.name}&quot?
+              This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -390,5 +456,5 @@ export default function ProductsList() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

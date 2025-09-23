@@ -1,85 +1,98 @@
+"use client";
 
-"use client"
-
-import type React from "react"
-import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useMutation } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Image from "next/image"
-import { Eye, EyeOff } from "lucide-react" // Added for eye icons
+import type React from "react";
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react"; // Added for eye icons
+import { toast } from "sonner";
 
 interface ResetPasswordData {
-  newPassword: string
+  newPassword: string;
 }
 
-async function resetPassword({ token, data }: { token: string; data: ResetPasswordData }) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reset-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  })
+async function resetPassword({
+  token,
+  data,
+}: {
+  token: string;
+  data: ResetPasswordData;
+}) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  const res = await response.json();
 
   if (!response.ok) {
-    throw new Error("Failed to reset password")
+    toast.error(res.message || "Failed to reset password");
+  } else {
+    toast.success("Password reset successfully");
   }
 
-  return response.json()
+  return res;
 }
 
 export default function ResetPasswordPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const token = searchParams.get("token") || ""
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token") || "";
   const [formData, setFormData] = useState({
     newPassword: "",
     confirmNewPassword: "",
-  })
-  const [showNewPassword, setShowNewPassword] = useState(false) // State for new password visibility
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false) // State for confirm password visibility
+  });
+  const [showNewPassword, setShowNewPassword] = useState(false); // State for new password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
 
   const mutation = useMutation({
     mutationFn: resetPassword,
     onSuccess: () => {
-      router.push("/success")
+      router.push("/success");
     },
     onError: (error) => {
-      console.error("Password reset error:", error)
+      console.error("Password reset error:", error);
       // You can add error handling UI here, e.g., show a toast notification
     },
-  })
+  });
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Toggle visibility for new password
   const toggleNewPasswordVisibility = () => {
-    setShowNewPassword(!showNewPassword)
-  }
+    setShowNewPassword(!showNewPassword);
+  };
 
   // Toggle visibility for confirm password
   const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword)
-  }
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const handleResetPassword = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (formData.newPassword !== formData.confirmNewPassword) {
-      console.error("Passwords do not match")
-      return
+      console.error("Passwords do not match");
+      return;
     }
     mutation.mutate({
       token,
       data: { newPassword: formData.newPassword },
-    })
-  }
+    });
+  };
 
   return (
     <div className="container mx-auto flex items-center justify-center min-h-screen p-4 sm:p-6">
@@ -100,16 +113,25 @@ export default function ResetPasswordPage() {
         <Card className="w-full max-w-md sm:max-w-lg shadow-lg rounded-lg p-4 sm:p-6 bg-white">
           <CardHeader className="text-center md:text-left px-0 pt-0 pb-4">
             <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 justify-center md:justify-start">
-              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">Reset Password</h2>
-              <span role="img" aria-label="wave">👋</span>
+              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">
+                Reset Password
+              </h2>
+              <span role="img" aria-label="wave">
+                👋
+              </span>
             </CardTitle>
-            <p className="text-sm sm:text-base text-[#424242] mt-2">Set your new password</p>
+            <p className="text-sm sm:text-base text-[#424242] mt-2">
+              Set your new password
+            </p>
           </CardHeader>
 
           <form onSubmit={handleResetPassword} className="space-y-4">
             <CardContent className="grid gap-4 sm:gap-6 px-0 pb-0">
               <div className="grid gap-2">
-                <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor="newPassword">
+                <Label
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium"
+                  htmlFor="newPassword"
+                >
                   New Password
                 </Label>
                 <div className="relative">
@@ -118,7 +140,9 @@ export default function ResetPasswordPage() {
                     type={showNewPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={formData.newPassword}
-                    onChange={(e) => handleInputChange("newPassword", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("newPassword", e.target.value)
+                    }
                     className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
                     required
                   />
@@ -126,15 +150,24 @@ export default function ResetPasswordPage() {
                     type="button"
                     onClick={toggleNewPasswordVisibility}
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
-                    aria-label={showNewPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showNewPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    {showNewPassword ? <Eye className="h-5 w-5" />:  <EyeOff className="h-5 w-5" /> }
+                    {showNewPassword ? (
+                      <Eye className="h-5 w-5" />
+                    ) : (
+                      <EyeOff className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
 
               <div className="grid gap-2">
-                <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor="confirmNewPassword">
+                <Label
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium"
+                  htmlFor="confirmNewPassword"
+                >
                   Confirm New Password
                 </Label>
                 <div className="relative">
@@ -143,7 +176,9 @@ export default function ResetPasswordPage() {
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Enter your confirm password"
                     value={formData.confirmNewPassword}
-                    onChange={(e) => handleInputChange("confirmNewPassword", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("confirmNewPassword", e.target.value)
+                    }
                     className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
                     required
                   />
@@ -151,9 +186,15 @@ export default function ResetPasswordPage() {
                     type="button"
                     onClick={toggleConfirmPasswordVisibility}
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
-                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    {showConfirmPassword ? <Eye className="h-5 w-5" /> :  <EyeOff className="h-5 w-5" />}
+                    {showConfirmPassword ? (
+                      <Eye className="h-5 w-5" />
+                    ) : (
+                      <EyeOff className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -170,5 +211,5 @@ export default function ResetPasswordPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

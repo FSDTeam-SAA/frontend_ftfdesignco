@@ -72,7 +72,9 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
       )}
 
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">{title}</CardTitle>
+        <CardTitle className="text-2xl border-b-2 pb-2 inline-block  w-full">
+          {title}
+        </CardTitle>
         <p className="text-gray-600">{description}</p>
         <div className="mt-4">
           <span className="text-4xl font-bold">${price}</span>
@@ -81,6 +83,9 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
       </CardHeader>
 
       <CardContent>
+        <p className="bg-[#EEF2FF]  text-[#4338CA] text-[16px] my-6 font-medium leading-[150%] uppercase p-2 rounded-md">
+          This plan includes
+        </p>
         <ul className="space-y-3 mb-6">
           <li className="flex items-center">
             <Check className="h-5 w-5 text-green-500 mr-2" />
@@ -97,10 +102,10 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogTrigger asChild>
             <Button
-              className="w-full"
               variant={index === 1 ? "default" : "outline"}
               onClick={handleGetStarted}
               disabled={!userId || session.status === "loading"}
+              className="w-full bg-[#28A745] text-white hover:text-black rounded-xl"
             >
               Get Started
             </Button>
@@ -131,6 +136,7 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
                   amount={price}
                   onSuccess={handleModalClose}
                   onCancel={handleModalClose}
+                  type="subscription"
                 />
               )}
             </div>

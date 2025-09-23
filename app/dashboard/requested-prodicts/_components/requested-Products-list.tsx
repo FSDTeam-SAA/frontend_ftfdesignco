@@ -1,52 +1,54 @@
-"use client"
+"use client";
 
-import { useQuery, useMutation, useQueryClient, UseQueryResult } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { RefreshCw } from "lucide-react"
-import { DataTable } from "@/components/ui/data-table"
-import { toast, Toaster } from "sonner"
-import { Breadcrumb } from "../../_components/breadcrumb"
-import { useSession } from "next-auth/react"
-import Image from "next/image"
-
-
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
+import { toast, Toaster } from "sonner";
+import { Breadcrumb } from "../../_components/breadcrumb";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 interface Product {
-  _id: string
+  _id: string;
   product: {
-    _id: string
-    title: string
-    price: number
-    quantity: number
-    productImage: string
+    _id: string;
+    title: string;
+    price: number;
+    quantity: number;
+    productImage: string;
     category: {
-      _id: string
-      title: string
-    }
-    
-  }
-  userId: string
+      _id: string;
+      title: string;
+    };
+  };
+  userId: string;
   shopId: {
-    _id: string
-    companyId: string
-    companyName: string
-  }
-  coin: number
-  status: "pending" | "approved" | "rejected"
-  __v: number
+    _id: string;
+    companyId: string;
+    companyName: string;
+  };
+  coin: number;
+  status: "pending" | "approved" | "rejected";
+  __v: number;
 }
 
 interface ApiResponse {
-  success: boolean
-  code: number
-  message: string
-  data: Product[] | null
+  success: boolean;
+  code: number;
+  message: string;
+  data: Product[] | null;
 }
 
 export default function RequestedProductsList() {
-  const queryClient = useQueryClient()
-  const session = useSession()
-  const token = session?.data?.accessToken
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const token = session?.data?.accessToken;
 
   // Fetch products query
   const {
@@ -57,62 +59,76 @@ export default function RequestedProductsList() {
   }: UseQueryResult<ApiResponse, Error> = useQuery({
     queryKey: ["requested-products"],
     queryFn: async (): Promise<ApiResponse> => {
-      if (!token) return {
-        success: false,
-        code: 401,
-        message: "Unauthorized",
-        data: null
-      }
+      if (!token)
+        return {
+          success: false,
+          code: 401,
+          message: "Unauthorized",
+          data: null,
+        };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/my-shop`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      })
-
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/my-shop`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("request productddddddddddd", response);
       if (!response.ok) {
         // const errorText = await response.text()
-        throw new Error(`Failed to fetch products: ${response.statusText}`)
+        throw new Error(`Failed to fetch products: ${response.statusText}`);
       }
 
-      return response.json()
+      return response.json();
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: 2,
     enabled: !!token,
-  })
+  });
 
   // Filter only pending products
-  const pendingProducts = apiResponse?.data?.filter(product => product.status === "pending") || []
+  const pendingProducts =
+    apiResponse?.data?.filter((product) => product.status === "pending") || [];
 
   // Status update mutation
   const updateStatus = useMutation({
-    mutationFn: async ({ productId, status }: { productId: string; status: string }) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/assigned-product/${productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
-      })
+    mutationFn: async ({
+      productId,
+      // status,
+    }: {
+      productId: string;
+      status: string;
+    }) => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/shop-product/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          // body: JSON.stringify({ status }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to update status")
+        throw new Error("Failed to update status");
       }
 
-      return response.json()
+      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["requested-products"] })
-      toast.success("Product status updated successfully")
+      queryClient.invalidateQueries({ queryKey: ["requested-products"] });
+      toast.success("Product status updated successfully");
     },
     onError: (error: Error) => {
-      toast.error(`Failed to update status: ${error.message}`)
+      toast.error(`Failed to update status: ${error.message}`);
     },
-  })
+  });
 
   // Session loading state
   if (session.status === "loading") {
@@ -123,7 +139,7 @@ export default function RequestedProductsList() {
           <p className="mt-2 text-gray-600">Loading session...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Token validation
@@ -131,21 +147,21 @@ export default function RequestedProductsList() {
     return (
       <div className="text-center py-12">
         <p className="text-red-500 text-lg">Authentication required</p>
-        <p className="text-gray-400 text-sm mt-1">Please log in to view products.</p>
+        <p className="text-gray-400 text-sm mt-1">
+          Please log in to view products.
+        </p>
       </div>
-    )
+    );
   }
 
   const handleRefresh = () => {
-    refetch()
-    toast.success("Product list has been updated")
-  }
-
-
+    refetch();
+    toast.success("Product list has been updated");
+  };
 
   const handleReject = (productId: string) => {
-    updateStatus.mutate({ productId, status: "rejected" })
-  }
+    updateStatus.mutate({ productId, status: "rejected" });
+  };
 
   const columns = [
     {
@@ -153,27 +169,44 @@ export default function RequestedProductsList() {
       header: "Product Name",
       render: (item: Product) => (
         console.log(item),
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12  rounded-lg flex items-center justify-center">
-           <Image src={item.product?.productImage} alt="No Image" width={50} height={50} />
+        (
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12  rounded-lg flex items-center justify-center">
+              <Image
+                src={item.product?.productImage}
+                alt="No Image"
+                width={50}
+                height={50}
+              />
+            </div>
+            <div>
+              <span className="font-medium">
+                {item.product?.title || "Product"}
+              </span>
+              <div className="text-sm text-gray-500">
+                {item.shopId?.companyName}
+              </div>
+            </div>
           </div>
-          <div>
-            <span className="font-medium">{item.product?.title || "Product"}</span>
-            <div className="text-sm text-gray-500">{item.shopId?.companyName}</div>
-          </div>
-        </div>
+        )
       ),
     },
     {
       key: "price",
       header: "Price",
-      render: (item: Product) => <span className="font-medium">${item.product?.price || 0}</span>,
+      render: (item: Product) => (
+        <span className="font-medium">${item.product?.price || 0}</span>
+      ),
     },
     {
       key: "quantity",
       header: "Quantity",
       render: (item: Product) => (
-        <span className={`${item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"}`}>
+        <span
+          className={`${
+            item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"
+          }`}
+        >
           {item.product?.quantity || 0}
         </span>
       ),
@@ -214,7 +247,7 @@ export default function RequestedProductsList() {
         </div>
       ),
     },
-  ]
+  ];
 
   if (isLoading) {
     return (
@@ -224,7 +257,7 @@ export default function RequestedProductsList() {
           <p className="mt-2 text-gray-600">Loading products...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -236,7 +269,7 @@ export default function RequestedProductsList() {
           <RefreshCw className="h-4 w-4 mr-2" /> Try Again
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -244,17 +277,29 @@ export default function RequestedProductsList() {
       <Toaster richColors />
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Requested Products</h1>
-          <Breadcrumb items={[{ label: "Dashboard" }, { label: "Products" }, { label: "Requests" }]} />
+          <h1 className="text-2xl font-bold text-gray-900">
+            Requested Products
+          </h1>
+          <Breadcrumb
+            items={[
+              { label: "Dashboard" },
+              { label: "Products" },
+              { label: "Requests" },
+            ]}
+          />
         </div>
-       
       </div>
 
       <div className="bg-white rounded-lg border shadow-sm">
         {pendingProducts.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
-              <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="mx-auto h-12 w-12"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -276,5 +321,5 @@ export default function RequestedProductsList() {
         )}
       </div>
     </div>
-  )
+  );
 }

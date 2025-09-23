@@ -1,10 +1,10 @@
-'use client'
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
-import { format } from 'date-fns';
-import { Loader2 } from 'lucide-react';
-import Link from 'next/link';
+"use client";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 interface Blog {
   _id: string;
@@ -23,9 +23,9 @@ interface BlogResponse {
 }
 
 const fetchBlog = async (id: string): Promise<BlogResponse> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/blog/${id}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/${id}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch blog');
+    throw new Error("Failed to fetch blog");
   }
   return response.json();
 };
@@ -38,7 +38,7 @@ interface BlogDetailsProps {
 
 export default function BlogDetails({ params }: BlogDetailsProps) {
   const { data, isLoading, isError, error } = useQuery<BlogResponse, Error>({
-    queryKey: ['blog', params.id],
+    queryKey: ["blog", params.id],
     queryFn: () => fetchBlog(params.id),
   });
 
@@ -67,11 +67,13 @@ export default function BlogDetails({ params }: BlogDetailsProps) {
           <h1 className="text-4xl font-bold mb-4">{blog?.blogTitle}</h1>
           <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
             <span>
-              Published: {format(new Date(blog?.createdAt || ''), 'MMMM d, yyyy')}
+              Published:{" "}
+              {format(new Date(blog?.createdAt || ""), "MMMM d, yyyy")}
             </span>
             {blog?.updatedAt !== blog?.createdAt && (
               <span className="ml-4">
-                (Updated: {format(new Date(blog?.updatedAt || ''), 'MMMM d, yyyy')})
+                (Updated:{" "}
+                {format(new Date(blog?.updatedAt || ""), "MMMM d, yyyy")})
               </span>
             )}
           </div>
@@ -79,8 +81,8 @@ export default function BlogDetails({ params }: BlogDetailsProps) {
 
         <div className="relative aspect-video w-full mb-8 rounded-lg overflow-hidden">
           <Image
-            src={blog?.image || '/placeholder.svg'}
-            alt={blog?.blogTitle || 'Blog image'}
+            src={blog?.image || "/placeholder.svg"}
+            alt={blog?.blogTitle || "Blog image"}
             fill
             className="object-cover"
             priority

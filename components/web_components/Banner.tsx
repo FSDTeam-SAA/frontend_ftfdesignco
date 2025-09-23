@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
 import { CreateStoreModal } from "./create-store-modal";
+import Link from "next/link";
 
 export function Banner() {
   const { data: session } = useSession();
@@ -15,7 +16,6 @@ export function Banner() {
 
   const token = session?.accessToken;
   const accessSubScription = session?.user?.isPaid === true;
-
 
   const handleClick = () => {
     if (!token) {
@@ -35,7 +35,7 @@ export function Banner() {
           {/* <span className="mb-2 text-xs font-semibold uppercase tracking-wider text-gratisswag-orange sm:text-sm">
             Company
           </span> */}
-          <h2 className="mb-4 text-2xl font-bold leading-tight text-gratisswag-dark-gray sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl max-w-[90vw] sm:max-w-[513px]">
+          <h2 className="mb-4 text-2xl font-bold leading-tight font-manrope text-gratisswag-dark-gray sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl max-w-[90vw] sm:max-w-[513px]">
             Gratitude Given.{" "}
             <span className="text-gratisswag-accent-blue">Engagement</span>{" "}
             Gained.
@@ -49,7 +49,7 @@ export function Banner() {
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
                 <Button
-                  className="py-2 px-6 rounded bg-[#D9AD5E] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg"
+                  className="py-2 px-6 rounded leading-[120%] font-manrope bg-[#D9AD5E] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg"
                   onClick={handleClick}
                 >
                   Create My Store
@@ -57,6 +57,11 @@ export function Banner() {
               </DialogTrigger>
               <CreateStoreModal />
             </Dialog>
+            <Link href="/all-product">
+              <Button className="py-2 px-12 rounded leading-[120%]  bg-[#131313] text-base font-semibold text-white hover:bg-[#f5b641] font-manrope hover:text-white sm:text-lg">
+                See More
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -67,7 +72,11 @@ export function Banner() {
             alt="GratiSwag branded merchandise"
             width={600}
             height={600}
+<<<<<<< HEAD
             className="h-auto w-full max-w-[90vw]  object-cover shadow-lg sm:max-w-md md:max-w-lg lg:max-w-xl rounded-[8px]"
+=======
+            className="h-auto w-full max-w-[90vw] rounded-xl object-cover shadow-lg sm:max-w-md md:max-w-lg lg:max-w-xl"
+>>>>>>> 584772b25042a9d2b63dabdfd44e7780f2d0d3e1
             priority
           />
         </div>

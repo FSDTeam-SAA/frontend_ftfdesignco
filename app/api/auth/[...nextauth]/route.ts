@@ -1,9 +1,9 @@
-
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 declare module "next-auth" {
   interface User {
+    companyId?: string;
     employeeId?: string;
     userId?: string;
     shop: string;
@@ -24,6 +24,7 @@ const handler = NextAuth({
         email: { label: "Email", type: "email" },
         employeeId: { label: "Employee ID", type: "text" },
         password: { label: "Password", type: "password" },
+        companyId: { label: "compnayId", type: "text" },
       },
       async authorize(credentials) {
         if (!credentials) return null;
@@ -32,14 +33,15 @@ const handler = NextAuth({
         let loginPayload: Record<string, string> = {};
 
         if (credentials.role === "company") {
-          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`;
+          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
           loginPayload = {
             email: credentials.email,
             password: credentials.password,
           };
         } else if (credentials.role === "employee") {
-          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/employee-login`;
+          loginUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/employee-login`;
           loginPayload = {
+            companyId: credentials.companyId,
             employeeId: credentials.employeeId,
             password: credentials.password,
           };
@@ -111,7 +113,7 @@ const handler = NextAuth({
             isVerified: user.isVerified,
             isShopCreated: user.isShopCreated,
             employeeCount: user.employeeCount,
-              isPaid: user.isPaid, // ✅ add this line
+            isPaid: user.isPaid, // ✅ add this line
             shop: user.shop,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
