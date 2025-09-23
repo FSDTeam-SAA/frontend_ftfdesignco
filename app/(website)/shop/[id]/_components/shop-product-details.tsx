@@ -1,59 +1,84 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Minus, Plus,  } from "lucide-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import ShopNavbar from "@/components/shared/shopnavbar";
 
+// Type definitions
+interface Category {
+  _id: string;
+  title: string;
+}
+
 interface Product {
   _id: string;
   title: string;
   description: string;
-  price: number; // Use price as the main currency
+  price: number;
   quantity: number;
   productImage: string;
-  category: {
-    _id: string;
-    title: string;
-  };
-  coin: number; // Assuming 'coin' is also a property for display
+  category: Category;
+  coin?: number;
+}
+
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+interface AddToCartRequest {
+  productId: string;
 }
 
 interface ProductDetailProps {
   id: string;
 }
 
-export function ShopProductDetail({ id }: ProductDetailProps) {
-  const [quantity, setQuantity] = useState(1);
-  const session = useSession();
-  const token = session.data?.accessToken;
-  const queryClient = useQueryClient();
-  // Fetch product details
-  const {
-    data: product,
-    isLoading,
-    isError,
-    error,
-  } = useQuery<Product>({
-    queryKey: ["products", id],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((response) => response.data),
-    enabled: !!token, // Only fetch if token exists
-  });
+interface ExtendedSession {
+  accessToken?: string;
+}
 
-  // Mutation for add to cart the product
-  const addToCartMutation = useMutation({
-    mutationFn: async () => {
+// Custom hooks
+const useProductDetail = (id: string, token: string | undefined) => {
+  return useQuery<Product>({
+    queryKey: ["products", id],
+    queryFn: async (): Promise<Product> => {
+      if (!token) throw new Error("Authentication required");
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch product: ${response.statusText}`);
+      }
+
+      const result: ApiResponse<Product> = await response.json();
+      return result.data;
+    },
+    enabled: Boolean(token && id),
+    retry: 2,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+const useAddToCart = (token: string | undefined) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<ApiResponse<any>, Error, AddToCartRequest>({
+    mutationFn: async ({ productId }: AddToCartRequest) => {
+      if (!token) throw new Error("Authentication required");
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/cart/add-to-cart`,
         {
@@ -62,52 +87,42 @@ export function ShopProductDetail({ id }: ProductDetailProps) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            productId: product?._id, // Use product?._id
-            quantity,
-          }),
+          body: JSON.stringify({ productId }),
         }
       );
-      const result = await response.json();
+
+      const result: ApiResponse<any> = await response.json();
+
       if (!response.ok) {
         throw new Error(result.message || "Failed to add product to cart");
       }
+
       return result;
     },
     onSuccess: (data) => {
-      toast.success(data.message);
-      // Optionally invalidate cart-related queries if needed
+      toast.success(data.message || "Product added to cart successfully");
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
     onError: (error: Error) => {
-      toast.error(error.message);
+      toast.error(error.message || "Failed to add product to cart");
     },
   });
+};
 
-  const total = product ? product.price * quantity : 0;
+// Main component
+export function ShopProductDetail({ id }: ProductDetailProps) {
+  const { data: session } = useSession();
+  const token = (session as ExtendedSession)?.accessToken;
 
-  const updateQuantity = (newQuantity: number) => {
-    if (product && newQuantity >= 1 && newQuantity <= product.quantity) {
-      setQuantity(newQuantity);
-    }
-  };
+  const {
+    data: product,
+    isLoading,
+    isError,
+    error,
+  } = useProductDetail(id, token);
+  const addToCartMutation = useAddToCart(token);
 
-  // const handleShare = () => {
-  //   if (navigator.share) {
-  //     navigator
-  //       .share({
-  //         title: product?.title,
-  //         text: product?.description,
-  //         url: window.location.href,
-  //       })
-  //       .catch(() => toast.error("Failed to share product"));
-  //   } else {
-  //     navigator.clipboard.writeText(window.location.href);
-  //     toast.success("Link copied to clipboard!");
-  //   }
-  // };
-
-  const handleSubmit = () => {
+  const handleAddToCart = (): void => {
     if (!product) {
       toast.error("Product not available");
       return;
@@ -116,131 +131,202 @@ export function ShopProductDetail({ id }: ProductDetailProps) {
       toast.error("Please log in to add the product");
       return;
     }
-    addToCartMutation.mutate(); // Call the mutation
+
+    addToCartMutation.mutate({
+      productId: product._id,
+    });
   };
 
+  // Loading states and error handling
   if (!token) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-500">Please sign in to view product details.</p>
+      <div className="min-h-screen bg-gray-50">
+        <ShopNavbar />
+        <div className="container mx-auto px-4 py-16">
+          <div className="text-center">
+            <div className="bg-white rounded-lg shadow-sm p-8 max-w-md mx-auto">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                Authentication Required
+              </h2>
+              <p className="text-gray-600">
+                Please sign in to view product details.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8">Loading...</div>;
-  }
-
-  if (isError && error instanceof Error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        Error:{" "}
-        {error.message || "Failed to load product. Please try again later."}
+      <div className="min-h-screen bg-gray-50">
+        <ShopNavbar />
+        <div className="container mx-auto px-4 py-16">
+          <div className="animate-pulse">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div className="bg-gray-300 rounded-lg aspect-square"></div>
+              <div className="space-y-6">
+                <div className="h-8 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-300 rounded w-full"></div>
+                <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (!product) {
-    return <div className="container mx-auto px-4 py-8">Product not found</div>;
-  }
- console.log('details',product)
-  return (
-    <>
-      <div>
+  if (isError || !product) {
+    return (
+      <div className="min-h-screen bg-gray-50">
         <ShopNavbar />
-      </div>
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="space-y-4">
-            <div className="relative aspect-square">
-              <Image
-                src={product.productImage || "/placeholder.svg"}
-                alt={product.title}
-                width={400}
-                height={400}
-                className="object-cover rounded-lg w-full h-full"
-              />
+        <div className="container mx-auto px-4 py-16">
+          <div className="text-center">
+            <div className="bg-white rounded-lg shadow-sm p-8 max-w-md mx-auto">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                {!product ? "Product Not Found" : "Error Loading Product"}
+              </h2>
+              <p className="text-gray-600">
+                {error instanceof Error
+                  ? error.message
+                  : "Failed to load product. Please try again later."}
+              </p>
             </div>
           </div>
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-              <p className="text-2xl font-bold text-blue-600 mb-4">
-                Price: ${product.price}{" "}
-                {/* Changed product.coins to product.price */}
-              </p>
-              {product.coin > 0 && (
-                <p className="text-lg font-medium text-green-600 bg-green-50 px-2 py-1 rounded inline-block">
-                  {product.coin} Coins
-                </p>
-              )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <ShopNavbar />
+
+      <main className="container mx-auto px-4 py-8">
+        {/* Product Details Section */}
+        <div className="bg-white rounded-lg shadow-sm p-6 lg:p-8 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Product Image */}
+            <div className="space-y-4">
+              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                <Image
+                  src={product.productImage || "/placeholder.svg"}
+                  alt={product.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              </div>
             </div>
-            <div>
+
+            {/* Product Info */}
+            <div className="space-y-6">
               <div>
-                <div className="flex justify-between">
-                  <div>
-                    <Label>QTY</Label>
-                    <div className="flex items-center space-x-2 p-1 mt-2 border border-[#595959] rounded">
+                <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
+                  {product.title}
+                </h1>
+
+                <div className="flex flex-wrap items-center gap-4 mb-4">
+                  <span className="text-2xl lg:text-3xl font-bold text-blue-600">
+                    ${product.price.toFixed(2)}
+                  </span>
+
+                  {product.coin && product.coin > 0 && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                      {product.coin} Coins
+                    </span>
+                  )}
+                </div>
+
+                <div className="text-sm text-gray-600">
+                  Category:{" "}
+                  <span className="font-medium">{product.category.title}</span>
+                </div>
+              </div>
+
+              {/* Quantity and Total */}
+              {/* <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Quantity
+                    </Label>
+                    <div className="flex items-center space-x-3 p-2 bg-white border border-gray-300 rounded-md w-fit">
                       <button
                         onClick={() => updateQuantity(quantity - 1)}
                         disabled={quantity <= 1}
+                        className="flex items-center justify-center w-8 h-8 text-pink-600 hover:bg-pink-50 rounded-full disabled:text-gray-400 disabled:hover:bg-transparent transition-colors"
+                        aria-label="Decrease quantity"
                       >
-                        <Minus className="h-4 w-4 text-[#F0217A]" />
+                        <Minus className="h-4 w-4" />
                       </button>
-                      <span className="w-12 text-center">{quantity}</span>
+
+                      <span className="w-12 text-center font-medium text-gray-900">
+                        {quantity}
+                      </span>
+
                       <button
                         onClick={() => updateQuantity(quantity + 1)}
                         disabled={quantity >= product.quantity}
+                        className="flex items-center justify-center w-8 h-8 text-pink-600 hover:bg-pink-50 rounded-full disabled:text-gray-400 disabled:hover:bg-transparent transition-colors"
+                        aria-label="Increase quantity"
                       >
-                        <Plus className="h-4 w-4 text-[#F0217A]" />
+                        <Plus className="h-4 w-4" />
                       </button>
                     </div>
+
+                    <div className="mt-1 text-xs text-gray-500">
+                      {product.quantity} available
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm text-gray-600">Total</div>
-                    <div className="text-2xl font-bold">${total}</div>
+
+                  <div className="text-right ml-8">
+                    <div className="text-sm text-gray-600 mb-1">Total</div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      ${total.toFixed(2)}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="space-y-2 py-4">
+              </div> */}
+
+              {/* Add to Cart Button */}
+              <div className="pt-4">
                 <Button
-                  className="bg-[#D9AD5E] hover:bg-[#f5b641] w-[172px] rounded"
-                  onClick={handleSubmit}
-                  disabled={addToCartMutation.isPending} // Use addToCartMutation.isPending
+                  onClick={handleAddToCart}
+                  disabled={
+                    addToCartMutation.isPending || product.quantity === 0
+                  }
+                  className="w-full sm:w-auto bg-yellow-600 hover:bg-yellow-700 text-white font-medium px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {addToCartMutation.isPending ? "Adding..." : "Add to cart"}{" "}
-                  {/* Update button text */}
+                  {addToCartMutation.isPending
+                    ? "Adding to Cart..."
+                    : product.quantity === 0
+                    ? "Out of Stock"
+                    : "Add to Cart"}
                 </Button>
-                {/* <span
-                  className="bg-transparent flex items-center py-2 text-sm text-black font-semibold hover:bg-gray-50"
-                  onClick={handleShare}
-                >
-                  <Share className="h-4 w-4 mr-2" />
-                  Share
-                </span> */}
               </div>
             </div>
           </div>
         </div>
-        <div className="mt-10">
-          <h2 className="text-2xl font-bold mb-4 text-center">
+
+        {/* Product Description Section */}
+        <div className="bg-white rounded-lg shadow-sm p-6 lg:p-8">
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6 text-center">
             Product Description
           </h2>
-          <div className="mt-12 grid grid-cols-8 gap-12">
-            <div className="col-span-6">
-              <p>{product.description}</p>
+
+          <div className="prose max-w-none">
+            <div className="text-gray-700 leading-relaxed">
+              {product.description ||
+                "No description available for this product."}
             </div>
-            {/* <div className="col-span-2">
-              <ul className="mt-4 space-y-2">
-                <li>• Storage: 256GB / 512GB / 1TB</li>
-                <li>• Display: 6.9-inch Super Retina XDR</li>
-                <li>• Chip: A18 Pro</li>
-                <li>• SKU: {product._id}</li>
-              </ul>
-            </div> */}
           </div>
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
