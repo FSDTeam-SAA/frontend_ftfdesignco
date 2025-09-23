@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react"; // Added for eye icons
+import { toast } from "sonner";
 
 interface ResetPasswordData {
   newPassword: string;
@@ -34,11 +35,15 @@ async function resetPassword({
     }
   );
 
+  const res = await response.json();
+
   if (!response.ok) {
-    throw new Error("Failed to reset password");
+    toast.error(res.message || "Failed to reset password");
+  } else {
+    toast.success("Password reset successfully");
   }
 
-  return response.json();
+  return res;
 }
 
 export default function ResetPasswordPage() {

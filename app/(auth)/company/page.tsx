@@ -45,7 +45,7 @@ export default function CompanyLoginPage() {
         toast.success("Login successful!");
         router.push("/");
       } else {
-        toast.error(res?.error || "Invalid email or password");
+        toast.error("Invalid email or password");
       }
     } catch (error) {
       toast.error("An unexpected error occurred. Please try again.");
@@ -72,16 +72,25 @@ export default function CompanyLoginPage() {
         <Card className="w-full max-w-md sm:max-w-lg shadow-lg rounded-lg p-4 sm:p-6 bg-white">
           <CardHeader className="text-center md:text-left px-0 pt-0 pb-4">
             <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 justify-center md:justify-start">
-              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">Welcome</h2>
-              <span role="img" aria-label="wave">👋</span>
+              <h2 className="text-2xl sm:text-[32px] md:text-[40px] text-[#131313]">
+                Welcome
+              </h2>
+              <span role="img" aria-label="wave">
+                👋
+              </span>
             </CardTitle>
-            <p className="text-sm sm:text-base text-[#424242] mt-2">Company login</p>
+            <p className="text-sm sm:text-base text-[#424242] mt-2">
+              Company login
+            </p>
           </CardHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <CardContent className="grid gap-4 sm:gap-6 px-0 pb-0">
               <div className="grid gap-2">
-                <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor="email">
+                <Label
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium"
+                  htmlFor="email"
+                >
                   Email Address
                 </Label>
                 <Input
@@ -96,7 +105,10 @@ export default function CompanyLoginPage() {
               </div>
 
               <div className="grid gap-2">
-                <Label className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium" htmlFor="password">
+                <Label
+                  className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] font-medium"
+                  htmlFor="password"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -105,7 +117,9 @@ export default function CompanyLoginPage() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     required
                     className="text-sm sm:text-[16px] md:text-[18px] text-[#131313] border border-[#616161] h-10 sm:h-12 rounded-[10px] pr-10"
                   />
@@ -113,9 +127,15 @@ export default function CompanyLoginPage() {
                     type="button"
                     onClick={togglePasswordVisibility}
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    {showPassword ? <Eye className="h-5 w-5" /> :  <EyeOff className="h-5 w-5" />}
+                    {showPassword ? (
+                      <Eye className="h-5 w-5" />
+                    ) : (
+                      <EyeOff className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -125,11 +145,18 @@ export default function CompanyLoginPage() {
                   <Checkbox
                     id="remember"
                     checked={formData.rememberMe}
-                    onCheckedChange={(checked) => handleInputChange("rememberMe", checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleInputChange("rememberMe", checked as boolean)
+                    }
                   />
-                  <Label htmlFor="remember" className="text-sm sm:text-[14px]">Remember Me</Label>
+                  <Label htmlFor="remember" className="text-sm sm:text-[14px]">
+                    Remember Me
+                  </Label>
                 </div>
-                <Link href="/forgot-password" className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline"
+                >
                   Forgot Password?
                 </Link>
               </div>
@@ -143,7 +170,10 @@ export default function CompanyLoginPage() {
 
               <p className="text-sm sm:text-[14px] text-gray-600 text-center mt-4">
                 Don&apos;t have an account?{" "}
-                <Link href="/signup" className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline">
+                <Link
+                  href="/signup"
+                  className="text-sm sm:text-[14px] font-medium text-gray-600 hover:underline"
+                >
                   Sign Up
                 </Link>
               </p>
