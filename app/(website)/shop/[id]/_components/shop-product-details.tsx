@@ -247,6 +247,9 @@ export function ShopProductDetail({ id }: ProductDetailProps) {
                   Category:{" "}
                   <span className="font-medium">{product.category.title}</span>
                 </div>
+                <div className="flex items-center justify-between text-sm text-muted-foreground pt-2">
+                  <span>Qty: {product.quantity}</span>
+                </div>
               </div>
 
               {/* Quantity and Total */}
