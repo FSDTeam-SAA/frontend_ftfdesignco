@@ -12,11 +12,7 @@ export function Footer() {
           <div className="md:col-span-4 mb-6 md:mb-0">
             <div className="mb-4 flex items-center gap-2">
               <Image
-<<<<<<< HEAD
-                src="/assets/logo1.png"
-=======
                 src="/assets/footerlogo.svg"
->>>>>>> 584772b25042a9d2b63dabdfd44e7780f2d0d3e1
                 alt="GratiSwag Logo"
                 width={1000}
                 height={1000}
@@ -42,25 +38,21 @@ export function Footer() {
                   About Us
                 </Link>
               </li>
-              {/* <li>
+              <li>
                 <Link href="/blogs" className="text-gray-300 hover:text-white">
                   Blog
                 </Link>
-              </li> */}
+              </li>
               {/* <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
                   All Awag
                 </Link>
               </li> */}
               <li>
-<<<<<<< HEAD
-                <Link href="/contact-us" className="text-gray-300 hover:text-white">
-=======
                 <Link
                   href="/contact-us"
                   className="text-gray-300 hover:text-white"
                 >
->>>>>>> 584772b25042a9d2b63dabdfd44e7780f2d0d3e1
                   Contact Us
                 </Link>
               </li>

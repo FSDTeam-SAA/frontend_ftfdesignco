@@ -61,19 +61,10 @@ export function Navbar() {
   ];
 
   return (
-<<<<<<< HEAD
-    <Hideon
-      routes={["/shop", "/cart", "/checkout"]}
-    >
-      <header className="w-full py-5  bg-white shadow-sm  ">
-        {/* Top Bar */}
-       
-=======
     <Hideon routes={["/shop", "/cart", "/checkout", "/my-account"]}>
       <header className="w-full  sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Bar */}
         {/* <div className="bg-gratisswag-dark-gray h-2 w-full" /> */}
->>>>>>> 584772b25042a9d2b63dabdfd44e7780f2d0d3e1
 
         {/* Main Navbar */}
         <nav className="container mx-auto flex h-16 items-center justify-between px-4 py-2 pt-5 sm:h-20 sm:px-6 lg:px-8">

@@ -72,11 +72,7 @@ export function Banner() {
             alt="GratiSwag branded merchandise"
             width={600}
             height={600}
-<<<<<<< HEAD
-            className="h-auto w-full max-w-[90vw]  object-cover shadow-lg sm:max-w-md md:max-w-lg lg:max-w-xl rounded-[8px]"
-=======
             className="h-auto w-full max-w-[90vw] rounded-xl object-cover shadow-lg sm:max-w-md md:max-w-lg lg:max-w-xl"
->>>>>>> 584772b25042a9d2b63dabdfd44e7780f2d0d3e1
             priority
           />
         </div>
