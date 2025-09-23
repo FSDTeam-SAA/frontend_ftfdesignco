@@ -45,11 +45,11 @@ export default function SwageFaQ() {
         </div>
         <Accordion type="single" collapsible className="w-full ">
           {faqs.map((faq, index) => (
-            <AccordionItem className="border-2" key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-[#0F0F0F] text-base sm:text-lg md:text-xl font-medium text-left">
+            <AccordionItem className="py-2 border-none  " key={index} value={`item-${index}`}>
+              <AccordionTrigger className="text-[#0F0F0F] text-base sm:text-lg md:text-xl px-2 font-medium text-left  border-2">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-[#424242] text-sm sm:text-base md:text-base font-normal leading-[150%]">
+              <AccordionContent className="text-[#424242] text-sm sm:text-base md:text-base px-2 font-normal leading-[150%] border-b-0">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

@@ -31,7 +31,7 @@ async function getCategories(): Promise<Category[]> {
 interface CompanyProductFiltersProps {
   onApply: (filters: {
     categories: string[];
-    brands: string[];
+    // brands: string[];
     priceRange: number[];
   }) => void;
 }
@@ -40,7 +40,7 @@ export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  // const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories"],
@@ -52,10 +52,14 @@ export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
   const applyFilters = () => {
     onApply({
       categories: selectedCategories,
-      brands: selectedBrands,
+      // brands: selectedBrands,
       priceRange,
     });
     setIsOpen(false);
+  };
+    const handlePriceChange = (value: [number, number]) => {
+    setPriceRange(value);
+    // updateFilters({ prices: `${value[0]}-${value[1]}` });
   };
 
   const FilterContent = () => (
@@ -87,7 +91,25 @@ export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
         </AccordionItem>
 
         {/* Price Range */}
-        <AccordionItem
+         <AccordionItem value="price" className="bg-[#E9EEF2] px-2 rounded-xl">
+          <AccordionTrigger>Coins</AccordionTrigger>
+          <AccordionContent>
+            <div className="">
+              <Slider
+                value={priceRange}
+                onValueChange={handlePriceChange}
+                max={1000}
+                step={10}
+                className="w-full bg-gray-300 rounded-full my-4"
+              />
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>${priceRange[0]}</span>
+                <span>${priceRange[1]}+</span>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        {/* <AccordionItem
           value="price"
           className="bg-[#E9EEF2] px-4 py-2 rounded-xl"
         >
@@ -107,10 +129,10 @@ export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
               </div>
             </div>
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
 
         {/* Brands */}
-        <AccordionItem value="brands" className="border rounded-xl px-2">
+        {/* <AccordionItem value="brands" className="border rounded-xl px-2">
           <AccordionTrigger className="font-semibold">Brands</AccordionTrigger>
           <AccordionContent className="space-y-3">
             {["Nike", "Adidas", "Puma", "Champion"].map((brand) => (
@@ -130,7 +152,7 @@ export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
               </div>
             ))}
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
       </Accordion>
 
       {/* Apply Button */}

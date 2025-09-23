@@ -93,7 +93,7 @@ export function Footer() {
           </div>
 
           {/* Newsletter Signup */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-3 ">
             <h3 className="mb-4 text-base sm:text-lg font-semibold">
               Subscribe To Our{" "}
               <span className="text-[#D9AD5E]">NEWSLETTER</span>
@@ -105,10 +105,10 @@ export function Footer() {
           </div>
         </div>
 
-        <Separator className="my-6 sm:my-8 bg-gray-600" />
+        <Separator className="my-6 sm:my-8 bg-white/60" />
 
         {/* Copyright */}
-        <div className="text-center text-xs sm:text-sm text-gray-400">
+        <div className="text-center text-xs sm:text-sm text-[#E7E7E7]">
           {"© 2025 Swag. All Rights Reserved"}
         </div>
       </div>
