@@ -23,12 +23,14 @@ const forgotPassword = async (email: string) => {
       body: JSON.stringify({ email }),
     }
   );
+  const data = await response.json(); // parse body
 
   if (!response.ok) {
-    throw new Error("Failed to send OTP");
+    // backend usually sends { message: "...error text..." }
+    throw new Error(data.message || "Something went wrong");
   }
 
-  return response.json();
+  return data;
 };
 
 export default function ForgotPasswordPage() {
