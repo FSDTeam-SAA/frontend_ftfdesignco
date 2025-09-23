@@ -1,7 +1,6 @@
-import type { ReactNode } from "react"
-import "../../app/globals.css"
-import Image from "next/image"
-
+import type { ReactNode } from "react";
+import "../../app/globals.css";
+import Image from "next/image";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -23,5 +22,5 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="w-full max-w-md mx-auto">{children}</div>
       </div>
     </div>
-  )
+  );
 }
