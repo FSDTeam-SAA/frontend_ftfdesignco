@@ -1,14 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface GetProductsParams {
   category?: string;
@@ -86,6 +78,7 @@ export async function ProductsGrid({
 
   return (
     <div>
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">All Products</h1>
         <div className="text-sm text-gray-600">
@@ -93,18 +86,20 @@ export async function ProductsGrid({
         </div>
       </div>
 
+      {/* No Products */}
       {products.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500">No products found.</p>
         </div>
       ) : (
         <>
+          {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-8">
             {products.map((product) => (
               <div key={product._id} className="group">
                 <Link href={`/all-product/${product._id}`} className="block">
                   <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden border">
-                    <div className="relative  aspect-square bg-[#E9E9E9]">
+                    <div className="relative aspect-square bg-[#E9E9E9]">
                       <Image
                         src={
                           product.productImage ||
@@ -123,7 +118,7 @@ export async function ProductsGrid({
                         <span className="text-lg md:text-[40px] font-semibold py-1 text-gray-900">
                           ${product.price}
                         </span>
-                        <span className="text-xs md:text-[18px] text-[#000000]  px-2 ">
+                        <span className="text-xs md:text-[18px] text-[#000000] px-2">
                           {product.category.title}
                         </span>
                       </div>
@@ -134,62 +129,59 @@ export async function ProductsGrid({
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href={`/all-product?page=${Math.max(1, currentPage - 1)}`}
-                    className={
-                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-                {[...Array(totalPages)].map((_, i) => {
-                  const pageNum = i + 1;
-                  if (
-                    pageNum === 1 ||
-                    pageNum === totalPages ||
-                    (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                  ) {
-                    return (
-                      <PaginationItem key={pageNum}>
-                        <PaginationLink
-                          href={`/all-product?page=${pageNum}`}
-                          isActive={pageNum === currentPage}
-                        >
-                          {pageNum}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  } else if (
-                    pageNum === currentPage - 2 ||
-                    pageNum === currentPage + 2
-                  ) {
-                    return (
-                      <PaginationItem key={pageNum}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    );
-                  }
-                  return null;
-                })}
-                <PaginationItem>
-                  <PaginationNext
-                    href={`/all-product?page=${Math.min(
-                      totalPages,
-                      currentPage + 1
-                    )}`}
-                    className={
-                      currentPage === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
+          {/* Custom Pagination */}
+          <div className="flex items-center justify-center space-x-2">
+            {/* Previous */}
+            <Link
+              href={`/all-product?page=${Math.max(1, currentPage - 1)}`}
+              className="flex items-center justify-center w-10 h-10 border rounded-full hover:bg-gray-100"
+            >
+              <ChevronLeft size={20} />
+            </Link>
+
+            {/* Page numbers */}
+            {[...Array(totalPages)].map((_, i) => {
+              const pageNum = i + 1;
+
+              if (
+                pageNum === 1 ||
+                pageNum === totalPages ||
+                (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+              ) {
+                return (
+                  <Link
+                    key={pageNum}
+                    href={`/all-product?page=${pageNum}`}
+                    className={`flex items-center justify-center w-10 h-10 border rounded-full ${
+                      pageNum === currentPage
+                        ? "bg-[#23547B] text-white"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    {pageNum}
+                  </Link>
+                );
+              } else if (
+                pageNum === currentPage - 2 ||
+                pageNum === currentPage + 2
+              ) {
+                return (
+                  <span key={pageNum} className="px-2">
+                    ...
+                  </span>
+                );
+              }
+              return null;
+            })}
+
+            {/* Next */}
+            <Link
+              href={`/all-product?page=${Math.min(totalPages, currentPage + 1)}`}
+              className="flex items-center justify-center w-10 h-10 border rounded-full hover:bg-gray-100"
+            >
+              <ChevronRight size={20} />
+            </Link>
+          </div>
         </>
       )}
     </div>

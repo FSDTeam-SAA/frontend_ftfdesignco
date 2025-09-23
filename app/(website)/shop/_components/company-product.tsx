@@ -1,20 +1,12 @@
 "use client";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Product {
   _id: string;
@@ -72,9 +64,7 @@ async function fetchProducts({
   } else {
     url = `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/shop-products`;
   }
-  console.log(role);
 
-  // ✅ Only category filter is applied
   if (categories.length > 0) {
     url += `&category=${encodeURIComponent(categories.join(","))}`;
   }
@@ -110,6 +100,7 @@ async function addToCart({
       }),
     }
   );
+
   const result = await response.json();
   if (!response.ok) {
     throw new Error(result.message || "Failed to add product to cart");
@@ -139,9 +130,7 @@ export default function CompanyProducts({
   const { data: session } = useSession();
   const token = session?.accessToken;
   const queryClient = useQueryClient();
-  console.log("1", session?.user.role);
   const role = session?.user.role || "";
-  console.log("role", role);
 
   const {
     data: productsData,
@@ -165,7 +154,7 @@ export default function CompanyProducts({
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast.error(error.message);
     },
   });
@@ -199,13 +188,13 @@ export default function CompanyProducts({
 
   const currentPage = productsData?.currentPage || filters.page;
   const totalPages = productsData?.totalPages || 1;
-  console.log("filter productsss", filteredProducts);
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">All Products</h1>
       </div>
+
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500">
@@ -234,7 +223,9 @@ export default function CompanyProducts({
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <Button
-                          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md"
+                          className={`bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md ${
+                            role === "company_admin" ? "hidden" : "block"
+                          }`}
                           onClick={(e) => {
                             e.preventDefault();
                             addToCartMutation.mutate({
@@ -266,71 +257,73 @@ export default function CompanyProducts({
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() =>
-                      setFilters((f) => ({
-                        ...f,
-                        page: Math.max(1, f.page - 1),
-                      }))
-                    }
-                    className={
-                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-                {[...Array(totalPages)].map((_, i) => {
-                  const pageNum = i + 1;
-                  if (
-                    pageNum === 1 ||
-                    pageNum === totalPages ||
-                    (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                  ) {
-                    return (
-                      <PaginationItem key={pageNum}>
-                        <PaginationLink
-                          onClick={() =>
-                            setFilters((f) => ({ ...f, page: pageNum }))
-                          }
-                          isActive={pageNum === currentPage}
-                        >
-                          {pageNum}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  } else if (
-                    pageNum === currentPage - 2 ||
-                    pageNum === currentPage + 2
-                  ) {
-                    return (
-                      <PaginationItem key={pageNum}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    );
-                  }
-                  return null;
-                })}
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() =>
-                      setFilters((f) => ({
-                        ...f,
-                        page: Math.min(totalPages, f.page + 1),
-                      }))
-                    }
-                    className={
-                      currentPage === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
+          {/* Custom Pagination */}
+
+         <div className="flex items-center justify-center gap-2 mb-6">
+  {/* Previous */}
+  <button
+    className={`flex items-center justify-center w-10 h-10 rounded-full bg-[#23547B] text-white hover:opacity-90 ${
+      currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+    }`}
+    onClick={() =>
+      setFilters((f) => ({
+        ...f,
+        page: Math.max(1, f.page - 1),
+      }))
+    }
+    disabled={currentPage === 1}
+  >
+    <ChevronLeft size={20} />
+  </button>
+
+  {/* Page Numbers */}
+  {[...Array(totalPages)].map((_, i) => {
+    const pageNum = i + 1;
+    if (
+      pageNum === 1 ||
+      pageNum === totalPages ||
+      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+    ) {
+      return (
+        <button
+          key={pageNum}
+          className={`flex items-center justify-center w-10 h-10 rounded-full border ${
+            pageNum === currentPage
+              ? "bg-[#23547B] text-white"
+              : "hover:bg-gray-100"
+          }`}
+          onClick={() => setFilters((f) => ({ ...f, page: pageNum }))}
+        >
+          {pageNum}
+        </button>
+      );
+    } else if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+      return (
+        <span key={pageNum} className="px-2">
+          ...
+        </span>
+      );
+    }
+    return null;
+  })}
+
+  {/* Next */}
+  <button
+    className={`flex items-center justify-center w-10 h-10 rounded-full bg-[#23547B] text-white hover:opacity-90 ${
+      currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+    }`}
+    onClick={() =>
+      setFilters((f) => ({
+        ...f,
+        page: Math.min(totalPages, f.page + 1),
+      }))
+    }
+    disabled={currentPage === totalPages}
+  >
+    <ChevronRight size={20} />
+  </button>
+</div>
+
         </>
       )}
     </div>

@@ -1,7 +1,7 @@
 
 import FAQSection from "@/components/FAQSection";
 import { SubScriptionPlan } from "@/components/SubScriptionPlan";
-import { TestimonialsSection } from "@/components/testimonials-section";
+// import { TestimonialsSection } from "@/components/testimonials-section";
 import { Banner } from "@/components/web_components/Banner";
 import Banner2 from "@/components/web_components/Banner2";
 import Trusted_by from "@/components/web_components/Trusted_by";
@@ -15,7 +15,7 @@ export default function Home() {
       <SubScriptionPlan />
       <Banner2/>
       <Why_We_Are_Different/>
-      <TestimonialsSection/> 
+      {/* <TestimonialsSection/>  */}
       <FAQSection/> 
     </div>
   );

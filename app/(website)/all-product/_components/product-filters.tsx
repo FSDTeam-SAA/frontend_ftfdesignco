@@ -37,7 +37,7 @@ export function ProductFilters() {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  // const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
 
   // Load categories
@@ -48,11 +48,11 @@ export function ProductFilters() {
   // Initialize from URL params
   useEffect(() => {
     const categoryParam = searchParams.get("category");
-    const brandParam = searchParams.get("brand");
+    // const brandParam = searchParams.get("brand");
     const pricesParam = searchParams.get("prices");
 
     if (categoryParam) setSelectedCategories(categoryParam.split(","));
-    if (brandParam) setSelectedBrands(brandParam.split(","));
+    // if (brandParam) setSelectedBrands(brandParam.split(","));
     if (pricesParam) {
       const [min, max] = pricesParam.split("-").map(Number);
       setPriceRange([min, max]);
@@ -76,13 +76,13 @@ export function ProductFilters() {
     updateFilters({ category: updated.join(",") });
   };
 
-  const handleBrandChange = (brand: string, checked: boolean) => {
-    const updated = checked
-      ? [...selectedBrands, brand]
-      : selectedBrands.filter((b) => b !== brand);
-    setSelectedBrands(updated);
-    updateFilters({ brand: updated.join(",") });
-  };
+  // const handleBrandChange = (brand: string, checked: boolean) => {
+  //   const updated = checked
+  //     ? [...selectedBrands, brand]
+  //     : selectedBrands.filter((b) => b !== brand);
+  //   setSelectedBrands(updated);
+  //   updateFilters({ brand: updated.join(",") });
+  // };
 
   const handlePriceChange = (value: [number, number]) => {
     setPriceRange(value);
@@ -91,7 +91,7 @@ export function ProductFilters() {
 
   const clearAll = () => {
     setSelectedCategories([]);
-    setSelectedBrands([]);
+    // setSelectedBrands([]);
     setPriceRange([0, 1000]);
     router.push("/all-product");
   };
@@ -142,7 +142,7 @@ export function ProductFilters() {
         </AccordionItem>
 
         {/* Brands */}
-        <AccordionItem value="brands" className="bg-[#E9EEF2] px-2 rounded-xl">
+        {/* <AccordionItem value="brands" className="bg-[#E9EEF2] px-2 rounded-xl">
           <AccordionTrigger>Brands</AccordionTrigger>
           <AccordionContent className="space-y-2">
             {["Nike", "Adidas", "Puma", "Champion"].map((brand) => (
@@ -158,7 +158,7 @@ export function ProductFilters() {
               </div>
             ))}
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
       </Accordion>
 
       <Button

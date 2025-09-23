@@ -37,9 +37,7 @@ export default function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="mx-auto max-w-[90%] sm:max-w-[700px] md:max-w-[800px] font-manrope lg:max-w-[905px] text-[#3F3F3F] text-sm sm:text-base md:text-lg font-normal leading-[150%]">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+           Here are a few questions that people usually ask, however, you don&apos;t need to read a screen if you want to talk to a human- call or text (302) 276-8557.
           </p>
         </div>
         <Accordion type="single" collapsible className="w-full">

@@ -14,7 +14,7 @@ export default function Why_We_Are_Different() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-3 lg:gap-12">
+        <div className=" grid  items-start md:items-stretch gap-6 py-12 lg:grid-cols-3 lg:gap-6">
           <div className="grid gap-1 p-6 rounded-xl bg-[#FCF7EF] text-center">
             <div className="flex justify-center ">
               <Image
