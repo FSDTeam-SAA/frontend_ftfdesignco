@@ -28,7 +28,7 @@ export function Banner() {
   };
 
   return (
-    <section className="bg-white py-8 sm:py-12 md:py-16 lg:py-20">
+    <section className="bg-white py-8 sm:py-12 md:py-16 lg:py-20  ">
       <div className="container mx-auto grid items-center gap-6 px-4 sm:gap-8 md:grid-cols-2 md:px-6 lg:gap-12 xl:gap-1">
         {/* Left Content */}
         <div className="flex flex-col items-start order-2 md:order-1">

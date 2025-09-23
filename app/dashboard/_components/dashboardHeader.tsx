@@ -5,6 +5,7 @@ import { useUserProfile } from "@/hooks/use-api"
 
 export function DashboardHeader() {
   const { data: profile } = useUserProfile()
+  console.log(profile)
 
   console.log(profile)
 
@@ -15,7 +16,7 @@ export function DashboardHeader() {
           <span className="text-sm font-medium text-white">{profile?.name || "Mr. Raja"}</span>
           <Avatar className="h-8 w-8">
             <AvatarImage src={profile?.imageLink || ""} />
-            <AvatarFallback>MR</AvatarFallback>
+            <AvatarFallback>{profile?.name?.charAt(0) || "R"}</AvatarFallback>
           </Avatar>
         </div>
       </div>

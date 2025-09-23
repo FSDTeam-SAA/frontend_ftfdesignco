@@ -47,7 +47,7 @@ const fetchBlogs = async (
   limit: number = 6
 ): Promise<BlogsResponse> => {
   const response = await fetch(
-    `https://ftfdesignco-backend.onrender.com/blog?page=${page}&limit=${limit}`
+    `${process.env.NEXT_PUBLIC_API_URL}/blog?page=${page}&limit=${limit}`
   );
   if (!response.ok) {
     throw new Error("Network response was not ok");
