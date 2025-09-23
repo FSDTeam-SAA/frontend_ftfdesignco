@@ -24,7 +24,7 @@ interface EditCoinModalProps {
 }
 
 export function EditCoinModal({ product, isOpen, onClose, onUpdateCoin, isUpdating }: EditCoinModalProps) {
-  const [coinValue, setCoinValue] = useState(0)
+  const [coinValue, setCoinValue] = useState(product?.coin || 0)
 
   // Update coin value when product changes
   useEffect(() => {
@@ -66,7 +66,7 @@ export function EditCoinModal({ product, isOpen, onClose, onUpdateCoin, isUpdati
               </Label>
               <Input
                 id="coin"
-                type="number"
+                type="text"
                 value={coinValue}
                 onChange={(e) => setCoinValue(Number(e.target.value))}
                 className="col-span-3"
@@ -84,10 +84,10 @@ export function EditCoinModal({ product, isOpen, onClose, onUpdateCoin, isUpdati
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+            <Button type="button" variant="outline" onClick={handleClose} className="border-[#EFA610] text-[#EFA610] hover:text-[#EFA610]/90">
               Cancel
             </Button>
-            <Button type="submit" disabled={isUpdating}>
+            <Button type="submit" disabled={isUpdating} className="bg-[#EFA610] text-white rounded-[8px] hover:bg-[#EFA610]/90 hover:text-white">
               {isUpdating ? "Updating..." : "Update Coin"}
             </Button>
           </DialogFooter>
