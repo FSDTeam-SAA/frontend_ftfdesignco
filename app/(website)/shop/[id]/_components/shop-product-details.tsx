@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import ShopNavbar from "@/components/shared/shopnavbar";
+import ProductsByCategory from "./related-product";
 
 // Type definitions
 interface Category {
@@ -326,6 +327,8 @@ export function ShopProductDetail({ id }: ProductDetailProps) {
             </div>
           </div>
         </div>
+
+        <ProductsByCategory category={product.category.title} />
       </main>
     </div>
   );
