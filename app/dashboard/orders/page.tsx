@@ -27,10 +27,11 @@ export default function OrderHistoryPage() {
   });
   const queryClient = useQueryClient();
 
-  // 🔹 Pagination State (must be before conditional return)
+  // Pagination state
   const [page, setPage] = useState(1);
   const itemsPerPage = 5;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const orders: Order[] = ordersResponse?.data || [];
   const total = orders.length;
   const totalPages = Math.ceil(total / itemsPerPage);
@@ -66,11 +67,10 @@ export default function OrderHistoryPage() {
     orderMutation.mutate({ Id, status });
   };
 
-  // 🔹 Loading state with Skeletons
+  // Loading Skeleton
   if (isLoading) {
     return (
       <div className="space-y-6">
-        {/* Page Title + Breadcrumb */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Order History</h1>
           <Breadcrumb
@@ -78,9 +78,7 @@ export default function OrderHistoryPage() {
           />
         </div>
 
-        {/* Skeleton Table */}
         <div className="bg-white rounded-lg border">
-          {/* Table Header */}
           <div className="grid grid-cols-6 gap-4 px-6 py-3 border-b bg-gray-50">
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-4 w-16" />
@@ -90,7 +88,6 @@ export default function OrderHistoryPage() {
             <Skeleton className="h-4 w-20" />
           </div>
 
-          {/* Table Body */}
           <div className="divide-y">
             {Array.from({ length: 3 }).map((_, i) => (
               <div
@@ -103,14 +100,10 @@ export default function OrderHistoryPage() {
                     <Skeleton className="h-4 w-32" />
                   </div>
                 </div>
-
-                {/* Date */}
                 <div className="space-y-2">
                   <Skeleton className="h-3 w-28" />
                   <Skeleton className="h-3 w-16" />
                 </div>
-
-                {/* Actions */}
                 <div className="flex gap-2 justify-end">
                   <Skeleton className="h-8 w-16 rounded-md" />
                 </div>
@@ -119,16 +112,14 @@ export default function OrderHistoryPage() {
           </div>
         </div>
 
-        {/* Pagination Skeleton */}
         <div className="flex justify-center items-center gap-2 pt-4">
-          
           <Skeleton className="h-9 w-9 rounded-full" />
         </div>
       </div>
     );
   }
 
-  // 🔹 Table columns
+  // Table columns
   const columns = [
     {
       key: "productName",
@@ -137,7 +128,7 @@ export default function OrderHistoryPage() {
         <div className="flex justify-center items-center gap-3">
           <div className="w-12 h-12 rounded-lg overflow-hidden border">
             <Image
-              src={order?.items[0]?.image}
+              src={order?.items?.[0]?.image || "/placeholder.png"}
               alt="order Image"
               width={50}
               height={50}
@@ -159,12 +150,12 @@ export default function OrderHistoryPage() {
       key: "quantity",
       header: "Quantity",
       render: (order: Order) =>
-        order.items?.reduce((sum, i) => sum + i.quantity, 0) || 0,
+        order.items?.reduce((sum, i) => sum + (i.quantity || 0), 0) || 0,
     },
     {
       key: "employeeId",
       header: "Employee Id",
-      render: (order: Order) => order.employee,
+      render: (order: Order) => order.employee?.employeeId || "N/A",
     },
     {
       key: "date",
@@ -192,12 +183,7 @@ export default function OrderHistoryPage() {
           >
             Approved
           </Badge>
-          <Badge
-            onClick={() => handelstatus(order._id, "delivered")}
-            className="bg-blue-100 text-blue-800 cursor-pointer"
-          >
-            Processing
-          </Badge>
+          
           <Badge
             onClick={() => handelstatus(order._id, "rejected")}
             className="bg-red-100 text-red-800 cursor-pointer"
@@ -208,7 +194,7 @@ export default function OrderHistoryPage() {
       ),
     },
   ];
-
+   console.log('current data',currentData)
   return (
     <div className="space-y-6">
       <div>
@@ -219,10 +205,8 @@ export default function OrderHistoryPage() {
       </div>
 
       <div className="bg-white rounded-lg border">
-        {/* 🔹 Table */}
         <DataTable data={currentData} columns={columns} />
 
-        {/* 🔹 Pagination Footer */}
         <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-t">
           <div className="text-sm text-gray-700">
             Showing {startItem} to {endItem} of {total} results
@@ -233,24 +217,20 @@ export default function OrderHistoryPage() {
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => handlePageChange(page - 1)}
-                    className={
-                      page === 1 ? "pointer-events-none opacity-50" : ""
-                    }
+                    className={page === 1 ? "pointer-events-none opacity-50" : ""}
                   />
                 </PaginationItem>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (p) => (
-                    <PaginationItem key={p}>
-                      <PaginationLink
-                        onClick={() => handlePageChange(p)}
-                        isActive={page === p}
-                      >
-                        {p}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )
-                )}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <PaginationItem key={p}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(p)}
+                      isActive={page === p}
+                    >
+                      {p}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
 
                 {totalPages > 3 && (
                   <PaginationItem>
@@ -261,11 +241,7 @@ export default function OrderHistoryPage() {
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => handlePageChange(page + 1)}
-                    className={
-                      page === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
+                    className={page === totalPages ? "pointer-events-none opacity-50" : ""}
                   />
                 </PaginationItem>
               </PaginationContent>

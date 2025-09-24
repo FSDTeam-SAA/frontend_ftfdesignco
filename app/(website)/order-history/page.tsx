@@ -39,7 +39,7 @@ export default function OrdersPage() {
       setCurrentPage(page);
     }
   };
-  console.log(paginatedOrders);
+ 
   return (
     <div className="flex flex-col items-center justify-center py-4">
       <h1 className="text-3xl font-bold mb-8">Orders</h1>

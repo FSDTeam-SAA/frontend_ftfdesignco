@@ -1,3 +1,5 @@
+import { Employee } from "./types";
+
 export interface OrderItem {
   _id: string;
   title: string;
@@ -10,7 +12,7 @@ export interface OrderItem {
 
 export interface Order {
   _id: string;
-  employee: string;
+  employee: Employee;
   shop: string;
   items: OrderItem[];
   status: "pending" | "delivered" | "cancelled";
