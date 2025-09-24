@@ -220,15 +220,15 @@ export default function OrderHistoryPage() {
           <Badge
             onClick={() =>
               order.status !== "approved" &&
-              order.status !== "cancelled" &&
+              order.status !== "rejected" &&
               handelstatus(order._id, "approved")
             }
             className={`bg-green-100 text-green-800 
       ${
-        order.status === "approved" || order.status === "cancelled"
+        order.status === "approved" || order.status === "rejected"
           ? "opacity-50 cursor-not-allowed"
           : "cursor-pointer"
-      } ${order.status === "cancelled" && "hidden"}`}
+      } ${order.status === "rejected" && "hidden"}`}
           >
             Approved
           </Badge>
@@ -237,12 +237,12 @@ export default function OrderHistoryPage() {
           <Badge
             onClick={() =>
               order.status !== "approved" &&
-              order.status !== "cancelled" &&
-              handelCancelstatus(order._id, "cancelled")
+              order.status !== "rejected" &&
+              handelCancelstatus(order._id, "rejected")
             }
             className={`bg-red-100 text-red-800 
       ${
-        order.status === "approved" || order.status === "cancelled"
+        order.status === "approved" || order.status === "rejected"
           ? "opacity-50 cursor-not-allowed hidden"
           : "cursor-pointer block"
       }`}
@@ -253,7 +253,7 @@ export default function OrderHistoryPage() {
            
             className={`bg-red-100 text-red-800 
       ${
-        order.status === "cancelled" 
+        order.status === "rejected" 
           ? "opacity-50 cursor-not-allowed block"
           : "cursor-pointer hidden"
       }`}
@@ -261,7 +261,7 @@ export default function OrderHistoryPage() {
             Rejected
           </Badge>
           {/* Trash Button (only visible when cancelled) */}
-          {order.status === "cancelled" && (
+          {order.status === "rejected" && (
             <Badge
               onClick={() => handelDelete(order._id)}
               className="bg-gray-100 text-gray-800 cursor-pointer"
