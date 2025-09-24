@@ -15,7 +15,7 @@ export interface Order {
   employee: Employee;
   shop: string;
   items: OrderItem[];
-  status: "pending" | "delivered" | "cancelled";
+  status: string;
   country: string;
   zipCode: number;
   name: string;

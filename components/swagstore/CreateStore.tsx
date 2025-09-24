@@ -123,7 +123,7 @@ export function CreateStore() {
   return (
     <section id="swagecreatestore">
       <div className="container mx-auto py-[40px] md:py-[72px]">
-        <Card className="max-w-[900px] mx-auto h-auto overflow-y-auto rounded-xl bg-white shadow-md">
+        <Card className="max-w-[900px] mx-auto h-auto   overflow-y-auto hide-scrollbar rounded-xl bg-white shadow-md">
           <CardHeader className="text-center">
             <CardTitle className="text-[48px] text-[#131313] font-bold">
               Create New Swag Store

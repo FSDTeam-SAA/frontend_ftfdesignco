@@ -55,7 +55,7 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
-  console.log("propssss", props);
+  // console.log("propssss", props);
   return (
     <Card
       key={_id}

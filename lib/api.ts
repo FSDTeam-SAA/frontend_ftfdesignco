@@ -226,6 +226,18 @@ export async function employOrder(
     throw error;
   }
 }
+export async function employOrderDelete(id: string) {
+  try {
+    const res = await api.delete(`/order/remove-rejected-order/${id}`);
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw error;
+  }
+}
+
 
 // company payment 
 

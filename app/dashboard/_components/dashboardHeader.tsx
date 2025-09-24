@@ -5,9 +5,9 @@ import { useUserProfile } from "@/hooks/use-api"
 
 export function DashboardHeader() {
   const { data: profile } = useUserProfile()
-  console.log(profile)
+  // console.log(profile)
 
-  console.log(profile)
+  // console.log(profile)
 
   return (
     <header className="bg-[#035F8A] border-b border-gray-200 px-6 py-4">

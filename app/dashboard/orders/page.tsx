@@ -4,7 +4,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "../_components/breadcrumb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchOrders, orderStatus } from "@/lib/api";
+import { employOrderDelete, fetchOrders, orderStatus } from "@/lib/api";
 import { Order } from "@/lib/companytypes";
 import { toast } from "sonner";
 import Image from "next/image";
@@ -19,12 +19,14 @@ import {
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useMemo } from "react";
+import { Trash } from "lucide-react";
 
 export default function OrderHistoryPage() {
   const { data: ordersResponse, isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: () => fetchOrders(),
   });
+
   const queryClient = useQueryClient();
 
   // Pagination state
@@ -50,6 +52,7 @@ export default function OrderHistoryPage() {
     }
   };
 
+  // Approve mutation
   const orderMutation = useMutation({
     mutationKey: ["orders"],
     mutationFn: ({ Id, status }: { Id: string; status: string }) =>
@@ -63,8 +66,43 @@ export default function OrderHistoryPage() {
     },
   });
 
+  // Cancel mutation
+  const orderCancelMutation = useMutation({
+    mutationKey: ["orders"],
+    mutationFn: ({ Id, status }: { Id: string; status: string }) =>
+      orderStatus(Id, status),
+    onSuccess: (data) => {
+      toast.success(`${data.message}`);
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError: (error) => {
+      toast.error(`${error.message}`);
+    },
+  });
+
+  // Delete mutation
+  const orderDeleteMutation = useMutation({
+    mutationKey: ["orders"],
+    mutationFn: (id: string) => employOrderDelete(id),
+    onSuccess: (data) => {
+      toast.success(`${data.message}`);
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError: (error) => {
+      toast.error(`${error.message}`);
+    },
+  });
+
   const handelstatus = (Id: string, status: string) => {
     orderMutation.mutate({ Id, status });
+  };
+
+  const handelCancelstatus = (Id: string, status: string) => {
+    orderCancelMutation.mutate({ Id, status });
+  };
+
+  const handelDelete = (id: string) => {
+    orderDeleteMutation.mutate(id);
   };
 
   // Loading Skeleton
@@ -176,25 +214,66 @@ export default function OrderHistoryPage() {
       key: "action",
       header: "Action",
       render: (order: Order) => (
+        console.log(order.status),
         <div className="flex items-center justify-center gap-2">
+          {/* Approve Button */}
           <Badge
-            onClick={() => handelstatus(order._id, "approved")}
-            className="bg-green-100 text-green-800 cursor-pointer"
+            onClick={() =>
+              order.status !== "approved" &&
+              order.status !== "rejected" &&
+              handelstatus(order._id, "approved")
+            }
+            className={`bg-green-100 text-green-600 
+      ${
+        order.status === "approved" || order.status === "rejected"
+          ? "opacity-50 cursor-not-allowed"
+          : "cursor-pointer"
+      } ${order.status === "rejected" && "hidden"}`}
           >
             Approved
           </Badge>
-          
+
+          {/* Cancel Button */}
           <Badge
-            onClick={() => handelstatus(order._id, "rejected")}
-            className="bg-red-100 text-red-800 cursor-pointer"
+            onClick={() =>
+              order.status !== "approved" &&
+              order.status !== "rejected" &&
+              handelCancelstatus(order._id, "rejected")
+            }
+            className={`bg-red-100 text-red-800 
+      ${
+        order.status === "approved" || order.status === "rejected"
+          ? "opacity-50 cursor-not-allowed hidden"
+          : "cursor-pointer block"
+      }`}
           >
             Cancel
           </Badge>
+          <Badge
+           
+            className={`bg-red-100 text-red-800 
+      ${
+        order.status === "rejected" 
+          ? "opacity-50 cursor-not-allowed block"
+          : "cursor-pointer hidden"
+      }`}
+          >
+            Rejected
+          </Badge>
+          {/* Trash Button (only visible when cancelled) */}
+          {order.status === "rejected" && (
+            <Badge
+              onClick={() => handelDelete(order._id)}
+              className="bg-gray-100 text-gray-800 cursor-pointer"
+            >
+              <Trash className="w-4 h-4" />
+            </Badge>
+          )}
         </div>
       ),
     },
   ];
-   console.log('current data',currentData)
+ console.log('hello',currentData)
   return (
     <div className="space-y-6">
       <div>
@@ -217,20 +296,24 @@ export default function OrderHistoryPage() {
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => handlePageChange(page - 1)}
-                    className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
+                    }
                   />
                 </PaginationItem>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <PaginationItem key={p}>
-                    <PaginationLink
-                      onClick={() => handlePageChange(p)}
-                      isActive={page === p}
-                    >
-                      {p}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (p) => (
+                    <PaginationItem key={p}>
+                      <PaginationLink
+                        onClick={() => handlePageChange(p)}
+                        isActive={page === p}
+                      >
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
 
                 {totalPages > 3 && (
                   <PaginationItem>
@@ -241,7 +324,11 @@ export default function OrderHistoryPage() {
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => handlePageChange(page + 1)}
-                    className={page === totalPages ? "pointer-events-none opacity-50" : ""}
+                    className={
+                      page === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>
