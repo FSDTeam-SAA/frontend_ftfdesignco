@@ -1,25 +1,17 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Trash2 } from "lucide-react";
-import { useCart } from "@/hooks/use-cart";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import ShopNavbar from "@/components/shared/shopnavbar";
 import Link from "next/link";
 import { employOrder } from "@/lib/api";
-
+import { toast } from "sonner";
 
 interface CartItem {
   _id: string;
@@ -30,13 +22,15 @@ interface CartItem {
     _id: string;
     title: string;
     price: number;
+    productImage:string;
+      
   };
 }
 
 export default function CheckoutPage() {
-  const { removeFromCart } = useCart();
   const { data: session } = useSession();
   const token = session?.accessToken;
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     country: "",
@@ -45,7 +39,7 @@ export default function CheckoutPage() {
     address: "",
   });
 
-  // Fetch cart data with product info
+  // Fetch cart data
   const { data: cartData, isLoading } = useQuery<CartItem[]>({
     queryKey: ["cart"],
     queryFn: async () => {
@@ -70,6 +64,10 @@ export default function CheckoutPage() {
       name: string;
       address: string;
     }) => employOrder(data),
+    onSuccess: (data) => {
+      toast.success(data.message)
+      router.push("/cart"); 
+    },
   });
 
   const subtotalCoins =
@@ -130,7 +128,10 @@ export default function CheckoutPage() {
                       <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0">
                           <Image
-                            src="/placeholder.svg?height=48&width=48"
+                               src={
+                              item.product?.productImage ||
+                              "/placeholder.svg?height=64&width=64"
+                            }
                             alt={item.product?.title || "Product"}
                             width={48}
                             height={48}
@@ -148,14 +149,6 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-sm">Qty: {item.quantity}</span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 text-red-500 hover:text-red-700"
-                          onClick={() => removeFromCart(item._id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
                       </div>
                     </div>
                   ))}
@@ -165,10 +158,6 @@ export default function CheckoutPage() {
                   <div className="flex justify-between text-sm">
                     <span>Subtotal (Items):</span>
                     <span>{subtotalCoins} Coins</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Shipping Charge:</span>
-                    <span>{shippingCharge} Coins</span>
                   </div>
                   <div className="flex justify-between font-semibold border-t pt-2">
                     <span>Total:</span>
@@ -188,24 +177,14 @@ export default function CheckoutPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="country">Country</Label>
-                          <Select
-                            onValueChange={(value) =>
-                              handleInputChange("country", value)
+                          <Input
+                            id="country"
+                            placeholder="Enter Your Country"
+                            value={formData.country}
+                            onChange={(e) =>
+                              handleInputChange("country", e.target.value)
                             }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select country" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="us">
-                                United States
-                              </SelectItem>
-                              <SelectItem value="ca">Canada</SelectItem>
-                              <SelectItem value="uk">
-                                United Kingdom
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                          />
                         </div>
                         <div>
                           <Label htmlFor="zipCode">Zip Code</Label>
@@ -261,13 +240,10 @@ export default function CheckoutPage() {
                       >
                         {ordermutation.isPending
                           ? "Processing..."
-                          : "💰 Make Your Confirmation"}
+                          : " Make Your Confirmation"}
                       </Button>
                       {ordermutation.isError && (
                         <p className="text-red-500">Order failed</p>
-                      )}
-                      {ordermutation.isSuccess && (
-                        <p className="text-green-500">Order placed!</p>
                       )}
                     </div>
                   </CardContent>
@@ -280,5 +256,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-// ✅ employOrder function

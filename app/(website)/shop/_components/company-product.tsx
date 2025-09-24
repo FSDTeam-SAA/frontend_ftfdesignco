@@ -225,7 +225,7 @@ export default function CompanyProducts({
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <Button
-                          className={`bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md ${
+                          className={`bg-orange-500 hover:bg-orange-600 text-white px-6  rounded-sm ${
                             role === "company_admin" ? "hidden" : "block"
                           }`}
                           onClick={(e) => {

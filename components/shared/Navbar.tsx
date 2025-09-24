@@ -22,6 +22,8 @@ import { useState } from "react";
 import { CreateStoreModal } from "../web_components/create-store-modal";
 import { useRouter, usePathname } from "next/navigation";
 import Hideon from "@/provider/Hideon";
+import { fetchemployecartdata } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -48,6 +50,12 @@ export function Navbar() {
   // const handleShopClick = () => {
   //   window.location.href = "https://shop.companycasuals.com/";
   // };
+  const { data: carddata } = useQuery({
+    queryKey: ["cart"],
+    queryFn: () => fetchemployecartdata(),
+    enabled: role === "employee" && !!token,
+  });
+  console.log("data for card", carddata);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -104,17 +112,19 @@ export function Navbar() {
               <>
                 {/* Cart Icon (Only for employee role) */}
                 {role === "employee" && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative h-10 w-10"
-                    aria-label="Shopping Cart"
-                  >
-                    <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-gratisswag-dark-gray" />
-                    <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-[#D9AD5E] px-1.5 text-xs font-semibold text-white">
-                      0
-                    </Badge>
-                  </Button>
+                  <Link href={"/cart"}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="relative h-10 w-10"
+                      aria-label="Shopping Cart"
+                    >
+                      <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-gratisswag-dark-gray" />
+                      <Badge className="absolute -right-1 -top-1 h-5 w-5 hover:bg-[#D9AD5E] rounded-full bg-[#D9AD5E] px-1.5 text-xs font-semibold text-white">
+                        {carddata?.length ?? 0}
+                      </Badge>
+                    </Button>
+                  </Link>
                 )}
 
                 {/* User Dropdown */}
