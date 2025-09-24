@@ -108,13 +108,13 @@ export default function ShopNavbar() {
               </div>
               <Link
                 href="/shop"
-                className="block px-2 py-1 text-lg hover:text-foreground/80"
+                className="block px-2 py-1 text-[#EFA610] text-lg hover:text-foreground/80"
               >
                 Shop
               </Link>
               <Link
                 href="/shop"
-                className="block px-2 py-1 text-lg hover:text-foreground/80"
+                className="block px-2 py-1 text-lg text-[#EFA610] hover:text-foreground/80"
               >
                 All Products
               </Link>
@@ -151,7 +151,7 @@ export default function ShopNavbar() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/shop"
-                  className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                  className="group inline-flex h-9 w-max text-[#EFA610] items-center justify-center rounded-md bg-background px-4 py-2 text-sm md:text-[18px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                 >
                   Shop
                 </Link>
