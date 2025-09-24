@@ -35,7 +35,7 @@ async function getProducts(
   const {
     category,
     page = "1",
-    limit = "12",
+    limit = "8",
     sort = "createdAt",
     prices,
     search,
@@ -75,6 +75,8 @@ export async function ProductsGrid({
     currentPage,
     totalPages,
   } = productsData;
+
+  console.log("all data", productsData);
 
   return (
     <div>
@@ -130,14 +132,21 @@ export async function ProductsGrid({
           </div>
 
           {/* Custom Pagination */}
+          {/* Custom Pagination */}
           <div className="flex items-center justify-center space-x-2">
             {/* Previous */}
-            <Link
-              href={`/all-product?page=${Math.max(1, currentPage - 1)}`}
-              className="flex items-center justify-center w-10 h-10 border rounded-full hover:bg-gray-100"
-            >
-              <ChevronLeft size={20} />
-            </Link>
+            {currentPage > 1 ? (
+              <Link
+                href={`/all-product?page=${currentPage - 1}`}
+                className="flex items-center justify-center w-10 h-10 border rounded-full hover:bg-gray-100"
+              >
+                <ChevronLeft size={20} />
+              </Link>
+            ) : (
+              <div className="flex items-center justify-center w-10 h-10 border rounded-full text-gray-400 cursor-not-allowed">
+                <ChevronLeft size={20} />
+              </div>
+            )}
 
             {/* Page numbers */}
             {[...Array(totalPages)].map((_, i) => {
@@ -175,12 +184,18 @@ export async function ProductsGrid({
             })}
 
             {/* Next */}
-            <Link
-              href={`/all-product?page=${Math.min(totalPages, currentPage + 1)}`}
-              className="flex items-center justify-center w-10 h-10 border rounded-full hover:bg-gray-100"
-            >
-              <ChevronRight size={20} />
-            </Link>
+            {currentPage < totalPages ? (
+              <Link
+                href={`/all-product?page=${currentPage + 1}`}
+                className="flex items-center justify-center w-10 h-10 border rounded-full hover:bg-gray-100"
+              >
+                <ChevronRight size={20} />
+              </Link>
+            ) : (
+              <div className="flex items-center justify-center w-10 h-10 border rounded-full text-gray-400 cursor-not-allowed">
+                <ChevronRight size={20} />
+              </div>
+            )}
           </div>
         </>
       )}

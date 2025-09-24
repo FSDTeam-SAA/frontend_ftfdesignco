@@ -31,7 +31,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const token = session?.accessToken;
   const queryClient = useQueryClient();
-
+  const role= session?.user?.role;
   // Fetch cart data
   const { data: cartResponse, isLoading } = useQuery({
     queryKey: ["cart", token],
@@ -48,7 +48,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (!response.ok) throw new Error("Failed to fetch cart");
       return response.json();
     },
-    enabled: !!token,
+    enabled: role !== "company_admin" && !!token,
   });
 
   const cartData: CartData = cartResponse?.data || {};

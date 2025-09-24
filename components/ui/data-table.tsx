@@ -33,10 +33,10 @@ export function DataTable<T>({ data, columns, itemsPerPage = 10 }: DataTableProp
     <div className="space-y-4">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead>
+          <thead className="text-center">
             <tr className="border-b border-gray-200">
               {columns.map((column, index) => (
-                <th key={index} className="text-left py-3 px-4 font-medium text-gray-700">
+                <th key={index} className=" py-3 px-4 font-medium text-gray-700">
                   {column.header}
                 </th>
               ))}
@@ -44,7 +44,7 @@ export function DataTable<T>({ data, columns, itemsPerPage = 10 }: DataTableProp
           </thead>
           <tbody>
             {currentData.map((item, index) => (
-              <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
+              <tr key={index} className="border-b text-center border-gray-100 hover:bg-gray-50">
                 {columns.map((column, colIndex) => (
                   <td key={colIndex} className="py-4 px-4">
                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}

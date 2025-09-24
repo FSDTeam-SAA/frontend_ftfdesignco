@@ -724,7 +724,7 @@ export default function ProductsList() {
       key: "productName",
       header: "Product Name",
       render: (item: Product) => (
-        <div className="flex items-center gap-3">
+        <div className="flex justify-center items-center gap-3">
           <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
             <Image
               src={item.product?.productImage || ""}
@@ -795,7 +795,7 @@ export default function ProductsList() {
       key: "actions",
       header: "Actions",
       render: (item: Product) => (
-        <div className="flex items-center gap-2">
+        <div className="flex justify-center items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -844,6 +844,7 @@ export default function ProductsList() {
       </div>
     );
   }
+  console.log('api respons',apiResponse)
 
   const pagination = apiResponse?.pagination || { total: 0, page: 1, limit: 12, totalPages: 1 };
   const startItem = (pagination.page - 1) * pagination.limit + 1;

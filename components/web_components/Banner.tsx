@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
 import { CreateStoreModal } from "./create-store-modal";
-import Link from "next/link";
+// import Link from "next/link";
 
 export function Banner() {
   const { data: session } = useSession();
@@ -52,16 +52,16 @@ export function Banner() {
                   className="py-2 px-6 rounded leading-[120%] font-manrope bg-[#D9AD5E] text-base font-semibold text-white hover:bg-[#f5b641] hover:text-white sm:text-lg"
                   onClick={handleClick}
                 >
-                  Create My Store
+                  Create Your Store Now
                 </Button>
               </DialogTrigger>
               <CreateStoreModal />
             </Dialog>
-            <Link href="/all-product">
+            {/* <Link href="/all-product">
               <Button className="py-2 px-12 rounded leading-[120%]  bg-[#131313] text-base font-semibold text-white hover:bg-[#f5b641] font-manrope hover:text-white sm:text-lg">
                 See More
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
 

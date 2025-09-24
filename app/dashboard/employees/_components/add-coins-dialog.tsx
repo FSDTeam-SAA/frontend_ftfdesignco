@@ -21,7 +21,7 @@ interface AddCoinsDialogProps {
   onClose: () => void
   employee: Employee | null
   token: string
-  apiBaseUrl: string
+  apiBaseUrl: string |undefined
 }
 
 export function AddCoinsDialog({ isOpen, onClose, employee, token, apiBaseUrl }: AddCoinsDialogProps) {

@@ -165,7 +165,7 @@ export function ProductFilters() {
         onClick={clearAll}
         variant="outline"
         size="sm"
-        className="mt-5 rounded-xl"
+        className="mt-5 rounded-xl bg-[#E0B15E] border-none px-8 hover:bg-[#EFA610] hover:text-white"
       >
         Clear All
       </Button>

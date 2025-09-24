@@ -29,7 +29,7 @@ interface UpdateEmployeeDialogProps {
   onClose: () => void
   employee: Employee | null
   token: string
-  apiBaseUrl: string
+  apiBaseUrl: string | undefined
 }
 
 export function UpdateEmployeeDialog({ isOpen, onClose, employee, token, apiBaseUrl }: UpdateEmployeeDialogProps) {

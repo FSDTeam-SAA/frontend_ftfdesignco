@@ -20,7 +20,7 @@ interface FormData {
 
 interface AddEmployeeDialogProps {
   token: string
-  apiBaseUrl: string
+  apiBaseUrl: string | undefined
 }
 
 export function AddEmployeeDialog({ token, apiBaseUrl }: AddEmployeeDialogProps) {
