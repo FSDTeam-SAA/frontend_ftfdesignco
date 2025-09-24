@@ -151,7 +151,7 @@ export function ProductSellChart(): JSX.Element {
       <Card className="bg-white border border-gray-200 shadow-sm">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold text-gray-900">
-            Product Sell by Category
+            Product Sold by Category
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
@@ -168,7 +168,7 @@ export function ProductSellChart(): JSX.Element {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold text-gray-900">
-            Product sell by Category
+            Product Sold by Category
           </CardTitle>
           {/* <button
             onClick={handleRefresh}
