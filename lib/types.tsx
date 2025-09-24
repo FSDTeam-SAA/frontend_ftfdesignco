@@ -24,9 +24,9 @@ export type OrderStatus = "approved" | "cancelled" | "pending" | "delivered";
 
 export interface Order {
   _id: string;
-  employee: string; // employeeId was actually just a string ID in your response
-  shop: string;     // shopId was also just a string ID
-  items: OrderItem[]; // contains products in the order
+  employee: string; 
+  shop: string;     
+  items: OrderItem[]; 
   status: OrderStatus;
   name?: string;
   address?: string;
