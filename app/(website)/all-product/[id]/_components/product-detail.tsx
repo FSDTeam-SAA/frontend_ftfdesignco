@@ -45,7 +45,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
         .then((response) => response.data),
   });
 
-  console.log("details product", product);
+  // console.log("details product", product);
   // Mutation for submitting the product
   const mutation = useMutation({
     mutationFn: async () => {

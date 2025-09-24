@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
       );
     },
     onError: (error) => {
-      console.error("Error sending OTP:", error);
+      // console.error("Error sending OTP:", error);
       toast.error(error.message || "Failed to send OTP");
     },
   });

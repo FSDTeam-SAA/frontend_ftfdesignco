@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { toast } from "sonner";
 
 declare module "next-auth" {
   interface User {
@@ -83,7 +84,8 @@ const handler = NextAuth({
 
           return null;
         } catch (error) {
-          console.error("Authorize error:", error);
+          toast.error(`${error}`)
+          // console.error("Authorize error:", error);
           return null;
         }
       },
@@ -100,7 +102,7 @@ const handler = NextAuth({
         token.accessToken = user.accessToken;
         token.role = user.role;
 
-        console.log(token);
+        // console.log(token);
 
         if (user.role === "company_admin" || user.role === "company") {
           token.user = {

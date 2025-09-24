@@ -68,7 +68,7 @@ export default function PaymentForm({
       token: string | undefined;
     }) => confirmPayment({ paymentIntentId, token }),
     onSuccess: () => {
-      console.log("Payment confirmed successfully");
+      // console.log("Payment confirmed successfully");
       setMessage(
         "Payment confirmed successfully! Your subscription is now active."
       );
@@ -79,7 +79,7 @@ export default function PaymentForm({
       }, 2000);
     },
     onError: (err: Error) => {
-      console.error("Error confirming payment:", err.message);
+      // console.error("Error confirming payment:", err.message);
       setMessage(err.message || "Failed to confirm payment.");
       setMessageType("error");
       setLoading(false);

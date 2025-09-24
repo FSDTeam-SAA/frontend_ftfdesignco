@@ -188,8 +188,8 @@ export default function CompanyProducts({
 
   const currentPage = productsData?.currentPage || filters.page;
   const totalPages = productsData?.totalPages || 1;
- console.log('shbop data',productsData)
-   console.log('company product',filteredProducts)
+//  console.log('shbop data',productsData)
+  //  console.log('company product',filteredProducts)
 
   return (
     <div>

@@ -95,7 +95,7 @@ export async function updateEmployeeProfile(
     if (image) {
       fd.append("image", image);
     }
-    console.log("fd", fd);
+    // console.log("fd", fd);
     const res = await api.patch<EmployeeProfile>(`/employee/update`, fd, {
       headers: { "Content-Type": "multipart/form-data" },
     });

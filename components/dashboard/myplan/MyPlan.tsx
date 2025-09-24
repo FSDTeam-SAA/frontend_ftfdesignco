@@ -1,5 +1,6 @@
 import SubScriptionPlanCard from '@/components/shared/card/subScriptionPlanCard';
 import React from 'react'
+import { toast } from 'sonner';
 
 
 interface PricingPlan {
@@ -23,7 +24,8 @@ async function getPricingPlans(): Promise<PricingPlan[]> {
     const data = await response.json();
     return data.success ? data.data : [];
   } catch (error) {
-    console.error("Failed to fetch pricing plans:", error);
+    toast.error(`${error}`)
+    // console.error("Failed to fetch pricing plans:", error);
     return [];
   }
 }
@@ -31,7 +33,7 @@ async function getPricingPlans(): Promise<PricingPlan[]> {
 
 export async function MyPlan (){
     const plans = await getPricingPlans();
-    console.log('my plan..............',plans)
+    // console.log('my plan..............',plans)
   return (
     <section>
          <div className="py-16 bg-white ">

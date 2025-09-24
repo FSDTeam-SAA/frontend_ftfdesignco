@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { toast } from "sonner";
 interface Category {
   _id: string;
   title: string;
@@ -26,7 +27,8 @@ async function getCategories(): Promise<Category[]> {
     const data = await res.json();
     return data.success ? data.data : [];
   } catch (err) {
-    console.error(err);
+    // console.error(err);
+    toast.error(`${err}`)
     return [];
   }
 }

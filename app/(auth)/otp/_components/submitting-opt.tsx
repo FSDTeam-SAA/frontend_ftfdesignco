@@ -36,7 +36,7 @@ const verifyEmailApi = async (otp: string, token: string | null) => {
   );
 
   const text = await response.text();
-  console.log("Raw response from server (verifyEmailApi):", text);
+  // console.log("Raw response from server (verifyEmailApi):", text);
 
   const data = safeJsonParse(text);
 
@@ -71,7 +71,7 @@ const verifyForgotPasswordApi = async (otp: string, token: string | null) => {
   );
 
   const text = await response.text();
-  console.log("Raw response from server (verifyForgotPasswordApi):", text);
+  // console.log("Raw response from server (verifyForgotPasswordApi):", text);
 
   const data = safeJsonParse(text);
 
@@ -99,12 +99,12 @@ export default function OtpPage() {
   const [countdown, setCountdown] = useState(30);
 
   useEffect(() => {
-    console.log("Received params:", { context, token, email });
+    // console.log("Received params:", { context, token, email });
   }, [context, token, email]);
 
   const mutation = useMutation({
     mutationFn: (otpCode: string) => {
-      console.log("Submitting OTP:", otpCode);
+      // console.log("Submitting OTP:", otpCode);
       if (context === "register") {
         return verifyEmailApi(otpCode, token);
       } else if (context === "forgot-password") {
@@ -114,7 +114,7 @@ export default function OtpPage() {
       }
     },
     onSuccess: (data) => {
-      console.log("Verification success:", data);
+      // console.log("Verification success:", data);
       toast.success(data.message || "Verification successful");
 
       if (context === "register") {
@@ -124,7 +124,7 @@ export default function OtpPage() {
       }
     },
     onError: (error: Error) => {
-      console.error("Verification error:", error);
+      // console.error("Verification error:", error);
       toast.error(error.message || "Verification failed. Please try again.");
     },
   });
@@ -166,7 +166,7 @@ export default function OtpPage() {
   const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otp.join("");
-    console.log("Verifying OTP:", otpCode);
+    // console.log("Verifying OTP:", otpCode);
 
     if (otpCode.length !== 6) {
       toast.error("Please enter a complete 6-digit OTP");
