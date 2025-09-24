@@ -531,7 +531,7 @@ export default function RequestedProductsList() {
       key: "productName",
       header: "Product Name",
       render: (item: Product) => (
-        <div className="flex items-center gap-3">
+        <div className="flex justify-center items-center gap-3">
           <div className="w-12 h-12 rounded-lg flex items-center justify-center">
             <Image
               src={item.product?.productImage}
@@ -593,7 +593,7 @@ export default function RequestedProductsList() {
       key: "actions",
       header: "Actions",
       render: (item: Product) => (
-        <div className="flex items-center gap-2">
+        <div className="flex justify-center items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -631,7 +631,7 @@ export default function RequestedProductsList() {
       </div>
     );
   }
-
+  console.log('pending data',pendingProducts)
   return (
     <div className="space-y-6 p-6">
       <Toaster richColors />

@@ -51,10 +51,10 @@ export function DeleteConfirmationDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex gap-3 sm:gap-3">
-          <Button variant="outline" onClick={onClose} disabled={isLoading} className="flex-1 bg-transparent">
+          <Button variant="outline" onClick={onClose} disabled={isLoading} className="flex-1 bg-transparent border-[#EFA610] hover:scale-x-105">
             No, Cancel
           </Button>
-          <Button variant="destructive" onClick={onConfirm} disabled={isLoading} className="flex-1">
+          <Button variant="destructive" onClick={onConfirm} disabled={isLoading} className="flex-1 bg-[#c79229] hover:text-white hover:bg-[#EFA610]">
             {isLoading ? "Deleting..." : "Yes, Delete"}
           </Button>
         </DialogFooter>

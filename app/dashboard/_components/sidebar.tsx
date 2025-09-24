@@ -17,6 +17,7 @@ import {
   LogOut,
   Menu,
   X,
+  Route,
 } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
@@ -53,11 +54,11 @@ const navigation = [
     href: "/dashboard/sales",
     icon: DollarSign,
   },
-  // {
-  //   name: "Company Coins",
-  //   href: "/dashboard/coins",
-  //   icon: Coins,
-  // },
+  {
+    name: "My Plan",
+    href: "/dashboard/my-plan",
+    icon: Route ,
+  },
   {
     name: "Setting",
     href: "/dashboard/settings",

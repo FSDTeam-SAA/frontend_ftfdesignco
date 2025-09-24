@@ -12,7 +12,7 @@ import { AddEmployeeDialog } from "./add-employee-dialog";
 import { UpdateEmployeeDialog } from "./update-employee-dialog";
 import { AddCoinsDialog } from "./add-coins-dialog";
 
-const API_BASE_URL = "https://ftfdesignco-backend.onrender.com/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Interfaces for type safety
 interface Shop {
@@ -92,13 +92,13 @@ export default function EmployeesList() {
       });
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Employee deleted successfully");
+      toast.success(data.message);
       setIsDeleteDialogOpen(false);
       setEmployeeToDelete(null);
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast.error(error.message || "Failed to delete employee");
       setIsDeleteDialogOpen(false);
       setEmployeeToDelete(null);
@@ -167,7 +167,7 @@ export default function EmployeesList() {
       key: "action",
       header: "Actions",
       render: (item: Employee) => (
-        <div className="flex gap-2">
+        <div className="flex justify-center items-center gap-2">
           <Button
             size="sm"
             variant="outline"
@@ -184,13 +184,13 @@ export default function EmployeesList() {
           >
             <Edit className="h-4 w-4 mr-1" />
           </Button> */}
-          <Button
+          <Button className="h-4 w-4 mr-1 hover:bg-yellow-50"
             size="sm"
             variant="destructive"
             onClick={() => handleDeleteClick(item)}
             disabled={deleteEmployee.isPending}
           >
-            <Trash2 className="h-4 w-4 mr-1" />
+            <Trash2 className="h-4 w-4 mr-1 hover:bg-yellow-50" />
           </Button>
         </div>
       ),

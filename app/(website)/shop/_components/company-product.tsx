@@ -60,7 +60,7 @@ async function fetchProducts({
   const { categories, sort = "createdAt", page } = filters;
   let url;
   if (role == "company_admin") {
-    url = `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/my-shop/approved?page=${page}&limit=12&sort=${sort}`;
+    url = `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/my-shop/approved?page=${page}&limit=8&sort=${sort}`;
   } else {
     url = `${process.env.NEXT_PUBLIC_API_URL}/assigned-product/shop-products`;
   }
@@ -188,6 +188,8 @@ export default function CompanyProducts({
 
   const currentPage = productsData?.currentPage || filters.page;
   const totalPages = productsData?.totalPages || 1;
+ console.log('shbop data',productsData)
+   console.log('company product',filteredProducts)
 
   return (
     <div>

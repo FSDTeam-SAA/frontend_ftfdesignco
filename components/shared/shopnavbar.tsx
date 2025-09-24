@@ -1,4 +1,4 @@
-"use client";
+
 
 import {  Menu, ShoppingCart, User } from "lucide-react";
 import Link from "next/link";
@@ -52,13 +52,16 @@ export default function ShopNavbar() {
   } = useQuery({
     queryKey: ["shopData", token],
     queryFn: () => employeecard(),
+    enabled: role !== "company_admin" && !!token, 
   });
-
+// if(role)
+  
   const { data: carddata } = useQuery({
     queryKey: ["cart"],
     queryFn: () => fetchemployecartdata(),
+    enabled: role === "employee",
   });
-  console.log("cart data 1111", carddata);
+  // console.log("cart data 1111", carddata);
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">

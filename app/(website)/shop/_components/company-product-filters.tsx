@@ -158,7 +158,7 @@ export function CompanyProductFilters({ onApply }: CompanyProductFiltersProps) {
       {/* Apply Button */}
       <Button
         onClick={applyFilters}
-        className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+        className="w-full bg-orange-500 hover:bg-orange-800 text-white"
       >
         Apply Filters
       </Button>

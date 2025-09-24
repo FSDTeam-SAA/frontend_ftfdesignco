@@ -52,7 +52,7 @@ export function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     // { name: "Shop", href: "#", onClick: handleShopClick },
-    { name: "Swag Store", href: "https://shop.companycasuals.com" },
+    { name: "Swag Store", href: "/swagstore" },
     { name: "Swag Packs", href: "/swagpacks" },
     { name: "Pricing", href: "/pricing" },
     { name: "Products Catalog", href: "https://shop.companycasuals.com" },

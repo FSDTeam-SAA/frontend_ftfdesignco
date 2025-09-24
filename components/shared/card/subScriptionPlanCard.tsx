@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Check } from "lucide-react";
+// import { Check } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -55,7 +55,7 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
-
+  console.log("propssss", props);
   return (
     <Card
       key={_id}
@@ -86,15 +86,17 @@ export default function SubScriptionPlanCard(props: SubScriptionPlanCardProps) {
         <p className="bg-[#EEF2FF]  text-[#4338CA] text-[16px] my-6 font-medium leading-[150%] uppercase p-2 rounded-md">
           This plan includes
         </p>
-        <ul className="space-y-3 mb-6">
-          <li className="flex items-center">
-            <Check className="h-5 w-5 text-green-500 mr-2" />
-            <span>Up to {maxEmployees} employees</span>
+        <ul className="space-y-3 mb-6 ml-6 list-disc">
+          <li>
+            <div className="flex items-center">
+              <span>Up to {maxEmployees} employees</span>
+            </div>
           </li>
           {features.map((feature, featureIndex) => (
-            <li key={featureIndex} className="flex items-center">
-              <Check className="h-5 w-5 text-green-500 mr-2" />
-              <span>{feature}</span>
+            <li key={featureIndex}>
+              <div className="flex items-center">
+                <span>{feature}</span>
+              </div>
             </li>
           ))}
         </ul>

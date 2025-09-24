@@ -7,6 +7,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchOrders, orderStatus } from "@/lib/api";
 import { Order } from "@/lib/companytypes";
 import { toast } from "sonner";
+import Image from "next/image";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationLink,
+  PaginationNext,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useMemo } from "react";
 
 export default function OrderHistoryPage() {
   const { data: ordersResponse, isLoading } = useQuery({
@@ -15,38 +27,123 @@ export default function OrderHistoryPage() {
   });
   const queryClient = useQueryClient();
 
+  // 🔹 Pagination State (must be before conditional return)
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const orders: Order[] = ordersResponse?.data || [];
+  const total = orders.length;
+  const totalPages = Math.ceil(total / itemsPerPage);
+
+  const startItem = (page - 1) * itemsPerPage + 1;
+  const endItem = Math.min(page * itemsPerPage, total);
+
+  const currentData = useMemo(() => {
+    const start = (page - 1) * itemsPerPage;
+    return orders.slice(start, start + itemsPerPage);
+  }, [orders, page]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+
   const orderMutation = useMutation({
     mutationKey: ["orders"],
     mutationFn: ({ Id, status }: { Id: string; status: string }) =>
       orderStatus(Id, status),
     onSuccess: (data) => {
-      toast.success(`${data.message}`)
-     queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast.success(`${data.message}`);
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
-    onError:(error)=>{
-      toast.error(`${error}`)
-
-    }
+    onError: (error) => {
+      toast.error(`${error.message}`);
+    },
   });
 
   const handelstatus = (Id: string, status: string) => {
     orderMutation.mutate({ Id, status });
   };
-  if (isLoading) return <div>Loading...</div>;
 
-  // Pass only the array of orders to the DataTable
-  const orders: Order[] = ordersResponse?.data || [];
+  // 🔹 Loading state with Skeletons
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {/* Page Title + Breadcrumb */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Order History</h1>
+          <Breadcrumb
+            items={[{ label: "Dashboard" }, { label: "Order History" }]}
+          />
+        </div>
 
+        {/* Skeleton Table */}
+        <div className="bg-white rounded-lg border">
+          {/* Table Header */}
+          <div className="grid grid-cols-6 gap-4 px-6 py-3 border-b bg-gray-50">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+
+          {/* Table Body */}
+          <div className="divide-y">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-6 gap-4 items-center px-6 py-4"
+              >
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-12 w-12 rounded-md" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                  </div>
+                </div>
+
+                {/* Date */}
+                <div className="space-y-2">
+                  <Skeleton className="h-3 w-28" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 justify-end">
+                  <Skeleton className="h-8 w-16 rounded-md" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div className="flex justify-center items-center gap-2 pt-4">
+          
+          <Skeleton className="h-9 w-9 rounded-full" />
+        </div>
+      </div>
+    );
+  }
+
+  // 🔹 Table columns
   const columns = [
     {
       key: "productName",
       header: "Product Name",
       render: (order: Order) => (
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">EK</span>
+        <div className="flex justify-center items-center gap-3">
+          <div className="w-12 h-12 rounded-lg overflow-hidden border">
+            <Image
+              src={order?.items[0]?.image}
+              alt="order Image"
+              width={50}
+              height={50}
+              className="object-cover"
+            />
           </div>
-          {/* Display first item's title for this order */}
           <span className="font-medium">
             {order.items?.[0]?.title || "T-Shirt"}
           </span>
@@ -88,7 +185,7 @@ export default function OrderHistoryPage() {
       key: "action",
       header: "Action",
       render: (order: Order) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2">
           <Badge
             onClick={() => handelstatus(order._id, "approved")}
             className="bg-green-100 text-green-800 cursor-pointer"
@@ -122,7 +219,59 @@ export default function OrderHistoryPage() {
       </div>
 
       <div className="bg-white rounded-lg border">
-        <DataTable data={orders} columns={columns} />
+        {/* 🔹 Table */}
+        <DataTable data={currentData} columns={columns} />
+
+        {/* 🔹 Pagination Footer */}
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-t">
+          <div className="text-sm text-gray-700">
+            Showing {startItem} to {endItem} of {total} results
+          </div>
+          <div>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => handlePageChange(page - 1)}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (p) => (
+                    <PaginationItem key={p}>
+                      <PaginationLink
+                        onClick={() => handlePageChange(p)}
+                        isActive={page === p}
+                      >
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
+
+                {totalPages > 3 && (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                )}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => handlePageChange(page + 1)}
+                    className={
+                      page === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </div>
       </div>
     </div>
   );

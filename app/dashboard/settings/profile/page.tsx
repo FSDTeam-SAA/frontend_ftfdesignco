@@ -28,15 +28,17 @@ export default function ProfilePage() {
     address: "",
   })
 
-  // Update form data when profile is loaded
+  // Load API data into form
   useEffect(() => {
     if (profile) {
       setFormData({
         name: profile.name || "",
         phone: profile.phone || "",
-        gender: "",
-        dateOfBirth: "",
-        address: "",
+        gender: profile.gender || "", // ✅ Gender from API
+        dateOfBirth: profile.dateOfBirth
+          ? profile.dateOfBirth.split("T")[0] // Format ISO date -> yyyy-MM-dd
+          : "",
+        address: profile.address || "",
       })
     }
   }, [profile])
@@ -84,6 +86,7 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6 p-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
@@ -91,6 +94,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Profile Info */}
       <div className="flex items-center gap-4 mb-8">
         {profile && token && (
           <ProfileImageUpload currentImage={profile.imageLink} userName={profile.name} token={token} />
@@ -102,8 +106,10 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Full Name */}
           <div>
             <Label htmlFor="fullName">Full Name</Label>
             <Input
@@ -114,6 +120,7 @@ export default function ProfilePage() {
             />
           </div>
 
+          {/* Phone */}
           <div>
             <Label htmlFor="phone">Phone Number</Label>
             <Input
@@ -124,20 +131,25 @@ export default function ProfilePage() {
             />
           </div>
 
+          {/* Gender */}
           <div>
             <Label htmlFor="gender">Gender</Label>
-            <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
+            <Select
+              value={formData.gender || ""}
+              onValueChange={(value) => handleInputChange("gender", value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select Gender" />
               </SelectTrigger>
               <SelectContent className="bg-white">
-                <SelectItem value="male" className="hover:text-[#f5b641] cursor-pointer">Male</SelectItem>
-                <SelectItem value="female" className="hover:text-[#f5b641] cursor-pointer">Female</SelectItem>
-                <SelectItem value="other" className="hover:text-[#f5b641] cursor-pointer">Other</SelectItem>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
+          {/* Date of Birth */}
           <div>
             <Label htmlFor="dateOfBirth">Date of Birth</Label>
             <div className="relative">
@@ -151,6 +163,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
+          {/* Address */}
           <div className="md:col-span-2">
             <Label htmlFor="address">Address</Label>
             <Input
@@ -162,6 +175,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Actions */}
         <div className="flex items-center gap-4">
           <Button
             type="button"
@@ -171,16 +185,22 @@ export default function ProfilePage() {
                 setFormData({
                   name: profile.name || "",
                   phone: profile.phone || "",
-                  gender: "",
-                  dateOfBirth: "",
-                  address: "",
+                  gender: profile.gender || "", // ✅ restore gender
+                  dateOfBirth: profile.dateOfBirth
+                    ? profile.dateOfBirth.split("T")[0]
+                    : "",
+                  address: profile.address || "",
                 })
               }
             }}
           >
             Reset
           </Button>
-          <Button type="submit" className="bg-[#D9AD5E] hover:bg-[#f5b641] text-white" disabled={updateProfile.isPending}>
+          <Button
+            type="submit"
+            className="bg-[#D9AD5E] hover:bg-[#f5b641] text-white"
+            disabled={updateProfile.isPending}
+          >
             {updateProfile.isPending ? "Saving..." : "Save Changes"}
           </Button>
         </div>

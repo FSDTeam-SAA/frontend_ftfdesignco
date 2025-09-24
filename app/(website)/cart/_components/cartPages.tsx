@@ -101,7 +101,7 @@ export default function CartPage() {
       </div>
     );
   }
-  console.log('1234..testing',cartItems)
+  // console.log('1234..testing',cartItems)
 
   return (
     <div className="min-h-screen bg-gray-50">
