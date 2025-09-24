@@ -148,7 +148,7 @@ export default function CheckoutPage() {
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm">Qty: {item.quantity}</span>
+                        <span className="text-sm">Quantity: {item.quantity}</span>
                       </div>
                     </div>
                   ))}
