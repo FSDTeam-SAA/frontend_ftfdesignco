@@ -139,4 +139,55 @@ export interface SalesResponse {
 }
 
 
-//company dashboard order
+//company dashboard sales
+// export interface Employee {
+//   employeeId: string;
+//   name?: string;
+// }
+
+export interface SaleItem {
+  id: string;
+  employees: Employee[];
+  productName: string;
+  image: string;
+  quantity: number;
+  coins: number;
+  totalPrice: number;
+}
+
+export interface SalesData {
+  data: SaleItem[];
+  totalProducts: number;
+  totalUserCoin: number;
+  totalProductPrice: number;
+}
+
+export interface PaymentPayload {
+  type: string;
+  totalProductPrice: number;
+  shopId: string;
+}
+
+export interface SalesStatsCardProps {
+  title: string;
+  value: number | string;
+  icon: React.ReactNode;
+  className?: string;
+}
+
+export interface SalesTableColumn<T = SaleItem> {
+  key: string;
+  header: string;
+  render: (item: T) => React.ReactNode;
+}
+
+export interface SalesComponentProps {
+  title?: string;
+  showPaymentButton?: boolean;
+  showSearch?: boolean;
+  searchPlaceholder?: string;
+  onPayment?: (payload: PaymentPayload) => void;
+  onSearch?: (query: string) => void;
+  customColumns?: SalesTableColumn[];
+  className?: string;
+}

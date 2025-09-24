@@ -1,24 +1,26 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Elements } from "@stripe/react-stripe-js"
-import { loadStripe } from "@stripe/stripe-js"
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 export default function StripeProvider({
   children,
   clientSecret,
 }: {
-  children: React.ReactNode
-  clientSecret: string
+  children: React.ReactNode;
+  clientSecret: string;
 }) {
-  console.log("StripeProvider clientSecret:", clientSecret)
+  console.log("StripeProvider clientSecret:", clientSecret);
 
   if (!clientSecret) {
-    console.error("StripeProvider: clientSecret is missing")
-    return <div>Loading payment provider...</div>
+    console.error("StripeProvider: clientSecret is missing");
+    return <div>Loading payment provider...</div>;
   }
 
   const options = {
@@ -35,11 +37,11 @@ export default function StripeProvider({
         borderRadius: "6px",
       },
     },
-  }
+  };
 
   return (
     <Elements stripe={stripePromise} options={options}>
       {children}
     </Elements>
-  )
+  );
 }
