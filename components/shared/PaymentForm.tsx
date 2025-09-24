@@ -58,7 +58,7 @@ export default function PaymentForm({
     "info"
   );
   const [isPaymentElementReady, setIsPaymentElementReady] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const { mutate: confirmPaymentMutate } = useMutation({
     mutationFn: ({
       paymentIntentId,
@@ -85,9 +85,7 @@ export default function PaymentForm({
       setLoading(false);
     },
   });
- const handleModalClose = () => {
-   setIsModalOpen(false);
- };
+
   useEffect(() => {
     if (!elements) return;
     const paymentElement = elements.getElement("payment");
