@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { SortBy } from "./SortBy";
 
 export interface GetProductsParams {
   category?: string;
@@ -82,11 +83,15 @@ export async function ProductsGrid({
     <div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
-        <h1 className="text-2xl font-bold">All Products</h1>
-        <div className="text-sm text-gray-600">
-          Showing {products.length} of {totalProducts} products
-        </div>
-      </div>
+  <h1 className="text-2xl font-bold">All Products</h1>
+  <div className="flex items-center gap-6">
+    <div className="text-sm text-gray-600">
+      Showing {products.length} of {totalProducts} products
+    </div>
+    <SortBy /> {/* ⬅️ add here */}
+  </div>
+</div>
+
 
       {/* No Products */}
       {products.length === 0 ? (

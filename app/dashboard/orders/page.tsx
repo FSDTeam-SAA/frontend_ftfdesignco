@@ -223,7 +223,7 @@ export default function OrderHistoryPage() {
               order.status !== "rejected" &&
               handelstatus(order._id, "approved")
             }
-            className={`bg-green-100 text-green-800 
+            className={`bg-green-100 text-green-600 
       ${
         order.status === "approved" || order.status === "rejected"
           ? "opacity-50 cursor-not-allowed"
