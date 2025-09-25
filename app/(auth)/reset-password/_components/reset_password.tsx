@@ -63,7 +63,8 @@ export default function ResetPasswordPage() {
       router.push("/success");
     },
     onError: (error) => {
-      console.error("Password reset error:", error);
+      toast.error(error.message)
+      // console.error("Password reset error:", error);
       // You can add error handling UI here, e.g., show a toast notification
     },
   });
@@ -85,7 +86,7 @@ export default function ResetPasswordPage() {
   const handleResetPassword = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.newPassword !== formData.confirmNewPassword) {
-      console.error("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
     mutation.mutate({

@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Package } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 // Type definitions
 interface Category {
@@ -186,57 +187,61 @@ export default function ProductsByCategory({
       {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         {products.map((product) => (
-          <Card
-            key={product._id}
-            className="h-full flex flex-col hover:shadow-lg transition-shadow"
-          >
-            <CardHeader className="p-0">
-              <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
-                <Image
-                  src={product.productImage}
-                  alt={product.title}
-                  fill
-                  className="object-cover transition-transform hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                />
-                {product.quantity <= 5 && product.quantity > 0 && (
-                  <Badge
-                    variant="destructive"
-                    className="absolute top-2 right-2"
-                  >
-                    Low Stock
-                  </Badge>
-                )}
-                {product.quantity === 0 && (
-                  <Badge variant="secondary" className="absolute top-2 right-2">
-                    Out of Stock
-                  </Badge>
-                )}
-              </div>
-            </CardHeader>
+          <div key={product._id}>
+            <Link href={`/shop/${product?._id}`} className="no-underline">
+              <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
+                <CardHeader className="p-0">
+                  <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
+                    <Image
+                      src={product.productImage}
+                      alt={product.title}
+                      fill
+                      className="object-cover transition-transform hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    />
+                    {product.quantity <= 5 && product.quantity > 0 && (
+                      <Badge
+                        variant="destructive"
+                        className="absolute top-2 right-2"
+                      >
+                        Low Stock
+                      </Badge>
+                    )}
+                    {product.quantity === 0 && (
+                      <Badge
+                        variant="secondary"
+                        className="absolute top-2 right-2"
+                      >
+                        Out of Stock
+                      </Badge>
+                    )}
+                  </div>
+                </CardHeader>
 
-            <CardContent className="flex-1 p-4">
-              <CardTitle className="text-lg mb-2 line-clamp-2">
-                {product.title}
-              </CardTitle>
-              <CardDescription className="text-sm line-clamp-3 mb-4">
-                {product.description}
-              </CardDescription>
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>Qty: {product.quantity}</span>
-                <span>Added: {formatDate(product.createdAt)}</span>
-              </div>
-            </CardContent>
+                <CardContent className="flex-1 p-4">
+                  <CardTitle className="text-lg mb-2 line-clamp-2">
+                    {product.title}
+                  </CardTitle>
+                  <CardDescription className="text-sm line-clamp-3 mb-4">
+                    {product.description}
+                  </CardDescription>
+                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <span>Qty: {product.quantity}</span>
+                    <span>Added: {formatDate(product.createdAt)}</span>
+                  </div>
+                </CardContent>
 
-            <CardFooter className="p-4 pt-0 flex items-center justify-between">
-              <div className="text-2xl font-bold text-primary">
-                {formatPrice(product.price)}
-              </div>
-              <Badge variant="outline" className="capitalize">
-                {product.category.title}
-              </Badge>
-            </CardFooter>
-          </Card>
+                <CardFooter className="p-4 pt-0 flex items-center justify-between">
+                  <div className="text-2xl font-bold text-primary">
+                    {formatPrice(product.price)}
+                  </div>
+                  <Badge variant="outline" className="capitalize">
+                    {product.category.title}
+                  </Badge>
+                </CardFooter>
+              </Card>
+            </Link>
+          </div>
         ))}
       </div>
 

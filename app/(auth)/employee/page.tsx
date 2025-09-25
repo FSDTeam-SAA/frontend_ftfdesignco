@@ -26,7 +26,7 @@ export default function EmployeeLoginPage() {
     setLoading(true);
     setError("");
 
-    console.log(employeeId, companyId, password);
+    // console.log(employeeId, companyId, password);
 
     const res = await signIn("credentials", {
       redirect: false,
@@ -35,7 +35,7 @@ export default function EmployeeLoginPage() {
       employeeId,
       password,
     });
-    console.log("loing", res);
+    // console.log("loing", res);
     if (res?.ok) {
       toast.success("Login successful!");
       router.push(`/shop?companyId=${companyId}`);

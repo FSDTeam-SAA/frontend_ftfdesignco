@@ -95,7 +95,7 @@ export async function updateEmployeeProfile(
     if (image) {
       fd.append("image", image);
     }
-    console.log("fd", fd);
+    // console.log("fd", fd);
     const res = await api.patch<EmployeeProfile>(`/employee/update`, fd, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -147,6 +147,19 @@ export async function employeecardincrement(productId: string) {
 export async function employeecarddicrement(productId: string) {
   try {
     const res = await api.put(`/cart/decrement/${productId}`);
+    return res.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Something went wrong");
+    }
+    throw error;
+  }
+}
+
+export async function employeeChangePassword(data:{currentPassword:string;newPassword:string}) {
+  try {
+    const res = await api.post(`/auth/employee-password`,data);
     return res.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {

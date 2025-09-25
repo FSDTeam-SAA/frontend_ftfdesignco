@@ -14,9 +14,7 @@ async function getPricingPlans(): Promise<PricingPlan[]> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/subscription-plan`,
-      {
-        cache: "no-store",
-      }
+   
     );
     const data = await response.json();
     return data.success ? data.data : [];
@@ -28,7 +26,7 @@ async function getPricingPlans(): Promise<PricingPlan[]> {
 
 export async function SubScriptionPlan() {
   const plans = await getPricingPlans();
-  console.log("plansss", plans);
+  // console.log("plansss", plans);
   return (
     <section className="py-16 bg-white ">
       <div className="container mx-auto ">

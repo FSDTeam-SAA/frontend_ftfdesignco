@@ -9,14 +9,15 @@ import { useSession } from "next-auth/react";
 import ShopNavbar from "@/components/shared/shopnavbar";
 import { employeecarddicrement, employeecardincrement } from "@/lib/api";
 import { toast } from "sonner";
-import { queryClient } from "@/lib/query-client";
+
 import { useCart } from "@/hooks/use-cart";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Product {
   _id: string;
   title: string;
   price: number;
-  image: string;
+  productImage: string;
 }
 
 interface CartItem {
@@ -25,14 +26,14 @@ interface CartItem {
   quantity: number;
   totalCoin: number;
   product: Product;
-  // image:string;
+  productImage?:string;
 }
 
 export default function CartPage() {
   const { removeFromCart } = useCart();
   const { data: session } = useSession();
   const token = session?.accessToken;
-
+  const queryClient = useQueryClient();
   // ✅ Fetch cart data (directly from API)
   const { data: cartItems = [], isLoading } = useQuery<CartItem[]>({
     queryKey: ["cart"],
@@ -43,7 +44,7 @@ export default function CartPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (!res.ok) throw new Error("Failed to fetch cart");
+
       const json = await res.json();
       return json.data as CartItem[];
     },
@@ -55,8 +56,8 @@ export default function CartPage() {
     mutationKey: ["cart"],
     mutationFn: (id: string) => employeecardincrement(id),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
       toast.success(`${data.message}`);
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
     onError: (error) => toast.error(error.message),
   });
@@ -65,8 +66,8 @@ export default function CartPage() {
     mutationKey: ["cart"],
     mutationFn: (id: string) => employeecarddicrement(id),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
       toast.success(`${data.message}`);
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
     onError: (error) => toast.error(error.message),
   });
@@ -148,7 +149,7 @@ export default function CartPage() {
                         <div className="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0">
                           <Image
                             src={
-                              item.product?.image ||
+                              item.product?.productImage ||
                               "/placeholder.svg?height=64&width=64"
                             }
                             alt={item.product?.title || "Product"}

@@ -188,8 +188,8 @@ export default function CompanyProducts({
 
   const currentPage = productsData?.currentPage || filters.page;
   const totalPages = productsData?.totalPages || 1;
- console.log('shbop data',productsData)
-   console.log('company product',filteredProducts)
+  //  console.log('shbop data',productsData)
+  //  console.log('company product',filteredProducts)
 
   return (
     <div>
@@ -225,7 +225,7 @@ export default function CompanyProducts({
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <Button
-                          className={`bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md ${
+                          className={`bg-orange-500 hover:bg-orange-600 text-white px-6  rounded-sm ${
                             role === "company_admin" ? "hidden" : "block"
                           }`}
                           onClick={(e) => {
@@ -261,71 +261,75 @@ export default function CompanyProducts({
 
           {/* Custom Pagination */}
 
-         <div className="flex items-center justify-center gap-2 mb-6">
-  {/* Previous */}
-  <button
-    className={`flex items-center justify-center w-10 h-10 rounded-full bg-[#23547B] text-white hover:opacity-90 ${
-      currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-    }`}
-    onClick={() =>
-      setFilters((f) => ({
-        ...f,
-        page: Math.max(1, f.page - 1),
-      }))
-    }
-    disabled={currentPage === 1}
-  >
-    <ChevronLeft size={20} />
-  </button>
+          <div className="flex items-center justify-center gap-2 mb-6">
+            {/* Previous */}
+            <button
+              className={`flex items-center justify-center w-10 h-10 rounded-full bg-[#23547B] text-white hover:opacity-90 ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={() =>
+                setFilters((f) => ({
+                  ...f,
+                  page: Math.max(1, f.page - 1),
+                }))
+              }
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft size={20} />
+            </button>
 
-  {/* Page Numbers */}
-  {[...Array(totalPages)].map((_, i) => {
-    const pageNum = i + 1;
-    if (
-      pageNum === 1 ||
-      pageNum === totalPages ||
-      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-    ) {
-      return (
-        <button
-          key={pageNum}
-          className={`flex items-center justify-center w-10 h-10 rounded-full border ${
-            pageNum === currentPage
-              ? "bg-[#23547B] text-white"
-              : "hover:bg-gray-100"
-          }`}
-          onClick={() => setFilters((f) => ({ ...f, page: pageNum }))}
-        >
-          {pageNum}
-        </button>
-      );
-    } else if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
-      return (
-        <span key={pageNum} className="px-2">
-          ...
-        </span>
-      );
-    }
-    return null;
-  })}
+            {/* Page Numbers */}
+            {[...Array(totalPages)].map((_, i) => {
+              const pageNum = i + 1;
+              if (
+                pageNum === 1 ||
+                pageNum === totalPages ||
+                (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+              ) {
+                return (
+                  <button
+                    key={pageNum}
+                    className={`flex items-center justify-center w-10 h-10 rounded-full border ${
+                      pageNum === currentPage
+                        ? "bg-[#23547B] text-white"
+                        : "hover:bg-gray-100"
+                    }`}
+                    onClick={() => setFilters((f) => ({ ...f, page: pageNum }))}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              } else if (
+                pageNum === currentPage - 2 ||
+                pageNum === currentPage + 2
+              ) {
+                return (
+                  <span key={pageNum} className="px-2">
+                    ...
+                  </span>
+                );
+              }
+              return null;
+            })}
 
-  {/* Next */}
-  <button
-    className={`flex items-center justify-center w-10 h-10 rounded-full bg-[#23547B] text-white hover:opacity-90 ${
-      currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-    }`}
-    onClick={() =>
-      setFilters((f) => ({
-        ...f,
-        page: Math.min(totalPages, f.page + 1),
-      }))
-    }
-    disabled={currentPage === totalPages}
-  >
-    <ChevronRight size={20} />
-  </button>
-</div>
-
+            {/* Next */}
+            <button
+              className={`flex items-center justify-center w-10 h-10 rounded-full bg-[#23547B] text-white hover:opacity-90 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              onClick={() =>
+                setFilters((f) => ({
+                  ...f,
+                  page: Math.min(totalPages, f.page + 1),
+                }))
+              }
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </>
       )}
     </div>

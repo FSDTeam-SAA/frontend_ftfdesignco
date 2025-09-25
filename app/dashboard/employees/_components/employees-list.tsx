@@ -35,6 +35,8 @@ interface Employee {
   coin: number;
   shop?: Shop;
   userId: User;
+  totalOrder: number;
+  remainingCoin: number;
 }
 
 export default function EmployeesList() {
@@ -155,6 +157,24 @@ export default function EmployeesList() {
       render: (item: Employee) => (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
           {item.coin}
+        </span>
+      ),
+    },
+        {
+      key: "remainingCoin",
+      header: "RemainingCoin",
+      render: (item: Employee) => (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+          {item.remainingCoin}
+        </span>
+      ),
+    },
+        {
+      key: "totalOrder",
+      header: "TotalOrder",
+      render: (item: Employee) => (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+          {item.totalOrder}
         </span>
       ),
     },

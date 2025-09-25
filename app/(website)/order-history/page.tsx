@@ -52,8 +52,8 @@ export default function OrdersPage() {
                   Product Name
                 </th>
                 <th className="px-4 py-3 border border-[#3F3F3F]">Coins</th>
-                <th className="px-4 py-3 border border-[#3F3F3F]">Employee</th>
-                <th className="px-4 py-3 border border-[#3F3F3F]">Shop</th>
+                {/* <th className="px-4 py-3 border border-[#3F3F3F]">Employee</th> */}
+                {/* <th className="px-4 py-3 border border-[#3F3F3F]">Shop</th> */}
                 <th className="px-4 py-3 border border-[#3F3F3F]">Status</th>
                 <th className="px-4 py-3 border border-[#3F3F3F]">Action</th>
               </tr>
@@ -85,13 +85,13 @@ export default function OrdersPage() {
                         ? order?.items[0]?.totalCoin.toFixed()
                         : "-"}
                     </td>
-                    <td className="px-4 py-4 border border-[#3F3F3F]">
+                    {/* <td className="px-4 py-4 border border-[#3F3F3F]">
                       {order.name ? order.name : "No-Name"}
-                    </td>
-                    <td className="px-4 py-4 border border-[#3F3F3F]">
+                    </td> */}
+                    {/* <td className="px-4 py-4 border border-[#3F3F3F]">
                       {order.shop}
-                    </td>
-                    <td className="px-4 py-4 border border-[#3F3F3F]">
+                    </td> */}
+                    <td className="px-4 py-4 border  border-[#3F3F3F]">
                       <span
                         className={`px-3 py-1 rounded-lg text-xs font-medium ${
                           order.status === "pending"
@@ -134,64 +134,110 @@ export default function OrdersPage() {
       </Card>
 
       {/* ✅ Modal for order details */}
-      <Dialog
-        open={!!selectedOrder}
-        onOpenChange={() => setSelectedOrder(null)}
-      >
-        <DialogContent className="max-w-2xl bg-white rounded-sm">
-          <DialogHeader>
-            <DialogTitle>Order Details</DialogTitle>
-            <DialogDescription>
-              Order ID: {selectedOrder?._id}
-            </DialogDescription>
-          </DialogHeader>
-          {selectedOrder && (
-            <div className="space-y-4">
-              <p>
-                <strong>Status:</strong> {selectedOrder.status}
-              </p>
-              <p>
-                <strong>Employee:</strong> {selectedOrder.employee ?? "N/A"}
-              </p>
-              <p>
-                <strong>Employee Name:</strong> {selectedOrder?.name ? selectedOrder?.name : "You don't use your Name"}
-              </p>
-              <p>
-                <strong>Shop:</strong> {selectedOrder.shop}
-              </p>
-              <p>
-                <strong>Created At:</strong>{" "}
-                {new Date(selectedOrder.createdAt).toLocaleString()}
-              </p>
-              <p>
-                <strong>Updated At:</strong>{" "}
-                {new Date(selectedOrder.updatedAt).toLocaleString()}
-              </p>
+    <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
+  <DialogContent className="max-w-3xl bg-white rounded-2xl shadow-2xl p-8">
+    {/* Header */}
+    <DialogHeader className="border-b pb-4 mb-6">
+      <DialogTitle className="text-2xl font-bold text-gray-900">
+        Order Details
+      </DialogTitle>
+      <DialogDescription className="text-sm text-gray-500">
+        Order ID: <span className="font-mono">{selectedOrder?._id}</span>
+      </DialogDescription>
+    </DialogHeader>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {selectedOrder.items.map((item) => (
-                  <div
-                    key={item._id}
-                    className="border p-3 rounded-lg flex flex-col items-center"
-                  >
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      className="w-32 h-32 object-cover rounded-md mb-2"
-                      width={40}
-                      height={40}
-                    />
-                    <p className="font-medium">{item.title}</p>
-                    <p>Price: {item.price}</p>
-                    <p>Quantity: {item.quantity}</p>
-                    <p>Total Coin: {item.totalCoin}</p>
-                  </div>
-                ))}
+    {selectedOrder && (
+      <div className="space-y-6 text-gray-700">
+        {/* Order Info */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <p>
+            <span className="font-semibold text-gray-800">Status:</span>{" "}
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                selectedOrder.status === "approved"
+                  ? "bg-green-100 text-green-700"
+                  : selectedOrder.status === "pending"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              {selectedOrder.status}
+            </span>
+          </p>
+          <p>
+            <span className="font-semibold text-gray-800">Employee:</span>{" "}
+            {selectedOrder.employee ?? "N/A"}
+          </p>
+          <p>
+            <span className="font-semibold text-gray-800">Employee Name:</span>{" "}
+            {selectedOrder?.name
+              ? selectedOrder?.name
+              : "You don't use your Name"}
+          </p>
+          <p>
+            <span className="font-semibold text-gray-800">Shop:</span>{" "}
+            {selectedOrder.shop}
+          </p>
+          <p>
+            <span className="font-semibold text-gray-800">Created At:</span>{" "}
+            {new Date(selectedOrder.createdAt).toLocaleString()}
+          </p>
+          <p>
+            <span className="font-semibold text-gray-800">Updated At:</span>{" "}
+            {new Date(selectedOrder.updatedAt).toLocaleString()}
+          </p>
+        </div>
+
+        {/* Items */}
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Ordered Items
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {selectedOrder.items.map((item) => (
+              <div
+                key={item._id}
+                className="rounded-xl border bg-white p-5 flex flex-col items-center text-center shadow-sm hover:shadow-md transition"
+              >
+                {/* Centered Image */}
+                <div className="flex justify-center w-full mb-4">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    className="w-32 h-32 object-cover rounded-lg border"
+                    width={128}
+                    height={128}
+                  />
+                </div>
+                <p className="font-medium text-gray-900">{item.title}</p>
+                <p className="text-sm text-gray-600">
+                  Price:{" "}
+                  <span className="font-semibold text-gray-800">
+                    {item.price}
+                  </span>
+                </p>
+                <p className="text-sm text-gray-600">
+                  Quantity:{" "}
+                  <span className="font-semibold text-gray-800">
+                    {item.quantity}
+                  </span>
+                </p>
+                <p className="text-sm text-gray-600">
+                  Total Coin:{" "}
+                  <span className="font-semibold text-gray-800">
+                    {item.totalCoin}
+                  </span>
+                </p>
               </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
+  </DialogContent>
+</Dialog>
+
+
     </div>
   );
 }

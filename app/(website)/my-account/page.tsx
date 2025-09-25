@@ -70,7 +70,7 @@ export default function AccountsPage() {
           {/* Left Sidebar */}
           <div className="flex flex-col gap-6">
             {/* Profile Card */}
-            <Card className="p-6 flex flex-col items-center text-center relative">
+            <Card className="p-6 flex flex-col items-center text-center shadow-none border-none relative">
               <div className="relative">
                 <Avatar className="w-24 h-24 mb-4 border-2 border-gray-200">
                   <AvatarImage
@@ -92,14 +92,14 @@ export default function AccountsPage() {
                 </label>
               </div>
 
-              <h2 className="text-lg font-semibold">{profile.name}</h2>
-              <p className="text-sm text-gray-500">{profile.email}</p>
-              <p className="text-sm text-gray-500 mt-2">
+              <h2 className="text-[20px] text-[#424242] leading-[150%] font-semibold  font-poppins">{profile.name}</h2>
+              <p className="text-sm text-[#BFBFBF] leading-[120%] font-normal font-poppins ">{profile.email}</p>
+              <p className="text-[20px] text-[#424242] leading-[120%] font-medium mt-2">
                 ID: <span className="font-medium">{profile.employeeId}</span>
               </p>
-              <p className="text-sm text-gray-500">
-                Co ID :{" "}
-                <span className="font-medium text-orange-600">
+              <p className="text-[20px] leading-[120%] pt-2 font-semibold text-[#D9AD5E]">
+                Coin:{" "}
+                <span className="font-medium">
                   {profile.coin}
                 </span>
               </p>
@@ -112,7 +112,7 @@ export default function AccountsPage() {
                 className={cn(
                   "justify-start px-4 py-2 text-base",
                   activeTab === "personal-information" &&
-                    "bg-gray-100 text-gray-900 font-semibold"
+                    "bg-[#595959] text-[#FFFFFF]  hover:bg-[#353434] hover:text-white  rounded-xl py-5 text-[18px] leading-[150%] font-normal"
                 )}
                 onClick={() => setActiveTab("personal-information")}
               >
@@ -124,7 +124,7 @@ export default function AccountsPage() {
                 className={cn(
                   "justify-start px-4 py-2 text-base",
                   activeTab === "change-password" &&
-                    "bg-gray-100 text-gray-900 font-semibold"
+                    "bg-[#595959] text-[#FFFFFF] hover:bg-[#353434] hover:text-white   rounded-xl py-5 text-[18px] leading-[150%] font-normal"
                 )}
                 onClick={() => setActiveTab("change-password")}
               >
@@ -136,7 +136,7 @@ export default function AccountsPage() {
                 className={cn(
                   "justify-start px-4 py-2 text-base",
                   activeTab === "order-history" &&
-                    "bg-gray-100 text-gray-900 font-semibold"
+                    "bg-[#595959] text-[#FFFFFF] hover:bg-[#353434] hover:text-white  rounded-xl py-5 text-[18px] leading-[150%] font-normal"
                 )}
                 onClick={() => setActiveTab("order-history")}
               >
