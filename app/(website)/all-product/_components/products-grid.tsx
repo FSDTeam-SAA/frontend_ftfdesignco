@@ -77,7 +77,7 @@ export async function ProductsGrid({
     totalPages,
   } = productsData;
 
-  console.log("all data", productsData);
+  // console.log("all data", productsData);
 
   return (
     <div>

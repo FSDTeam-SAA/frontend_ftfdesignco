@@ -1,3 +1,4 @@
+// import ProductsByCategory from "../../shop/[id]/_components/related-product"
 import { ProductDetail } from "./_components/product-detail"
 
 
@@ -11,6 +12,7 @@ export default async function ProductPage({ params }: PageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <ProductDetail id={id} />
+      
     </div>
   )
 }

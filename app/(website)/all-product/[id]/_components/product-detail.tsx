@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Minus, Plus, Share } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import Link from "next/link";
+import ProductsByCategory from "@/app/(website)/shop/[id]/_components/related-product";
 
 interface Product {
   _id: string;
@@ -30,6 +32,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1);
   const session = useSession();
   const token = session.data?.accessToken;
+  const role = session.data?.user?.role;
 
   // Fetch product details
   const {
@@ -85,20 +88,20 @@ export function ProductDetail({ id }: ProductDetailProps) {
     }
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: product?.title,
-          text: product?.description,
-          url: window.location.href,
-        })
-        .catch(() => toast.error("Failed to share product"));
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard!");
-    }
-  };
+  // const handleShare = () => {
+  //   if (navigator.share) {
+  //     navigator
+  //       .share({
+  //         title: product?.title,
+  //         text: product?.description,
+  //         url: window.location.href,
+  //       })
+  //       .catch(() => toast.error("Failed to share product"));
+  //   } else {
+  //     navigator.clipboard.writeText(window.location.href);
+  //     toast.success("Link copied to clipboard!");
+  //   }
+  // };
 
   const handleSubmit = () => {
     if (!product) {
@@ -127,6 +130,17 @@ export function ProductDetail({ id }: ProductDetailProps) {
 
   if (!product) {
     return <div className="container mx-auto px-4 py-8">Product not found</div>;
+  }
+
+  if (role == "employee") {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h2>You are not authorized to view this page.</h2>
+        <Button className="bg-[#D9AD5E] hover:bg-[#f5b641] w-[172px] rounded-xl mt-4">
+          <Link href="/shop">Go to Shop Page</Link>
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -194,13 +208,13 @@ export function ProductDetail({ id }: ProductDetailProps) {
               >
                 {mutation.isPending ? "Submitting..." : "Submit"}
               </Button>
-              <span
+              {/* <span
                 className="bg-transparent flex items-center py-2 text-sm text-black font-semibold hover:bg-gray-50"
                 onClick={handleShare}
               >
                 <Share className="h-4 w-4 mr-2" />
                 Share
-              </span>
+              </span> */}
             </div>
           </div>
         </div>
@@ -226,6 +240,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
           </div> */}
         </div>
       </div>
+      <ProductsByCategory category={product.title} />
     </div>
   );
 }
