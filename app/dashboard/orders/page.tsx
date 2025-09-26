@@ -177,7 +177,7 @@ export default function OrderHistoryPage() {
       key: "productName",
       header: "Product Name",
       render: (order: Order) => (
-        <div className="flex justify-center items-center gap-3">
+        <div className="flex justify-start items-center gap-3">
           <div className="w-12 h-12 rounded-lg overflow-hidden border">
             <Image
               src={order?.items?.[0]?.image || "/placeholder.png"}
@@ -198,12 +198,12 @@ export default function OrderHistoryPage() {
       header: "Coins",
       render: (order: Order) => order.totalPayCoin || 0,
     },
-    {
-      key: "quantity",
-      header: "Quantity",
-      render: (order: Order) =>
-        order.items?.reduce((sum, i) => sum + (i.quantity || 0), 0) || 0,
-    },
+    // {
+    //   key: "quantity",
+    //   header: "Quantity",
+    //   render: (order: Order) =>
+    //     order.items?.reduce((sum, i) => sum + (i.quantity || 0), 0) || 0,
+    // },
     {
       key: "employeeId",
       header: "Employee Id",
@@ -252,7 +252,8 @@ export default function OrderHistoryPage() {
             </Badge>
             <Badge
               onClick={() =>
-                order.status === "approved" && handleDeliveryStatus(order._id, "delivered")
+                order.status === "approved" &&
+                handleDeliveryStatus(order._id, "delivered")
               }
               className={`cursor-pointer ${
                 order.status === "approved" ? "block" : "hidden"
