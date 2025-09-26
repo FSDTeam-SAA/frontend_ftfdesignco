@@ -33,7 +33,7 @@ export function DataTable<T>({ data, columns, itemsPerPage = 10 }: DataTableProp
     <div className="space-y-4">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="text-center">
+          <thead className="text-start">
             <tr className="border-b border-gray-200">
               {columns.map((column, index) => (
                 <th key={index} className=" py-3 px-4 font-medium text-gray-700">

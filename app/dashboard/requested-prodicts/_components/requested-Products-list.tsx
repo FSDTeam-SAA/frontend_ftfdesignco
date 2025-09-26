@@ -531,8 +531,8 @@ export default function RequestedProductsList() {
       key: "productName",
       header: "Product Name",
       render: (item: Product) => (
-        <div className="flex justify-center items-center gap-3">
-          <div className="w-12 h-12 rounded-lg flex items-center justify-center">
+        <div className="flex justify-start items-center gap-3">
+          <div className="w-12 h-12 rounded-lg flex items-center justify-start">
             <Image
               src={item.product?.productImage}
               alt="No Image"
@@ -558,19 +558,19 @@ export default function RequestedProductsList() {
         <span className="font-medium">${item.product?.price || 0}</span>
       ),
     },
-    {
-      key: "quantity",
-      header: "Quantity",
-      render: (item: Product) => (
-        <span
-          className={`${
-            item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"
-          }`}
-        >
-          {item.product?.quantity || 0}
-        </span>
-      ),
-    },
+    // {
+    //   key: "quantity",
+    //   header: "Quantity",
+    //   render: (item: Product) => (
+    //     <span
+    //       className={`${
+    //         item.product?.quantity < 10 ? "text-red-600" : "text-gray-900"
+    //       }`}
+    //     >
+    //       {item.product?.quantity || 0}
+    //     </span>
+    //   ),
+    // },
     {
       key: "category",
       header: "Category",
