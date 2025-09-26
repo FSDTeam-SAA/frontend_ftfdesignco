@@ -92,6 +92,18 @@ export default function OrderHistoryPage() {
       toast.error(`${error.message}`);
     },
   });
+  const orderDeliveryMutation = useMutation({
+    mutationKey: ["orders"],
+    mutationFn: ({ Id, status }: { Id: string; status: string }) =>
+      orderStatus(Id, status),
+    onSuccess: (data) => {
+      toast.success(`${data.message}`);
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Something went wrong");
+    },
+  });
 
   const handelstatus = (Id: string, status: string) => {
     orderMutation.mutate({ Id, status });
@@ -104,7 +116,9 @@ export default function OrderHistoryPage() {
   const handelDelete = (id: string) => {
     orderDeleteMutation.mutate(id);
   };
-
+  const handleDeliveryStatus = (Id: string, status: string) => {
+    orderDeliveryMutation.mutate({ Id, status });
+  };
   // Loading Skeleton
   if (isLoading) {
     return (
@@ -215,65 +229,79 @@ export default function OrderHistoryPage() {
       header: "Action",
       render: (order: Order) => (
         console.log(order.status),
-        <div className="flex items-center justify-center gap-2">
-          {/* Approve Button */}
-          <Badge
-            onClick={() =>
-              order.status !== "approved" &&
-              order.status !== "rejected" &&
-              handelstatus(order._id, "approved")
-            }
-            className={`bg-green-100 text-green-600 
+        (
+          <div className="flex items-center justify-center gap-2">
+            {/* Approve Button */}
+            <Badge
+              onClick={() =>
+                order.status !== "approved" &&
+                order.status !== "rejected" &&
+                handelstatus(order._id, "approved")
+              }
+              className={`bg-green-100 text-green-600 
       ${
         order.status === "approved" || order.status === "rejected"
           ? "opacity-50 cursor-not-allowed"
           : "cursor-pointer"
-      } ${order.status === "rejected" && "hidden"}`}
-          >
-            Approved
-          </Badge>
+      } ${
+                order.status === "rejected" ||
+                (order.status === "approved" && "hidden")
+              } ${order.status === "rejected" && "hidden"}`}
+            >
+              Approved
+            </Badge>
+            <Badge
+              onClick={() =>
+                order.status === "approved" && handleDeliveryStatus(order._id, "delivered")
+              }
+              className={`cursor-pointer ${
+                order.status === "approved" ? "block" : "hidden"
+              } bg-blue-100 text-blue-800`}
+            >
+              Delivery
+            </Badge>
 
-          {/* Cancel Button */}
-          <Badge
-            onClick={() =>
-              order.status !== "approved" &&
-              order.status !== "rejected" &&
-              handelCancelstatus(order._id, "rejected")
-            }
-            className={`bg-red-100 text-red-800 
+            {/* Cancel Button */}
+            <Badge
+              onClick={() =>
+                order.status !== "approved" &&
+                order.status !== "rejected" &&
+                handelCancelstatus(order._id, "rejected")
+              }
+              className={`bg-red-100 text-red-800 
       ${
         order.status === "approved" || order.status === "rejected"
           ? "opacity-50 cursor-not-allowed hidden"
           : "cursor-pointer block"
       }`}
-          >
-            Cancel
-          </Badge>
-          <Badge
-           
-            className={`bg-red-100 text-red-800 
+            >
+              Cancel
+            </Badge>
+            <Badge
+              className={`bg-red-100 text-red-800 
       ${
-        order.status === "rejected" 
+        order.status === "rejected"
           ? "opacity-50 cursor-not-allowed block"
           : "cursor-pointer hidden"
       }`}
-          >
-            Rejected
-          </Badge>
-          {/* Trash Button (only visible when cancelled) */}
-          {order.status === "rejected" && (
-            <Badge
-              onClick={() => handelDelete(order._id)}
-              className="bg-gray-100 text-gray-800 cursor-pointer"
             >
-              <Trash className="w-4 h-4" />
+              Rejected
             </Badge>
-          )}
-        </div>
+            {/* Trash Button (only visible when cancelled) */}
+            {order.status === "rejected" && (
+              <Badge
+                onClick={() => handelDelete(order._id)}
+                className="bg-gray-100 text-gray-800 cursor-pointer"
+              >
+                <Trash className="w-4 h-4" />
+              </Badge>
+            )}
+          </div>
+        )
       ),
     },
   ];
- console.log('hello',currentData)
+  console.log("hello", currentData);
   return (
     <div className="space-y-6">
       <div>
