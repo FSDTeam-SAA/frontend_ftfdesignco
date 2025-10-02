@@ -1,11 +1,15 @@
 import FAQSection from "@/components/FAQSection";
+import PricingHero from "@/components/pricing/PricingHero";
 import { SubScriptionPlan } from "@/components/SubScriptionPlan";
 import React from "react";
 
 function Page() {
   return (
     <div>
+
       <div>
+
+        <PricingHero />
         <SubScriptionPlan />
       </div>
       <div className="bg-white">
